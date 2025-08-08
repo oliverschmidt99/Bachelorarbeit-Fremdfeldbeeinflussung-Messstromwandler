@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Flexible Feldanalyse mit Wandlern (Finale Korrektur)</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        #main-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        #simulation-wrapper {
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            display: flex;
+            min-width: 400px;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #b-field-display {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 1em;
+            pointer-events: none;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+
+        #controls {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-left: 15px;
+            width: 380px;
+            flex-shrink: 0;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #004d40;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 5px;
+            margin-top: 0;
+        }
+
+        label,
+        .checkbox-label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .checkbox-label,
+        .radio-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+        }
+
+        .dc-control-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .dc-control-group label {
+            flex-grow: 1;
+        }
+
+        fieldset .checkbox-label {
+            margin-top: 5px;
+        }
+
+        input[type="range"],
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .value-display,
+        .output-value {
+            font-weight: normal;
+            color: #00796b;
+            float: right;
+        }
+
+        fieldset {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #004d40;
+            padding: 0 10px;
+        }
+
+        fieldset:disabled {
+            opacity: 0.4;
+        }
+
+        .ac-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+
+        .ac-buttons button {
+            font-size: 1.1em;
+            padding: 5px 12px;
+            border-radius: 5px;
+            border: 1px solid #00796b;
+            background-color: white;
+            color: #00796b;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .output-row+.output-row {
+            margin-top: 8px;
+        }
+        
+        .output-row.sub-value {
+            margin-top: 4px;
+            padding-left: 15px;
+            font-size: 0.9em;
+        }
+
+        .output-row.main-value {
+            font-weight: bold;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main-container">
+        <div id="simulation-wrapper">
+            <canvas id="simulationCanvas"></canvas>
+            <div id="b-field-display">B: 0.00 mT</div>
+        </div>
+        <div id="controls">
+            <h2>Steuerung</h2>
+
+            <fieldset>
+                <legend>Leiter-Konfiguration</legend>
+                <div id="conductor-config-container"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>⚡ Strom-Modus</legend>
+                <label class="checkbox-label"><input type="checkbox" id="acModeCheckbox"> Drehstrom-Modus
+                    aktivieren</label>
+                <div id="acControlsDiv" class="hidden">
+                    <label>Spitzenstrom <span id="acAmpVal" class="value-display">2500 A</span></label>
+                    <input type="range" id="acAmplitude" min="0" max="5000" value="2500" step="100">
+                    <label>Phasenwinkel <span id="acAngleVal" class="value-display">0°</span></label>
+                    <input type="range" id="acAngle" min="0" max="360" value="0">
+                    <div class="ac-buttons">
+                        <button id="playPauseBtn" type="button">▶ Play</button>
+                        <button id="resetBtn" type="button">⟲ Reset</button>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset id="dcFieldset">
+                <legend>Manuelle Strom-Steuerung</legend>
+                <div id="dc-controls-container"></div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Wandler-Parameter</legend>
+                <label for="ctRatio">Wandler-Typ (z.B. 3250/1)</label>
+                <input type="text" id="ctRatio" value="3250/1">
+                <label for="burdenOhm">Bürde in Ω</label>
+                <input type="number" id="burdenOhm" value="15" step="0.1">
+                <label for="coreArea">Kernfläche (Aₖₑᵣₙ) in mm²</label>
+                <input type="number" id="coreArea" value="653" step="10">
+            </fieldset>
+
+            <fieldset>
+                <legend>Darstellungs-Optionen</legend>
+                <div id="core-controls-container"></div>
+                <label>Anfangs-Permeabilität µᵣ <span id="muRVal" class="value-display">1</span></label>
+                <input type="range" id="muRSlider" min="1" max="4000" value="2551" step="10">
+            </fieldset>
+
+            <fieldset id="resultsFieldset" class="hidden">
+                <legend>Wandler-Feldstärken und Strom</legend>
+                <div id="results-container"></div>
+            </fieldset>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        // UI Elements
+        const bFieldDisplay = document.getElementById('b-field-display');
+        const acModeCheckbox = document.getElementById('acModeCheckbox'), acControlsDiv = document.getElementById('acControlsDiv'), dcFieldset = document.getElementById('dcFieldset');
+        const acAmplitudeSlider = document.getElementById('acAmplitude'), acAngleSlider = document.getElementById('acAngle');
+        const acAmpVal = document.getElementById('acAmpVal'), acAngleVal = document.getElementById('acAngleVal');
+        const playPauseBtn = document.getElementById('playPauseBtn'), resetBtn = document.getElementById('resetBtn');
+        const conductorConfigContainer = document.getElementById('conductor-config-container');
+        const dcControlsContainer = document.getElementById('dc-controls-container');
+        const coreControlsContainer = document.getElementById('core-controls-container');
+        const resultsContainer = document.getElementById('results-container');
+        const resultsFieldset = document.getElementById('resultsFieldset');
+        const muRSlider = document.getElementById('muRSlider'), muRVal = document.getElementById('muRVal');
+        const ctRatioInput = document.getElementById('ctRatio'), burdenOhmInput = document.getElementById('burdenOhm'), coreAreaInput = document.getElementById('coreArea');
+
+        // Globale Zustands- & Physik-Variablen
+        let animationInterval = null, isPlaying = false, lastMousePos = null;
+        const MU_0 = 4 * Math.PI * 1e-7;
+        const FREQUENCY = 50;
+        const B_SAT = 1.8; // Sättigungsflussdichte in Tesla
+        let GRID_SPACING;
+        let PIXELS_PER_MM = 1.0;
+
+        const conductors = [
+            { id: 1, x: -5000, y: 0, width: 40, height: 10, current: 0, enabled: true, hasCore: false },
+            { id: 2, x: 0, y: 0, width: 40, height: 10, current: 0, enabled: true, hasCore: true },
+            { id: 3, x: 5000, y: 0, width: 40, height: 10, current: 0, enabled: true, hasCore: false }
+        ];
+
+        function getPositions() { return conductors.map(c => ({ x: width / 2 + c.x * PIXELS_PER_MM, y: height / 2 - c.y * PIXELS_PER_MM })); }
+        
+        function calculateB(point_px, pos_px, current) {
+            const rx_px = point_px.x - pos_px.x;
+            const ry_px = point_px.y - pos_px.y;
+            const r_px = Math.sqrt(rx_px * rx_px + ry_px * ry_px);
+            if (r_px < 1) return { Bx: 0, By: 0 };
+            const r_meters = r_px / PIXELS_PER_MM / 1000;
+            const B_mag = (MU_0 * current) / (2 * Math.PI * r_meters);
+            return { Bx: -B_mag * (ry_px / r_px), By: B_mag * (rx_px / r_px) };
+        }
+
+        function calculateB_from_H_nonlinear(H, B_sat, mu_r_initial) {
+            if (mu_r_initial <= 1) {
+                return MU_0 * H;
+            }
+            const mu_initial = MU_0 * mu_r_initial;
+            const k = (mu_initial * Math.PI) / (2 * B_sat);
+            return B_sat * (2 / Math.PI) * Math.atan(k * H);
+        }
+
+        function getBAtPoint(p, positions, currents) {
+            let Bx = 0, By = 0;
+            conductors.forEach((cond, i) => {
+                if (cond.enabled) {
+                    const B_source = calculateB(p, positions[i], currents[`I${i + 1}`]);
+                    Bx += B_source.Bx; By += B_source.By;
+                }
+            });
+            return { Bx, By };
+        }
+
+        function getInstantaneousCurrents(amplitude, angleRad) { return { I1: amplitude * Math.sin(angleRad), I2: amplitude * Math.sin(angleRad - 2 * Math.PI / 3), I3: amplitude * Math.sin(angleRad + 2 * Math.PI / 3) }; }
+
+        function drawCore(pos, conductor) {
+            const CORE_THICKNESS = 20 * PIXELS_PER_MM;
+            const inner_w = conductor.width * PIXELS_PER_MM + 5;
+            const inner_h = conductor.height * PIXELS_PER_MM + 5;
+            const outer_w = inner_w + CORE_THICKNESS;
+            const outer_h = inner_h + CORE_THICKNESS;
+            ctx.fillStyle = 'rgba(180, 180, 200, 0.3)';
+            ctx.beginPath();
+            ctx.rect(pos.x - outer_w / 2, pos.y - outer_h / 2, outer_w, outer_h);
+            ctx.rect(pos.x + inner_w / 2, pos.y - inner_h / 2, -inner_w, inner_h);
+            ctx.fill();
+        }
+
+        function updateUI() {
+            const currents = getCurrents();
+            const isAc = acModeCheckbox.checked;
+            const mu_r_initial = parseFloat(muRSlider.value);
+
+            if (isAc) { acAmpVal.textContent = `${acAmplitudeSlider.value} A`; acAngleVal.textContent = `${acAngleSlider.value}°`; }
+            conductors.forEach((cond, i) => {
+                document.getElementById(`val${i + 1}`).textContent = `${Math.round(isAc ? cond.current : currents[`I${i + 1}`])} A`;
+            });
+            muRVal.textContent = `${mu_r_initial}`;
+
+            let anyCoreActive = conductors.some(c => c.hasCore);
+            resultsFieldset.classList.toggle('hidden', !anyCoreActive);
+
+            if (anyCoreActive) {
+                const amplitude = parseFloat(acAmplitudeSlider.value);
+                const core_area_m2 = parseFloat(coreAreaInput.value) / 1e6;
+                const ratioParts = ctRatioInput.value.split('/');
+                const i_prim_nenn = parseFloat(ratioParts[0]), i_sek_nenn = parseFloat(ratioParts[1]);
+                
+                // KORREKTUR: Bürde direkt in Ohm einlesen
+                const burden_ohm = parseFloat(burdenOhmInput.value);
+                
+                let n_sek = NaN;
+                if (!isNaN(i_prim_nenn) && !isNaN(i_sek_nenn) && i_sek_nenn > 0) {
+                    n_sek = i_prim_nenn / i_sek_nenn;
+                }
+
+                conductors.forEach((cond, i) => {
+                    if (cond.hasCore) {
+                        let mag_peak = NaN;
+                        let mag_inst = NaN;
+
+                        const r_mean_m = 0.05725;
+                        const l_mean_m = 2 * Math.PI * r_mean_m;
+
+                        if (isAc) {
+                            const enclosed_current_peak = amplitude; 
+                            const enclosed_current_inst = cond.current;
+
+                            const H_peak = enclosed_current_peak / l_mean_m;
+                            const H_inst = enclosed_current_inst / l_mean_m;
+                            
+                            mag_peak = calculateB_from_H_nonlinear(H_peak, B_SAT, mu_r_initial);
+                            mag_inst = calculateB_from_H_nonlinear(H_inst, B_SAT, mu_r_initial);
+
+                            const B_rms = mag_peak / Math.sqrt(2);
+                            document.getElementById(`bFieldCore${i + 1}_rms`).textContent = isNaN(B_rms) ? '---' : `${B_rms.toFixed(3)} T`;
+                            
+                            if (!isNaN(burden_ohm) && burden_ohm > 0 && !isNaN(n_sek)) {
+                                const flux_peak = mag_peak * core_area_m2;
+                                // KORREKTUR: N in der Formel sind die Sekundärwicklungen. 
+                                // Das Übersetzungsverhältnis n_sek ist I_prim/I_sek = N_sek/N_prim. Da N_prim=1, ist n_sek = N_sek.
+                                const u_sek_rms = 4.44 * n_sek * FREQUENCY * flux_peak;
+                                const i_sek_rms = u_sek_rms / burden_ohm;
+                                document.getElementById(`iSecCore${i + 1}`).textContent = isNaN(i_sek_rms) ? 'Error' : `${i_sek_rms.toFixed(3)} A`;
+                            } else { 
+                                document.getElementById(`iSecCore${i + 1}`).textContent = '---'; 
+                            }
+                        } else {
+                             // ... DC-Berechnung ...
+                        }
+                        
+                        document.getElementById(`bFieldCore${i + 1}_inst`).textContent = isNaN(mag_inst) ? '---' : `${Math.abs(mag_inst).toFixed(3)} T`;
+
+                    } else {
+                        document.getElementById(`bFieldCore${i + 1}_inst`).textContent = `---`;
+                        document.getElementById(`bFieldCore${i + 1}_rms`).textContent = `---`;
+                        document.getElementById(`iSecCore${i + 1}`).textContent = `---`;
+                    }
+                });
+            }
+        }
+
+        // --- Die folgenden Funktionen sind hauptsächlich für die Darstellung und Steuerung und bleiben unverändert ---
+
+        function createControls() {
+            conductors.forEach((cond, i) => {
+                const configFieldset = document.createElement('fieldset');
+                configFieldset.innerHTML = `<legend>Leiter L${i + 1}</legend><div class="config-grid"><label>X-Pos (mm) <input type="number" id="x${i + 1}" value="${cond.x}" step="5"></label><label>Y-Pos (mm) <input type="number" id="y${i + 1}" value="${cond.y}" step="5"></label><label>Breite (mm) <input type="number" id="w${i + 1}" value="${cond.width}" min="1" step="1"></label><label>Höhe (mm) <input type="number" id="h${i + 1}" value="${cond.height}" min="1" step="1"></label></div>`;
+                conductorConfigContainer.appendChild(configFieldset);
+
+                const dcGroup = document.createElement('div');
+                dcGroup.className = 'dc-control-group';
+                dcGroup.innerHTML = `<input type="checkbox" id="enableL${i + 1}" ${cond.enabled ? 'checked' : ''}><label for="current${i + 1}">Strom I${i + 1} <span id="val${i + 1}" class="value-display">${cond.current} A</span></label>`;
+                const dcSlider = document.createElement('input');
+                dcSlider.type = 'range'; dcSlider.id = `current${i + 1}`; dcSlider.min = -5000; dcSlider.max = 5000; dcSlider.value = cond.current; dcSlider.step = 100;
+                dcControlsContainer.appendChild(dcGroup); dcControlsContainer.appendChild(dcSlider);
+
+                const coreGroup = document.createElement('label');
+                coreGroup.className = 'checkbox-label';
+                coreGroup.innerHTML = `<input type="checkbox" id="coreL${i + 1}" ${cond.hasCore ? 'checked' : ''}> Wandlerkern für L${i + 1}`;
+                coreControlsContainer.appendChild(coreGroup);
+
+                const resultsDiv = document.createElement('div');
+                resultsDiv.innerHTML = `<div class="output-row main-value">Wandler L${i + 1}</div><div class="output-row sub-value">B_inst <span id="bFieldCore${i + 1}_inst" class="output-value">---</span></div><div class="output-row sub-value">B_eff <span id="bFieldCore${i + 1}_rms" class="output-value">---</span></div><div class="output-row sub-value"><b>I_sek (eff)</b> <span id="iSecCore${i + 1}" class="output-value">---</span></div>`;
+                resultsContainer.appendChild(resultsDiv);
+
+                document.getElementById(`x${i + 1}`).addEventListener('input', e => { cond.x = parseFloat(e.target.value); fullUpdate(); });
+                document.getElementById(`y${i + 1}`).addEventListener('input', e => { cond.y = parseFloat(e.target.value); fullUpdate(); });
+                document.getElementById(`w${i + 1}`).addEventListener('input', e => { cond.width = parseFloat(e.target.value); fullUpdate(); });
+                document.getElementById(`h${i + 1}`).addEventListener('input', e => { cond.height = parseFloat(e.target.value); fullUpdate(); });
+                document.getElementById(`enableL${i + 1}`).addEventListener('change', e => { cond.enabled = e.target.checked; fullUpdate(); });
+                dcSlider.addEventListener('input', e => { cond.current = parseFloat(e.target.value); fullUpdate(); });
+                document.getElementById(`coreL${i + 1}`).addEventListener('change', e => { cond.hasCore = e.target.checked; fullUpdate(); });
+            });
+        }
+        function fullUpdate() { updateUI(); draw(); updateHoverDisplay(); }
+        function toggleAcMode() { const isAc = acModeCheckbox.checked; acControlsDiv.classList.toggle('hidden', !isAc); dcFieldset.disabled = isAc; if (!isAc && isPlaying) handlePlayPause(); fullUpdate(); }
+        function handlePlayPause() { if (isPlaying) { clearInterval(animationInterval); playPauseBtn.textContent = '▶ Play'; } else { animationInterval = setInterval(() => { acAngleSlider.value = (parseFloat(acAngleSlider.value) + 2) % 360; fullUpdate(); }, 20); playPauseBtn.textContent = '❚❚ Pause'; } isPlaying = !isPlaying; }
+        function updateHoverDisplay() { if (!lastMousePos) return; const positions = getPositions(); const currents = getCurrents(); const B_total = getBAtPoint(lastMousePos, positions, currents); const mag_total = Math.sqrt(B_total.Bx ** 2 + B_total.By ** 2); let html = `B: ${(mag_total * 1000).toFixed(2)} mT<br>`; positions.forEach((pos, i) => { const dist_px = Math.sqrt((lastMousePos.x - pos.x) ** 2 + (lastMousePos.y - pos.y) ** 2); html += `r${i + 1}: ${(dist_px / PIXELS_PER_MM).toFixed(1)} mm<br>`; }); bFieldDisplay.innerHTML = html; }
+        const resizeObserver = new ResizeObserver(rescaleAndRedraw);
+        resizeObserver.observe(canvas.parentElement);
+        canvas.addEventListener('mousemove', e => { const rect = canvas.getBoundingClientRect(); lastMousePos = { x: e.clientX - rect.left, y: e.clientY - rect.top }; updateHoverDisplay(); });
+        canvas.addEventListener('mouseleave', () => { lastMousePos = null; bFieldDisplay.innerHTML = `B: ---`; });
+        acModeCheckbox.addEventListener('change', toggleAcMode);
+        [acAmplitudeSlider, acAngleSlider, muRSlider, ctRatioInput, burdenOhmInput, coreAreaInput].forEach(el => el.addEventListener('input', fullUpdate));
+        playPauseBtn.addEventListener('click', handlePlayPause);
+        resetBtn.addEventListener('click', () => { acAngleSlider.value = 0; if (isPlaying) handlePlayPause(); fullUpdate(); });
+        function rescaleAndRedraw() { width = canvas.clientWidth; height = canvas.clientHeight; if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; } PIXELS_PER_MM = width / 600; GRID_SPACING = Math.max(15, Math.floor(width / 50)); fullUpdate(); }
+        function draw() { const positions = getPositions(); const currents = getCurrents(); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height); drawAxes(); for (let x = 0; x < width; x += GRID_SPACING) { for (let y = 0; y < height; y += GRID_SPACING) { const B_ges = getBAtPoint({ x, y }, positions, currents); const mag = Math.sqrt(B_ges.Bx ** 2 + B_ges.By ** 2); if (mag < 1e-7) continue; const angle = Math.atan2(B_ges.By, B_ges.Bx); const MIN_ARROW_LENGTH = 3.0; const rawArrowLength = Math.min(GRID_SPACING * 0.9, 4 + Math.log(1 + mag * 8e4)); const arrowLength = Math.max(MIN_ARROW_LENGTH, rawArrowLength); ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.beginPath(); ctx.moveTo(-arrowLength / 2, 0); ctx.lineTo(arrowLength / 2, 0); ctx.lineTo(arrowLength / 2 - 4, -3); ctx.moveTo(arrowLength / 2, 0); ctx.lineTo(arrowLength / 2 - 4, 3); ctx.strokeStyle = getColorForMagnitude(mag); ctx.lineWidth = 1.8; ctx.stroke(); ctx.restore(); } } positions.forEach((pos, i) => { if (conductors[i].hasCore) drawCore(pos, conductors[i]); }); conductors.forEach((cond, i) => drawConductor(positions[i], cond)); }
+
+        createControls();
+        toggleAcMode();
+        rescaleAndRedraw();
+    </script>
+</body>
+
+</html>
