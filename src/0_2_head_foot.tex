@@ -1,0 +1,14 @@
+\pagestyle{fancy} % Aktiviert den benutzerdefinierten Seitenstil 'fancy'
+\fancyhead[L]{{\includegraphics[width = 6.0cm]{logo/Technik.png}}} % Kopfzeile links: Logo einbinden
+\fancyhead[R]{ % Kopfzeile rechts:
+	\Large{{ % Große Schrift
+				\textbf{\praktikumstitel}}}} % Fetter Praktikumstitel (global definiert)
+\fancyfoot[L]{} % Fußzeile links: leer
+\fancyfoot[C]{} % Fußzeile mitte: leer
+\fancyfoot[R]{Seite \thepage} % Fußzeile rechts: Aktuelle Seitenzahl
+\renewcommand{\footrulewidth}{0.4pt}% Dicke der Linie unter der Kopfzeile
+
+\pagenumbering{Roman} % Seitennummerierung auf römische Ziffern setzen
+\fancyfoot[L]{\leftmark} % Fußzeile links: Aktuelle Abschnittsüberschrift
+\fancyfoot[C]{} % Fußzeile mitte: leer
+\fancyfoot[R]{Seite \thepage\ von \pageref{LastPage}} % Fußzeile rechts: Aktuelle Seite von Gesamtseitenzahl
