@@ -1,0 +1,42 @@
+% =============================================================================
+% HAUPTDOKUMENT (main.tex)
+% =============================================================================
+
+\documentclass[11pt, a4paper, titlepage, headsepline=0.4pt]{scrbook}
+
+% --- EINSTELLUNGEN LADEN ---
+\input{01_Einstellungen/praeambel.tex}
+\input{01_Einstellungen/befehle.tex}
+
+% --- LITERATURQUELLE ANGEBEN ---
+\addbibresource{bibliographie.bib}
+
+% -----------------------------------------------------------------------------
+% DOKUMENTENBEGINN
+% -----------------------------------------------------------------------------
+\begin{document}
+
+% --- VORDERER TEIL (VORSPANN) ---
+\frontmatter
+\input{02_Inhalt/01_Vorspann/00_deckblatt.tex}
+\include{02_Inhalt/01_Vorspann/01_abstract}
+\input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
+
+% --- HAUPTTEIL ---
+\mainmatter
+\include{02_Inhalt/02_Hauptteil/01_einleitung}
+\include{02_Inhalt/02_Hauptteil/02_theorieteil}
+\include{02_Inhalt/02_Hauptteil/03_methodenteil}
+\include{02_Inhalt/02_Hauptteil/04_ergebnisteil}
+\include{02_Inhalt/02_Hauptteil/05_diskussion_fazit}
+
+% --- ANHANG ---
+\appendix
+\addpart{Anhang}
+
+% --- ABSCHLIESSENDER TEIL (NACHSPANN) ---
+\backmatter
+\printbibliography[heading=bibintoc, title={Literaturverzeichnis}]
+\include{02_Inhalt/03_Nachspann/eigenstaendigkeitserklaerung}
+
+\end{document}

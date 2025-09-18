@@ -1,0 +1,45 @@
+% =============================================================================
+% VERZEICHNISSE (02_verzeichnisse.tex)
+% -----------------------------------------------------------------------------
+% Diese Datei generiert alle Verzeichnisse (Inhalt, Abbildungen etc.)
+% basierend auf den Schaltern (\toggletrue/\togglefalse) in der Präambel.
+% =============================================================================
+
+% Inhaltsverzeichnis
+\iftoggle{showtoc}{
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+    \newpage
+}{}
+
+% Tabellenverzeichnis
+\iftoggle{showtables}{
+    \hypersetup{linkcolor=black}
+    \listoftables
+    \addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+    \newpage
+}{}
+
+% Abbildungsverzeichnis
+\iftoggle{showfigures}{
+    \listoffigures
+    \addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+    \newpage
+}{}
+
+% Oszillogrammverzeichnis
+\iftoggle{showoszillos}{
+    \listofoszillo
+    \addcontentsline{toc}{chapter}{Oszillogrammverzeichnis}
+    \newpage
+}{}
+
+% Diagrammverzeichnis
+\iftoggle{showdiagrams}{
+    \listofdiagram
+    \addcontentsline{toc}{chapter}{Diagrammverzeichnis}
+    \newpage
+}{}
+
+% Setzt die Linkfarbe für den Haupttext wieder auf Blau
+\hypersetup{linkcolor=blue}

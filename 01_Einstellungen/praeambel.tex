@@ -1,0 +1,94 @@
+% =============================================================================
+% PRÄAMBEL (praeambel.tex)
+% =============================================================================
+
+% --- GRUNDEINSTELLUNGEN ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{csquotes}
+
+% --- SEITENLAYOUT ---
+% KORRIGIERT: Die fehlerhafte 'headsepline'-Option wurde hier entfernt.
+\usepackage[a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm, headheight=3cm, includefoot]{geometry}
+
+% --- KOPF- UND FUSSZEILE (mit scrlayer-scrpage für KOMA-Script) ---
+\usepackage{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+
+% Kopfzeile
+\ihead{\includegraphics[width=6.0cm]{03_Ressourcen/Logo/Technik.png}}
+\ohead{\Large\bfseries\praktikumstitel}
+
+% Fußzeile
+\ifoot{\leftmark}
+\ofoot{Seite \thepage\ von \pageref{LastPage}}
+
+% --- LITERATURVERZEICHNIS (BIBLATEX) ---
+\usepackage[backend=biber, style=alphabetic, sorting=ynt]{biblatex}
+
+% --- MATHEMATIK ---
+\usepackage{amsmath, amssymb, amsthm, latexsym, derivative}
+
+% --- GRAFIKEN & DIAGRAMME ---
+\usepackage{epsfig, tikz, subcaption, caption, adjustbox, eso-pic}
+\usepackage[european]{circuitikz}
+\usepackage{siunitx}
+\sisetup{locale = DE}
+
+% --- TABELLEN ---
+\usepackage{booktabs, multirow, colortbl}
+
+% --- SONSTIGE PAKETE ---
+\usepackage{enumitem}
+\usepackage{lastpage}
+\usepackage{makeidx}
+\makeindex
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=green, urlcolor=magenta, hidelinks]{hyperref}
+\usepackage{chngcntr}
+\usepackage[normalem]{ulem}
+\usepackage{calc}
+\usepackage{pdfpages}
+\usepackage{blindtext}
+\usepackage{float}
+\usepackage{newfloat}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{etoolbox}
+
+% --- BENUTZERDEFINIERTE EINSTELLUNGEN ---
+\setlength{\parindent}{0em}
+\setkomafont{sectioning}{\sffamily}
+
+% --- DEINE FLOAT-UMGEBUNGEN ---
+\DeclareFloatingEnvironment[listname={Diagrammverzeichnis}, name=Diagramm, fileext=lod, placement=htp]{diagram}
+\DeclareFloatingEnvironment[listname={Oszillogrammverzeichnis}, name=Oszillogramm, fileext=loo, placement=htp]{oszillo}
+
+% --- ZÄHLER-EINSTELLUNGEN ---
+\counterwithin{figure}{chapter}
+\counterwithin{table}{chapter}
+\counterwithin{oszillo}{chapter}
+\counterwithin{diagram}{chapter}
+
+% --- DEINE BOX-DEFINITIONEN ---
+\newmdenv[linecolor=red, linewidth=1pt, frametitle=Hinweis, frametitlebackgroundcolor=red, frametitlefont=\color{white}\bfseries, frametitlerule=true, backgroundcolor=white, roundcorner=2pt]{hinweisbox}
+\newmdenv[linecolor=gray, linewidth=1pt, frametitle=Aufgabe, frametitlebackgroundcolor=white, frametitlefont=\color{black}\bfseries, frametitlerule=true, backgroundcolor=white, roundcorner=2pt]{aufgabenbox}
+\newcounter{rechnungbox}[section]
+\renewcommand{\therechnungbox}{\arabic{rechnungbox}}
+\newtcolorbox{rechnungbox}[1][]{colframe=darkgray, colback=white, coltitle=white, colbacktitle=gray, title={Rechnung \therechnungbox}, fonttitle=\bfseries, boxed title style={size=small}, boxrule=1pt, sharp corners=south, before upper=\stepcounter{rechnungbox}, #1}
+
+% --- DEINE TOGGLES ---
+\newtoggle{showtoc}
+\newtoggle{showtables}
+\newtoggle{showfigures}
+\newtoggle{showoszillos}
+\newtoggle{showdiagrams}
+\toggletrue{showtoc}
+\togglefalse{showtables}
+\toggletrue{showfigures}
+\togglefalse{showoszillos}
+\togglefalse{showdiagrams}
