@@ -1,31 +1,19 @@
 % =============================================================================
 % PRÄAMBEL (praeambel.tex)
+% -----------------------------------------------------------------------------
+% Lädt alle Pakete und globalen Einstellungen.
 % =============================================================================
 
 % --- GRUNDEINSTELLUNGEN ---
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-\usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{csquotes}
 
-% --- SEITENLAYOUT ---
-% KORRIGIERT: Die fehlerhafte 'headsepline'-Option wurde hier entfernt.
-\usepackage[a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm, headheight=3cm, includefoot]{geometry}
+% --- LAYOUT-DATEI LADEN ---
+\input{01_Einstellungen/layout.tex}
 
-% --- KOPF- UND FUSSZEILE (mit scrlayer-scrpage für KOMA-Script) ---
-\usepackage{scrlayer-scrpage}
-\pagestyle{scrheadings}
-\clearpairofpagestyles
-
-% Kopfzeile
-\ihead{\includegraphics[width=6.0cm]{03_Ressourcen/Logo/Technik.png}}
-\ohead{\Large\bfseries\praktikumstitel}
-
-% Fußzeile
-\ifoot{\leftmark}
-\ofoot{Seite \thepage\ von \pageref{LastPage}}
 
 % --- LITERATURVERZEICHNIS (BIBLATEX) ---
 \usepackage[backend=biber, style=alphabetic, sorting=ynt]{biblatex}
@@ -47,6 +35,7 @@
 \usepackage{lastpage}
 \usepackage{makeidx}
 \makeindex
+% KORRIGIERT: Tippfehler 'hidelights' zu 'hidelinks' geändert.
 \usepackage[colorlinks=true, linkcolor=blue, citecolor=green, urlcolor=magenta, hidelinks]{hyperref}
 \usepackage{chngcntr}
 \usepackage[normalem]{ulem}
@@ -62,17 +51,17 @@
 
 % --- BENUTZERDEFINIERTE EINSTELLUNGEN ---
 \setlength{\parindent}{0em}
-\setkomafont{sectioning}{\sffamily}
+% GELÖSCHT: \setkomafont{sectioning}{\sffamily} - wird jetzt in layout.tex gemacht
 
 % --- DEINE FLOAT-UMGEBUNGEN ---
 \DeclareFloatingEnvironment[listname={Diagrammverzeichnis}, name=Diagramm, fileext=lod, placement=htp]{diagram}
 \DeclareFloatingEnvironment[listname={Oszillogrammverzeichnis}, name=Oszillogramm, fileext=loo, placement=htp]{oszillo}
 
 % --- ZÄHLER-EINSTELLUNGEN ---
-\counterwithin{figure}{chapter}
-\counterwithin{table}{chapter}
-\counterwithin{oszillo}{chapter}
-\counterwithin{diagram}{chapter}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{oszillo}{section}
+\counterwithin{diagram}{section}
 
 % --- DEINE BOX-DEFINITIONEN ---
 \newmdenv[linecolor=red, linewidth=1pt, frametitle=Hinweis, frametitlebackgroundcolor=red, frametitlefont=\color{white}\bfseries, frametitlerule=true, backgroundcolor=white, roundcorner=2pt]{hinweisbox}
@@ -92,3 +81,6 @@
 \toggletrue{showfigures}
 \togglefalse{showoszillos}
 \togglefalse{showdiagrams}
+
+% --- Globale Schriftart für den Haupttext aktivieren ---
+\AtBeginDocument{\haupttextSchrift}

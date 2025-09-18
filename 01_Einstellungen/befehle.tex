@@ -1,12 +1,12 @@
 % =============================================================================
-% EIGENE BEFEHLE (befehle.tex)
+% EIGENE BEFEHLE & GLOBALE EINSTELLUNGEN (befehle.tex)
 % -----------------------------------------------------------------------------
-% Diese Datei ist für deine persönlichen Makros und Befehle (\newcommand).
-% So hältst du die Präambel sauber und kannst deine Befehle zentral verwalten.
-% Die globalen Variablen für die Titelseite sind hier ebenfalls definiert.
+% Dies ist deine zentrale Steuerdatei für das gesamte Dokument.
+% Hier passt du globale Variablen, Schriftarten, Abstände und
+% Standardgrößen an.
 % =============================================================================
 
-% --- GLOBALE DEFINITIONEN (aus deiner alten main.tex) ---
+% --- GLOBALE DEFINITIONEN FÜR DIE TITELSEITE ---
 \newcommand{\praktikumstitel}{Bachelorarbeit}
 \newcommand{\semester}{}
 \newcommand{\versuchsnummer}{}
@@ -20,9 +20,10 @@
 \newcommand{\nachnameStudZwei}{Schmidt}
 \newcommand{\matrikelnummerStudZwei}{7023462}
 \newcommand{\betreuerEins}{Dr. Sandro Günter}
-\newcommand{\betreuerZwei}{Rainer Ludewig Diplom-Ingenieur (Dipl.Ing.)}
+\newcommand{\betreuerZwei}{Dipl.-Ing. Rainer Ludewig}
+\newcommand{\betreuerDrei}{Simon Westerbur, B. Eng.}
 
-% --- HINTERGRUNDBILD (PFAD ANGEPASST) ---
+% --- HINTERGRUNDBILD ---
 \newcommand\BackgroundWave{%
     \put(0,0){%
         \parbox[b][\paperheight]{\paperwidth}{%
@@ -34,3 +35,48 @@
         }%
     }%
 }
+
+
+% #############################################################################
+% ### ANFANG: GLOBALE LAYOUT- UND SCHRIFTART-EINSTELLUNGEN                  ###
+% #############################################################################
+%
+% Hier kannst du das gesamte Aussehen deines Dokuments anpassen,
+% indem du einfach die Werte und Befehle änderst.
+
+% === HAUPTSCHRIFTARTEN ===
+% Um die Schriftart zu wechseln, lade das entsprechende Paket in 'praeambel.tex'
+% und ändere hier den Befehl.
+% Beispiele für Pakete: \usepackage{mathpazo} (Palatino), \usepackage{newtxtext} (Times)
+\newcommand{\haupttextSchrift}{\rmfamily}       % \rmfamily (Serif), \sffamily (Sans-Serif)
+
+% === SCHRIFTGRÖSSEN & -STILE ===
+% Beispiele: \sffamily (serifenlos), \rmfamily (Serifen), \ttfamily (Schreibmaschine)
+%            \bfseries (fett), \itshape (kursiv), \scshape (Kapitälchen)
+%            \Huge, \huge, \LARGE, \Large, \large, \normalsize, \small, \footnotesize
+\newcommand{\haupttextGroesse}{\normalsize}
+\newcommand{\kapitelSchrift}{\sffamily\bfseries\Large}
+\newcommand{\sectionSchrift}{\sffamily\bfseries\large}
+\newcommand{\subsectionSchrift}{\sffamily\bfseries\normalsize}
+\newcommand{\kopfzeilenSchrift}{\sffamily\small}
+\newcommand{\fusszeilenSchrift}{\sffamily\itshape\footnotesize}
+
+% === ABSTÄNDE ===
+\newcommand{\zeilenabstand}{1.15}               % 1.0 für einfach, 1.15 für etwas luftiger, 1.5 für 1,5-fachen Abstand
+\newcommand{\absatzabstand}{0.5em}              % Abstand zwischen Absätzen (z.B. 1em, 0.5cm, etc.)
+\newcommand{\absatzeinzug}{0em}                 % Einzug der ersten Zeile eines Absatzes (0em für linksbündig)
+
+% === KOPF- UND FUSSZEILE ===
+\newcommand{\kopfzeilenHoehe}{2.5cm}             % Reservierter Platz für die Kopfzeile
+\newcommand{\fusszeilenAbstand}{1.5cm}           % Abstand der Fußzeile vom Text
+
+% === STANDARDGRÖSSEN FÜR BILDER ===
+% Definiert drei Standardbreiten für Bilder, relativ zur Textbreite.
+% Verwendung im Text: \includegraphics[\bildKlein]{pfad/zum/bild.png}
+\newcommand{\bildKlein}{width=0.3\textwidth}    % Kleines Bild, ca. 1/3 der Textbreite
+\newcommand{\bildMittel}{width=0.6\textwidth}   % Mittleres Bild, ca. 2/3 der Textbreite
+\newcommand{\bildGross}{width=0.9\textwidth}    % Großes Bild, fast die gesamte Textbreite
+
+% #############################################################################
+% ### ENDE: GLOBALE LAYOUT- UND SCHRIFTART-EINSTELLUNGEN                    ###
+% #############################################################################

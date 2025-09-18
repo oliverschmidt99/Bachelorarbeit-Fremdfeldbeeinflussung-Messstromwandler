@@ -6,41 +6,58 @@
 % =============================================================================
 
 \begin{titlepage}
+
 	\hspace{-1.0cm}
 	\begin{tabular}{p{8.0cm} p{8.0cm}}
+		% KORRIGIERT: Der Pfad zum Logo wurde an die neue Ordnerstruktur angepasst.
 		\includegraphics[width = 6.0cm]{03_Ressourcen/Logo/Technik.png} & % Logo
 		\parbox[b]{8.0cm}{
-		{\large  Fachbereich Technik }                                    \\
-		{\large  Abteilung Elektrotechnik und Informatik }
+		{\large  Fachbereich Technik }                                    \\ % Fachbereich
+		{\large  Abteilung Elektrotechnik und Informatik } % Abteilung
 		}                                                                 \\
 		\\
 		\hline
 	\end{tabular}
+	%
 	\begin{center}
+
 		\vspace{2.5cm}
+		% KORRIGIERT: Zeilenumbruch \\ entfernt, da \semester leer ist
 		\LARGE{\textsc{\praktikumstitel}}
 		\ifx\semester\empty\else\LARGE{\textsc{\semester}}\fi
+
 		\vspace{2cm}%
 		\ifx\versuchsnummer\empty\else\LARGE{\textsc{\versuchsnummer}}\fi
 		\LARGE{\versuchstitel}
+
 		\vspace{4cm}%
 		\large
+
+		% KORRIGIERT: Zeilenumbrüche entfernt, da \gruppe leer ist
 		\ifx\gruppe\empty\else\gruppe\fi
 		\studiengang
 		\vspace{0.5cm}
+
 		Vorgelegt von\\
+
 		\begin{table}[!ht]
 			\centering
 			\begin{tabular}{rll}
-				\vornameStudZwei & \nachnameStudZwei & \matrikelnummerStudZwei
+				% KORRIGIERT: Leere erste Zeile entfernt
+				\vornameStudZwei & \nachnameStudZwei & \matrikelnummerStudZwei % Studierender 2 (global definiert)
 			\end{tabular}
 		\end{table}
+
+
 		\vspace{1cm}
-		Emden, \today
+		Emden, \today % Ort und Datum
+
 		\vspace{1.5cm}%
-		Betreut von\\
-		\betreuerEins\\
-		\betreuerZwei
+		Betreut von\\ % Einleitung Betreuer
+		\betreuerEins\\ % Betreuer 1 (global definiert)
+		\betreuerZwei\\ % Betreuer 2 (global definiert)
+		\betreuerDrei % Betreuer 3 (neu hinzugefügt)
+
 	\end{center}
 	\normalsize
 \end{titlepage}
