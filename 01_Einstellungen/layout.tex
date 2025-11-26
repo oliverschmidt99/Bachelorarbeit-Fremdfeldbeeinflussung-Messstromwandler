@@ -1,34 +1,132 @@
-% =============================================================================
-% LAYOUT-EINSTELLUNGEN (layout.tex)
-% =============================================================================
 
-% --- SEITENRÄNDER UND GRÖSSE DER KOPF-/FUSSZEILE ---
-\usepackage[
-    a4paper,
-    left=25mm,
-    right=25mm,
-    top=25mm,
-    bottom=25mm,
-    headheight=2cm,
-    footskip=1.5cm
-]{geometry}
+\clubpenalty = 10000 % schliesst Schusterjungen aus
+\widowpenalty = 10000 % schliesst Hurenkinder aus
+\hyphenpenalty = 1000 % Keine Silbentrennung
 
-% --- KOPF- UND FUSSZEILE (scrlayer-scrpage) ---
-\usepackage{scrlayer-scrpage}
-\pagestyle{scrheadings}
-\clearpairofpagestyles
+\setbeamercovered{transparent}
+%\beamertemplatenavigationsymbolsempty
 
-% Kopfzeile befüllen
-\ihead{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo_rolf-janssen_2024.pdf}}
-\ohead{\Large\bfseries\praktikumstitel}
+\useoutertheme{split}
+\useinnertheme{default}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\usefonttheme{professionalfonts}
 
-% Fußzeile befüllen
-\ifoot{\leftmark}
-\ofoot{Seite \thepage\ von \pageref{LastPage}}
+% ###### color definition ######
+\definecolor{fbtechnik}{gray}{.2}
+\definecolor{logobg}{rgb}{0.537,0.7765,0.796}
+\definecolor{cHSblue}{RGB}{0,93,164}
+\definecolor{cHSmint}{RGB}{138,198,203}
+\definecolor{cHSfont}{RGB}{88,88,90}
 
-% --- SCHRIFTARTEN ---
-\setkomafont{pagehead}{\kopfzeilenSchrift}
-\setkomafont{pagefoot}{\fusszeilenSchrift}
-% GEÄNDERT: Kapitel-Schriftart entfernt, da \section nicht mehr verwendet wird.
-\setkomafont{section}{\sectionSchrift}
-\setkomafont{subsection}{\subsectionSchrift}
+% ###### color setup ######
+\setbeamercolor{section in head/foot}{bg=white,fg=black}
+\setbeamercolor{subsection in head/foot}{bg=cHSmint,fg=white}
+\setbeamercolor{block body}{bg=white,fg=black}
+\setbeamercolor{block title}{bg=white,fg=cHSblue}
+\setbeamercolor{item projected}{fg=black,bg=black!20}
+\setbeamercolor{item}{fg=cHSblue,bg=black!20}
+\setbeamercolor{frametitle}{bg=cHSblue,fg=white}
+\setbeamercolor{framesubtitle}{bg=cHSblue!25,fg=black!80}
+\setbeamercolor{title}{bg=cHSblue,fg=white}
+\setbeamercolor{subtitle}{bg=cHSblue,fg=white}
+\setbeamercolor{logo}{fg=logobg,bg=logobg}
+\setbeamercolor{title in head/foot}{bg=white,fg=black} % Für Kopfzeile
+\setbeamercolor{author in head/foot}{bg=cHSblue,fg=red}
+\setbeamercolor{structure}{bg=white,fg=black}
+\setbeamercolor{normal text}{bg=white,fg=black}
+\setbeamercolor{progress bar background}{bg=gray!30}
+\setbeamercolor{progress bar foreground}{bg=cHSblue}
+% --- Neue Farben für die Kopfzeile ---
+\setbeamercolor{headline left}{bg=white}
+\setbeamercolor{headline right}{bg=white}
+
+
+% ###### font definition for head/foot ######
+\setbeamerfont{title in head/foot}{size=\normalsize}
+\setbeamerfont{footline content}{size=\scriptsize}
+
+% ###### headline definition (NEU & KORRIGIERT) ######
+\setbeamertemplate{headline}
+{
+  \leavevmode%
+  \hbox{%
+    % Linke Box: Logo
+    \begin{beamercolorbox}[wd=0.4\paperwidth,ht=1.0cm,dp=0.5cm,left]{headline left}
+      \hspace{1cm} % Linker Abstand
+      % PLATZHALTER: Ersetze dies durch deinen \includegraphics Befehl
+      \texttt{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo_rolf-janssen_2024.pdf}}
+    \end{beamercolorbox}%
+    % Rechte Box: Titel
+    \begin{beamercolorbox}[wd=0.6\paperwidth,ht=1.0cm,dp=0.5cm,right]{headline right}
+      \usebeamerfont{title in head/foot}%
+      \insertshorttitle%
+      \hspace{1cm} % Rechter Abstand
+    \end{beamercolorbox}%
+  }%
+  \vspace{1mm}
+}
+
+% ###### footline definition (NEU) ######
+\setbeamertemplate{footline}{%
+  % Text-Zeile
+  \leavevmode\hbox{%
+    % Linke Box: Aktueller Abschnitt
+    \begin{beamercolorbox}[wd=0.7\paperwidth,ht=2.25ex,dp=1ex,leftskip=1cm,left]{section in head/foot}%
+      \usebeamerfont{footline content}\insertsectionhead%
+    \end{beamercolorbox}%
+    % Rechte Box: Seitenzahl
+    \begin{beamercolorbox}[wd=0.3\paperwidth,ht=2.25ex,dp=1ex,rightskip=1cm,right]{section in head/foot}%
+      \usebeamerfont{footline content}\insertframenumber/\inserttotalframenumber%
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+  % Fortschrittsbalken
+  \begin{beamercolorbox}[wd=\paperwidth,ht=1ex,dp=0ex]{progress bar background}%
+    \ifnum\inserttotalframenumber>0%
+      \begin{beamercolorbox}[wd=\dimexpr\paperwidth*\insertframenumber/\inserttotalframenumber\relax,ht=1ex,dp=0ex]{progress bar foreground}%
+      \end{beamercolorbox}%
+    \fi
+  \end{beamercolorbox}%
+}
+% ###### Navigationssymbole entfernen ######
+\setbeamertemplate{navigation symbols}{}
+
+% ###### frametitle definition ######
+\setbeamertemplate{frametitle}{\leavevmode\vbox{%
+    \begin{beamercolorbox}[wd=1\paperwidth,ht=3ex,dp=1.125ex,leftskip=0.4cm,rightskip=.15cm plus1fil]{frametitle}
+      \usebeamerfont{frametitle}%
+      \vbox{} \vspace{-0.1cm}
+      \strut\Large{}\insertframetitle\strut\par%
+      \vskip6pt
+      {%
+        \ifx\insertframesubtitle\@empty%
+          \else%
+          {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
+        \fi
+      }%
+      \vskip-1ex%
+    \end{beamercolorbox}%
+  }\vskip0pt}
+
+% ###### custom environments ######
+\newenvironment{eblock}{\setbeamercolor{block body}{bg=cHSblue!40,fg=black}\begin{block}{}\vspace{-3px}}{\end{block}}
+\newenvironment{wblock}{\setbeamercolor{block body}{bg=logobg!2,fg=black}\begin{block}{}\vspace{-3px}}{\end{block}}
+
+\parindent0.0cm
+\parskip1.5ex plus0.5ex minus0.5ex % KORRIGIERT: Komma durch Punkt ersetzt
+
+% ###### custom commands (KORRIGIERT) ######
+\newcommand{\titleframe}{
+  % HINWEIS: \includegraphics für Hintergrund wurde durch Platzhalter ersetzt.
+  % \setbeamertemplate{background canvas}{\includegraphics[width=1\paperwidth]{hintergrund}}
+  \begin{frame}[plain]
+    \begin{center}
+      % PLATZHALTER: Ersetze dies durch deine \includegraphics Befehle
+      \texttt{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo_rolf-janssen_2024.pdf}}\quad
+      \texttt{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo.pdf}}
+      \color{fbtechnik}
+    \end{center}
+    \maketitle
+  \end{frame}
+  \setbeamertemplate{background canvas}{}
+}
