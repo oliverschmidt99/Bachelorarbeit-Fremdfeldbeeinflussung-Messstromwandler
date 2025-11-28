@@ -3,7 +3,9 @@
 % =============================================================================
 
 % GEÄNDERT: Dokumentenklasse zu 'scrartcl' (Artikel) geändert
-\documentclass[11pt, a4paper, headsepline=0.4pt]{scrartcl}
+% NEU: numbers=noenddot entfernt den Punkt nach der Gliederungsnummer
+% NEU: headsepline korrigiert (ohne Wertangabe in der Class-Option)
+\documentclass[11pt, a4paper, headsepline, numbers=noenddot]{scrartcl}
 
 % --- EINSTELLUNGEN LADEN ---
 \input{01_Einstellungen/praeambel.tex}
@@ -33,11 +35,11 @@
 \include{02_Inhalt/02_Hauptteil/06_diskussion_fazit}
 \include{02_Inhalt/02_Hauptteil/07_ausblick}
 
-
 % --- ANHANG ---
 \appendix
 % In der Artikelklasse wird der Anhang mit \section eingeleitet
 \section{Anhang}
+\label{chap:anhang}
 
 % --- NACHSPANN ---
 \printbibliography[heading=bibintoc, title={Literaturverzeichnis}]

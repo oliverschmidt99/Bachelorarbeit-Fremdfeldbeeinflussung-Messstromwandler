@@ -1,63 +1,76 @@
 % =============================================================================
 % DECKBLATT (00_deckblatt.tex)
 % -----------------------------------------------------------------------------
-% Dies ist die Titelseite deiner Arbeit. Sie verwendet die globalen
-% Befehle aus 'befehle.tex', um die Informationen dynamisch einzufügen.
+% Dies ist die Titelseite deiner Arbeit.
 % =============================================================================
 
 \begin{titlepage}
-
-	\hspace{-1.0cm}
-	\begin{tabular}{p{8.0cm} p{8.0cm}}
-		% KORRIGIERT: Der Pfad zum Logo wurde an die neue Ordnerstruktur angepasst.
-		\includegraphics[width = 6.0cm]{03_Ressourcen/Logo/Technik.png} & % Logo
-		\parbox[b]{8.0cm}{
-		{\large  Fachbereich Technik }                                    \\ % Fachbereich
-		{\large  Abteilung Elektrotechnik und Informatik } % Abteilung
-		}                                                                 \\
-		\\
-		\hline
-	\end{tabular}
-	%
+	% --- KOPFZEILE: LOGO LINKS, LOGO RECHTS + TEXT ---
 	\begin{center}
+		% Linke Seite: Hochschule Logo
+		\begin{minipage}[b]{0.45\textwidth}
+			\includegraphics[width=5cm]{03_Ressourcen/Logo/Technik.png}
+		\end{minipage}
+		\hfill
+		% Rechte Seite: Rolf Janssen Logo + Fachbereichstext
+		\begin{minipage}[b]{0.45\textwidth}
+			% Logo Rolf Janssen (wie gewünscht hier platziert)
+			\includegraphics[width=5cm]{03_Ressourcen/Logo/logo_rolf-janssen_2024.png}
+		\end{minipage}
+	\end{center}
 
+	% --- HAUPTTEIL ---
+	\begin{center}
 		\vspace{2.5cm}
-		% KORRIGIERT: Zeilenumbruch \\ entfernt, da \semester leer ist
-		\LARGE{\textsc{\praktikumstitel}}
-		\ifx\semester\empty\else\LARGE{\textsc{\semester}}\fi
 
-		\vspace{2cm}%
-		\ifx\versuchsnummer\empty\else\LARGE{\textsc{\versuchsnummer}}\fi
-		\LARGE{\versuchstitel}
+		% ART DER ARBEIT
+		\scshape\LARGE \praktikumstitel
 
-		\vspace{4cm}%
-		\large
-
-		% KORRIGIERT: Zeilenumbrüche entfernt, da \gruppe leer ist
-		\ifx\gruppe\empty\else\gruppe\fi
-		\studiengang
 		\vspace{0.5cm}
 
-		Vorgelegt von\\
-
-		\begin{table}[!ht]
-			\centering
-			\begin{tabular}{rll}
-				% KORRIGIERT: Leere erste Zeile entfernt
-				\vornameStudZwei & \nachnameStudZwei & \matrikelnummerStudZwei % Studierender 2 (global definiert)
-			\end{tabular}
-		\end{table}
-
+		% STUDIENGANG
+		\normalfont\large im \studiengang
 
 		\vspace{1cm}
-		Emden, \today % Ort und Datum
+		\hrule height 1pt
+		\vspace{0.5cm}
 
-		\vspace{1cm}%
-		Betreut von\\ % Einleitung Betreuer
-		\betreuerEins\\ % Betreuer 1 (global definiert)
-		\betreuerZwei\\ % Betreuer 2 (global definiert)
-		\betreuerDrei % Betreuer 3 (neu hinzugefügt)
+		% TITEL DER ARBEIT
+		\huge \bfseries \versuchstitel
+
+		\vspace{0.5cm}
+		\hrule height 1pt
+		\vspace{1cm}
+
+		% AUTOR
+		\normalfont \large
+		Vorgelegt von:\\
+		\vspace{0.2cm}
+		\textbf{\vornameStudZwei\ \nachnameStudZwei}\\
+		Matrikelnummer: \matrikelnummerStudZwei
+
+		\vspace{1cm}
+
+		% UNTERNEHMEN (REINER TEXT)
+		Durchgeführt bei:\\
+		\vspace{0.3cm}
+		\textbf{Rolf Janssen Elektrotechnische Werke GmbH}\\
+		Emsstraße 4\\
+		26603 Aurich
 
 	\end{center}
-	\normalsize
+
+	\vfill
+
+	% --- FUSSZEILE: PRÜFER UND DATUM ---
+	\begin{center}
+		\normalsize
+		\begin{tabular}{rl}
+			\textbf{Erstprüfer:}             & \betreuerEins     \\
+			\textbf{Zweitprüfer:}            & \betreuerZwei     \\
+			                                 &                   \\ % kleiner Abstand
+			\textbf{Abgabedatum:}            & Emden, den \today
+		\end{tabular}
+	\end{center}
+
 \end{titlepage}
