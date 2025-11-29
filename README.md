@@ -15,24 +15,75 @@ Diese Bachelorarbeit befasst sich mit der Analyse von Messfehlern bei Stromwandl
 
 Hier ist der aktuelle Stand der Planung.
 
+# Projektplan
+
 ```mermaid
 gantt
-    title Projektplan Bachelorarbeit Elektrotechnik
+    title Projektplan Bachelorarbeit – Messstromwandler & Fremdfelder
     dateFormat  YYYY-MM-DD
-    axisFormat  %W
-    
-    section Recherche & Analyse
-    Literaturrecherche       :done,    des1, 2025-01-10, 2025-01-24
-    Anforderungsanalyse      :active,  des2, 2025-01-25, 3d
-    Materialbeschaffung      :         des3, after des2, 5d
+    axisFormat %d/%m
+    excludes    2025-12-24, 2025-12-25, 2025-12-26, 2026-01-01, 2026-01-06, weekends
 
-    section Implementierung
-    Schaltungsentwurf (PCB)  :         imp1, after des3, 10d
-    Software-Entwicklung (C/C++) :     imp2, 2025-02-15, 20d
-    Prototypen-Bau           :         imp3, after imp1, 5d
+    %% ==============================================================================
+    %% LEGENDE / BEFEHLE
+    %% ==============================================================================
+    %% :milestone -> Erzeugt eine Raute (Wichtig: Dauer auf 0d setzen!)
+    %% :crit      -> Roter Rahmen/Füllung (Kritisch)
+    %% :active    -> In Bearbeitung
+    %% :done      -> Erledigt
+    %% ==============================================================================
 
+
+    %% ============================
+    %% Wichtige Meilensteine (NEU)
+    %% ============================
+    section Meilensteine
+    Start der Arbeit                    :active,milestone, start, 2025-12-01, 0d
+    Messung                             :active, crit, milestone, after messung_1, 0d
+    Zwischenkontrolle                   :milestone, after pruefung_1, 2025-12-20, 0d
+    Zwischenkontrolle                   :milestone, after pruefung_1, 2026-01-06, 0d
+    Abgabe der Bachelorarbeit           :crit, milestone, abgabe, 2026-02-25, 0d
+
+    %% ============================
+    %% Bachelorarbeit – Schreiben
+    %% ============================
     section Schreiben
-    Rohfassung Theorie       :         doc1, after des1, 10d
-    Ergebnisse auswerten     :         doc2, after imp2, 5d
-    Korrekturlesen & Formatierung :    doc3, after doc2, 7d
-    Abgabe                   :crit,    2025-04-15, 1d
+    Versuchsaufbau und Methodik         :active, methodik_1, 2025-12-01, 5d
+    Experimentelle Untersuchung         :experiment_1, after methodik_1, 10d
+    Auswertung und Diskussion           :auswertung_1, after experiment_1, 7d
+    Zusammenfassung der Ergebnisse      :zusammenfassung_1, after auswertung_1, 5d
+    Einleitung                          :einleitung_1, after zusammenfassung_1, 3d
+    Ausblick                            :ausblick_1, after einleitung_1, 3d
+
+    %% ============================
+    %% Messreihen & Datenerhebung
+    %% ============================
+    section Messen
+    Programmierung der SPS              :active, programmierung_1, 2025-11-29, 3d
+    Durchführung der Messreihen         :messung_1, after programmierung_1, 12d
+
+
+    %% ============================
+    %% Prüfung
+    %% ============================
+    section Prüfen
+    Überprüfung der Daten               :crit, active, pruefung_1, 2025-12-01, 12d
+
+    %% ============================
+    %% Meetings
+    %% ============================
+    section Meetings
+    Regelmäßiges Meeting (Block)        :meeting_1, 2025-12-19, 1d
+```
+
+# Autor
+
+Oliver Schmidt
+
+Lizenz
+
+Dieses Projekt ist unter der MIT License lizenziert. Weitere Details finden sich in der LICENSE.md-Datei.
+
+```
+
+```
