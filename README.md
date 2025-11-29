@@ -11,23 +11,28 @@ Diese Bachelorarbeit befasst sich mit der Analyse von Messfehlern bei Stromwandl
 - **Datenanalyse und Validierung:** Vergleich der gewonnenen Messdaten mit den theoretisch ermittelten Modellen zur Validierung der Hypothesen.
 - **Entwicklung von Lösungsansätzen:** Ausarbeitung von konkreten Handlungsempfehlungen und technischen Maßnahmen zur Minimierung der festgestellten Messfehler.
 
-## Repository-Struktur
+# Zeitplan Bachelorarbeit
 
-Die Ordnerstruktur ist darauf ausgelegt, den gesamten wissenschaftlichen Arbeitsprozess abzubilden:
+Hier ist der aktuelle Stand der Planung.
 
-- `000_BA-Arbeit/`: Enthält alle Quelldateien der Bachelorarbeit, einschließlich des LaTeX-Codes (`src/`), der Abbildungen (`images/`) und weiterer dazugehöriger Dokumente.
-- `100_Gemeinsame_Daten/`: Dient als zentraler Speicherort für allgemeine Daten wie Normen, technische Notizen, Referenzliteratur sowie Rohdaten aus Simulationen und Analysen.
-- `200_Berichte_und_Ergebnisse/`: Beinhaltet finalisierte Grafiken, Zwischenberichte, Auswertungen und Präsentationen.
-- `300_Wandler/`: Enthält spezifische Informationen zu den untersuchten Wandlertypen (z.B. CELSA, MBS, Ritz), inklusive Datenblättern, Fotografien und Messprotokollen.
-- `.vscode/`: Speichert Konfigurationseinstellungen für den Visual Studio Code Editor.
-- `ordnerstruktur_erstellen.bat`: Ein Skript zur automatischen Erstellung der definierten Ordnerstruktur.
-- `README.md`: Diese Datei – die zentrale Dokumentation des Repositories.
-- `todo.md`: Eine Liste der offenen Aufgaben und Arbeitspakete.
+```mermaid
+gantt
+    title Projektplan Bachelorarbeit Elektrotechnik
+    dateFormat  YYYY-MM-DD
+    axisFormat  %W
+    
+    section Recherche & Analyse
+    Literaturrecherche       :done,    des1, 2025-01-10, 2025-01-24
+    Anforderungsanalyse      :active,  des2, 2025-01-25, 3d
+    Materialbeschaffung      :         des3, after des2, 5d
 
-## Autor
+    section Implementierung
+    Schaltungsentwurf (PCB)  :         imp1, after des3, 10d
+    Software-Entwicklung (C/C++) :     imp2, 2025-02-15, 20d
+    Prototypen-Bau           :         imp3, after imp1, 5d
 
-Oliver Schmidt
-
-## Lizenz
-
-Dieses Projekt ist unter der MIT License lizenziert. Weitere Details finden sich in der `LICENSE.md`-Datei.
+    section Schreiben
+    Rohfassung Theorie       :         doc1, after des1, 10d
+    Ergebnisse auswerten     :         doc2, after imp2, 5d
+    Korrekturlesen & Formatierung :    doc3, after doc2, 7d
+    Abgabe                   :crit,    2025-04-15, 1d
