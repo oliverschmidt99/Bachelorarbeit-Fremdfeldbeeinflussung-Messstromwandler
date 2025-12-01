@@ -19,25 +19,21 @@
 % -----------------------------------------------------------------------------
 \begin{document}
 
-% Deckblatt wird als unnummerierte Titelseite eingefügt
+% ---------- DECKBLATT (ohne Nummer) ----------
+\pagenumbering{gobble}
 \input{02_Inhalt/01_Vorspann/00_deckblatt.tex}
 
-% NEU: Römische Seitenzahlen für den Vorspann (Abstract, Verzeichnisse)
-% Dies setzt den Zähler auf I
-
-
-% --- VORSAPNN ---
-\include{02_Inhalt/01_Vorspann/01_abstract}
-
+% ---------- VORSPANN (römische Zählung) ----------
+\clearpage
 \pagenumbering{Roman}
 
+\include{02_Inhalt/01_Vorspann/01_abstract}
 \input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
 
-% NEU: Arabische Seitenzahlen ab dem Hauptteil
-% Dies setzt den Zähler auf 1 zurück, sodass die Einleitung auf Seite 1 beginnt
+% ---------- HAUPTTEIL (arabische Zählung ab 1) ----------
+\clearpage
 \pagenumbering{arabic}
 
-% --- HAUPTTEIL ---
 \include{02_Inhalt/02_Hauptteil/01_einleitung}
 \include{02_Inhalt/02_Hauptteil/02_theorieteil}
 \include{02_Inhalt/02_Hauptteil/03_methodenteil}
@@ -46,13 +42,17 @@
 \include{02_Inhalt/02_Hauptteil/06_diskussion_fazit}
 \include{02_Inhalt/02_Hauptteil/07_ausblick}
 
-% --- ANHANG --- 
+% ---------- ANHANG ----------
+\clearpage
 \appendix
-% In der Artikelklasse wird der Anhang mit \section eingeleitet
+\renewcommand{\thesection}{\Alph{section}} % A, B, C …
 \section{Anhang}
 \label{chap:anhang}
 
-% --- NACHSPANN ---
+% (falls du Unterkapitel hast → A.1, A.2 etc.)
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+
+% ---------- NACHSPANN ----------
 \printbibliography[heading=bibintoc, title={Literaturverzeichnis}]
 \include{02_Inhalt/03_Nachspann/eigenstaendigkeitserklaerung}
 
