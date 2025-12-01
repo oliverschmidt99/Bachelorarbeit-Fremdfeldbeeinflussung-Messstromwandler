@@ -22,9 +22,20 @@
 % Deckblatt wird als unnummerierte Titelseite eingefügt
 \input{02_Inhalt/01_Vorspann/00_deckblatt.tex}
 
+% NEU: Römische Seitenzahlen für den Vorspann (Abstract, Verzeichnisse)
+% Dies setzt den Zähler auf I
+
+
 % --- VORSAPNN ---
 \include{02_Inhalt/01_Vorspann/01_abstract}
+
+\pagenumbering{Roman}
+
 \input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
+
+% NEU: Arabische Seitenzahlen ab dem Hauptteil
+% Dies setzt den Zähler auf 1 zurück, sodass die Einleitung auf Seite 1 beginnt
+\pagenumbering{arabic}
 
 % --- HAUPTTEIL ---
 \include{02_Inhalt/02_Hauptteil/01_einleitung}
