@@ -105,5 +105,4 @@ Dieses Projekt, einschließlich aller Daten, Quellcodes und Dokumentationen, ist
 **Copyright © 2025 Oliver Schmidt & Rolf Janssen GmbH Elektrotechnische Werke**
 
 - Alle Rechte vorbehalten.
-- Die Inhalte sind ausschließlich zur Vorlage bei der prüfenden Hochschule bestimmt.
 - Jede Art der Vervielfältigung, Verbreitung, Veröffentlichung oder Weitergabe an Dritte ist ohne ausdrückliche schriftliche Genehmigung der Rechteinhaber streng untersagt.
