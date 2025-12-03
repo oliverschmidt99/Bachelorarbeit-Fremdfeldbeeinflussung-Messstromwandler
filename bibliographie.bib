@@ -1,147 +1,57 @@
-% =============================================================================
-% BIBLIOGRAPHIE (bibliographie.bib)
-% -----------------------------------------------------------------------------
-% Dies ist deine zentrale Literaturdatenbank. Füge hier alle deine
-% Quellen ein und zitiere sie im Text mit \cite{zitierschlüssel}.
-% =============================================================================
-
-% --- BEISPIELEINTRAG ---
-@book{knuth1984texbook,
-  author    = {Knuth, Donald E.},
-  title     = {The TeXbook},
-  publisher = {Addison-Wesley Professional},
-  year      = {1984},
-  address   = {Reading, Massachusetts},
-  isbn      = {0-201-13448-9}
+@misc{din_en_61869_2_2013,
+  title     = {DIN EN 61869-2 (VDE 0414-9-2):2013-07, Messwandler -- Teil 2: Zusätzliche Anforderungen für Stromwandler},
+  label     = {DIN13},
+  year      = {2013},
+  publisher = {DIN Deutsches Institut für Normung e.V. / VDE Verlag},
+  address   = {Berlin},
+  note      = {Deutsche Fassung EN 61869-2:2012; IEC 61869-2:2012},
+  url       = {https://www.beuth.de/de/norm/din-en-61869-2/172722083}
 }
 
-% -------------------------
-% STANDARDWERKE & ARTIKEL
-% -------------------------
-
-@book{buchbeispiel,
-  author    = {Autor, Vorname},
-  title     = {Titel des Buches},
-  publisher = {Verlag},
-  year      = {Jahr},
-  address   = {Verlagsort},
-  edition   = {Auflage},
-  note      = {Zusätzliche Anmerkungen}
+@book{minkner2020messwandler,
+  author    = {Minkner, Ruthard and Schmid, Joachim},
+  label     = {MS20},
+  title     = {Technologie der Messwandler: Strom- und Spannungsmessung und Isolationssysteme},
+  publisher = {Springer Vieweg},
+  year      = {2020},
+  address   = {Wiesbaden},
+  isbn      = {978-3-658-30206-1},
+  doi       = {10.1007/978-3-658-30207-8},
+  url       = {https://doi.org/10.1007/978-3-658-30207-8}
 }
 
-@article{artikelbeispiel,
-  author  = {Autor, Vorname and Zweitautor, Vorname},
-  title   = {Titel des Artikels},
-  journal = {Name der Fachzeitschrift},
-  year    = {Jahr},
-  volume  = {Band},
-  number  = {Ausgabennummer},
-  pages   = {Startseite--Endseite},
-  month   = {Monat},
-  doi     = {10.1000/xyz123}
+@book{metz2014formelsammlung,
+  author    = {Metz, Dieter and Naundorf, Uwe and Schlabbach, Jürgen},
+  label     = {MNS14},
+  title     = {Kleine Formelsammlung Elektrotechnik},
+  publisher = {Carl Hanser Verlag},
+  year      = {2014},
+  edition   = {6. Auflage},
+  address   = {München},
+  isbn      = {978-3-446-43977-1},
+  pages     = {254},
+  note      = {Enthält die wichtigsten Formeln der Elektrotechnik für Studium und Beruf. Neue Themen: Smart Grids, Netzanschluss, Spannungsqualität},
+  url       = {https://www.hanser-fachbuch.de/fachbuch/artikel/9783446439771}
 }
 
-@inproceedings{konferenzbeitrag,
-  author    = {Autor, Vorname},
-  title     = {Titel des Konferenzbeitrags},
-  booktitle = {Name der Konferenz oder des Tagungsbandes},
-  year      = {Jahr},
-  editor    = {Herausgeber, Vorname},
-  pages     = {Startseite--Endseite},
-  address   = {Ort der Konferenz},
-  publisher = {Verlag des Tagungsbandes}
+@book{redur_einmaleins,
+  author    = {{REDUR GmbH \& Co. KG}},
+  label     = {Red21},
+  title     = {Das kleine Einmaleins der Stromwandler},
+  publisher = {REDUR GmbH \& Co. KG},
+  isbn      = {978-3-00-068179-0},
+  address   = {Merzenich},
+  year      = {2021},
+  note      = {Unternehmenspublikation}
 }
 
-@incollection{kapitelinbuch,
-  author    = {Autor des Kapitels, Vorname},
-  title     = {Titel des Kapitels},
-  booktitle = {Titel des Sammelbandes},
-  publisher = {Verlag},
-  year      = {Jahr},
-  editor    = {Herausgeber des Buches, Vorname},
-  section   = {Kapitelnummer},
-  pages     = {Startseite--Endseite}
-}
-
-
-% -------------------------
-% ABSCHLUSSARBEITEN & BERICHTE
-% -------------------------
-
-@phdthesis{doktorarbeit,
-  author  = {Autor, Vorname},
-  title   = {Titel der Dissertation},
-  school  = {Universität oder Hochschule},
-  year    = {Jahr},
-  address = {Ort der Hochschule},
-  note    = {Art der Arbeit, z.B. Dissertation}
-}
-
-@mastersthesis{masterarbeit,
-  author  = {Autor, Vorname},
-  title   = {Titel der Masterarbeit},
-  school  = {Universität oder Hochschule},
-  year    = {Jahr},
-  type    = {Masterarbeit} % Oder Bachelorarbeit etc.
-}
-
-@techreport{technischerbericht,
-  author      = {Autor, Vorname},
-  title       = {Titel des Berichts},
-  institution = {Institution, die den Bericht herausgibt},
-  year        = {Jahr},
-  number      = {Berichtsnummer},
-  type        = {Art des Berichts, z.B. Forschungsbericht}
-}
-
-
-% -------------------------
-% INTERNETQUELLEN & SONSTIGES
-% -------------------------
-
-@online{webseite,
-  author  = {Autor oder Organisation},
-  title   = {Titel der Webseite oder des Online-Artikels},
-  year    = {Jahr der Veröffentlichung},
-  month   = {Monat der Veröffentlichung},
-  url     = {https://www.beispiel.de/pfad/zur/seite},
-  urldate = {JJJJ-MM-TT}, % Das Datum, an dem du die Seite besucht hast
-  note    = {Zusätzliche Anmerkungen}
-}
-
-@misc{sonstiges,
-  author = {Autor},
-  title  = {Titel},
-  year   = {Jahr},
-  note   = {Dieser Typ ist ein Auffangbecken für alles, was sonst nirgendwo reinpasst, z.B. Software-Dokumentationen, Normen oder unveröffentlichte Manuskripte.}
-}
-
-
-% -------------------------
-% SELTENERE TYPEN
-% -------------------------
-
-@manual{softwaremanual,
-  title        = {Titel des Handbuchs},
-  author       = {Autor oder Entwicklerteam},
-  organization = {Firma oder Organisation},
-  year         = {Jahr},
-  edition      = {Version oder Auflage},
-  address      = {Ort}
-}
-
-@proceedings{tagungsband,
-  title     = {Titel des Tagungsbandes},
-  year      = {Jahr},
-  editor    = {Herausgeber, Vorname},
-  publisher = {Verlag},
-  address   = {Verlagsort}
-}
-
-@unpublished{unveroeffentlicht,
-  author = {Autor, Vorname},
-  title  = {Titel des Manuskripts},
-  note   = {Wichtige Anmerkung, z.B. "Zur Veröffentlichung eingereicht" oder "Persönliche Kommunikation"},
-  year   = {Jahr},
-  month  = {Monat}
+@book{grafe_grundlagen_bd1,
+  author    = {Grafe, Hermann and Loose, Johannes and Kühn, Hellmut},
+  label     = {GLK83},
+  title     = {Grundlagen der Elektrotechnik Band 1: Gleichspannungstechnik},
+  publisher = {VEB Verlag Technik},
+  year      = {1983},
+  edition   = {10. Auflage},
+  address   = {Berlin},
+  note      = {Unveränderter Nachdruck der 10. Auflage (1978). Lehrbuch für Ingenieurschulen}
 }
