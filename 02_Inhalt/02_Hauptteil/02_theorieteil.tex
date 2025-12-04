@@ -19,7 +19,7 @@
 
 Ein induktiver Messstromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
 
-Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Der Wandler erzeugt einen sekundären Ausgangsstrom, der im Idealfall sowohl in der Amplitude proportional als auch in der Phasenlage gleich zum primären Eingangsstrom ist. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von $1\,\text{A}$ oder $5\,\text{A}$ ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
+Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von $1\,\text{A}$ oder $5\,\text{A}$ ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
 
 \subsubsection{Aufbau eines Messstromwandlers}
 \label{sec:aufbau_wandler}
@@ -34,6 +34,9 @@ Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, die 
 
 Für einfache Betriebsmessungen (z. B. Schalttafelanzeigen), bei denen eine grobe Indikation genügt, kommen Klassen mit geringeren Anforderungen (z. B. Klasse 1 oder 3) zum Einsatz. Für Verrechnungszwecke (Energiezähler) sind präzise Wandler der Klassen 0,2S oder 0,5S erforderlich.
 Neben der Messaufgabe spielt der Anlagenschutz eine zentrale Rolle. Schutzwandler (z. B. Klasse 5P oder 10P) sind so dimensioniert, dass sie auch bei hohen Überströmen im Kurzschlussfall nicht in die Sättigung gehen, um ein zuverlässiges Auslösen der Schutzgeräte zu gewährleisten.
+
+
+
 
 \subsubsection{Physikalisches Funktionsprinzip}
 \label{sec:physikalisches_prinzip}
@@ -56,9 +59,16 @@ Da der Sekundärkreis im Betrieb über eine niederohmige Bürde (Messgerät und 
 Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Windungszahlen ist. In der Realität ist jedoch ein kleiner Teil des Primärstroms notwendig, um den magnetischen Fluss im Eisenkern aufrechtzuerhalten (Magnetisierungsstrom), was zu den typischen Übersetzungs- und Winkelfehlern führt.
 
 
+\textbf{Magnetische Eigenschaften von Materialien}
+
+
 
 \subsection{Entstehung und Ausbreitung magnetischer Störfelder in Schaltanlagen}
 \label{sec:stoerfelder_schaltanlagen}
+
+Die Fremdfelder die in der Niederspannung auftreten und Messergebnisse beeinflussen können enstehen durch hohe Primärströme ab 2000 A. Dabei ist der Wandler L2 welcher in der Mitte ist von den EInflüssen am stärksten betroffen.
+
+
 
 \newpage
 \subsection{Physikalische Auswirkungen von Fremdfeldern auf den Wandlerkern}
