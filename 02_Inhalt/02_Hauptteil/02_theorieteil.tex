@@ -12,17 +12,19 @@
 \subsection{Funktionsprinzip induktiver Messstromwandler}
 \label{sec:funktionsprinzip_wandler}
 
+Ein induktiver Messstromwandler dient dazu, hohe Wechselströme aus dem Primärnetz
+in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
+Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem
+Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten
+Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von 1 A oder
+5 A ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primär-
+leiters auszusetzen.
 
 
-[Image of current transformer circuit diagram]
-
-
-Ein induktiver Messstromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
-
-Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von $1\,\text{A}$ oder $5\,\text{A}$ ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
 
 \subsubsection{Aufbau eines Messstromwandlers}
 \label{sec:aufbau_wandler}
+
 Ein Messstromwandler besteht im Wesentlichen aus einem magnetischen Kern, einer Sekundärwicklung und einem Gehäuse zur Isolierung.
 Das Gehäuse verfügt häufig über eine Fensteröffnung, durch die der Primärleiter (Schiene oder Kabel) hindurchgeführt wird; dieser bildet somit die Primärwicklung mit einer Windungszahl von $N_1 = 1$. Bei Wandlern für sehr kleine Primärströme ist die Primärwicklung oft fest im Gehäuse integriert und verfügt über separate Anschlussklemmen.
 
@@ -30,6 +32,7 @@ Der Eisenkern besteht aus einem ferromagnetischen Werkstoff mit hoher Permeabili
 
 \subsubsection{Anwendunggebiete}
 \label{sec:anwendungsgebiete}
+
 Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, die in der Norm DIN EN 61869-2 festgelegt sind \cite[S. 22; Tab. 201–203]{din_en_61869_2_2013}. Diese Klassen definieren die zulässigen Messabweichungen (Strom- und Fehlwinkel) und sind entscheidend für die Auswahl des geeigneten Wandlers.
 
 Für einfache Betriebsmessungen (z. B. Schalttafelanzeigen), bei denen eine grobe Indikation genügt, kommen Klassen mit geringeren Anforderungen (z. B. Klasse 1 oder 3) zum Einsatz. Für Verrechnungszwecke (Energiezähler) sind präzise Wandler der Klassen 0,2S oder 0,5S erforderlich.
@@ -43,7 +46,13 @@ Neben der Messaufgabe spielt der Anlagenschutz eine zentrale Rolle. Schutzwandle
 
 
 
-[Image of transformer vector diagram]
+
+Eines Messstromwandlers funktioniert nach dem Induktionsprinzip. Ein Stromdurchflossener Leiter $I_{pri}$ erzeugt ein Kreisförmiges $B$ und $H$ Feld, welches sich um den Leiter ausbreitet. Das
+
+
+\begin{align*}
+
+\end{align*}
 
 
 Physikalisch betrachtet arbeitet der Messstromwandler wie ein kurzgeschlossener Transformator. Jeder stromdurchflossene Leiter ist von einem magnetischen Feld umgeben. Nach dem Durchflutungssatz (Ampèresches Gesetz) erzeugt der Strom $I_p$ im Primärleiter eine magnetische Feldstärke $H$.
