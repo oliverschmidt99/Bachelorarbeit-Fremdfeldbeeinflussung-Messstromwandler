@@ -37,7 +37,7 @@ gantt
 
 
     %% ==============================================================================
-    %% PRÜFEN (Reviews immer 2 Tage VOR dem Meilenstein/Meeting)
+    %% PRÜFEN (Reviews immer 2 TagProgrammierunge VOR dem Meilenstein/Meeting)
     %% ==============================================================================
     section Prüfen
     %% ZK1 ist am 15.12 (Mo) -> Prüfung am Do/Fr davor
@@ -58,16 +58,16 @@ gantt
     %% ==============================================================================
     section Schreiben
     %% Phase 1: Bis zum ersten Review
-    Versuchsaufbau und Methodik         :active, write1, 2025-12-01, 8d
+    Versuchsaufbau und Methodik         :active, write1, 2025-12-16, 8d
 
     %% Phase 2: Nach ZK1 bis zum nächsten Review (Weihnachtspause beachten!)
-    Experimentelle Untersuchung         :write2, after zk1, 5d
+    Experimentelle Untersuchung         :write2, after zk2, 5d
 
     %% Phase 3: Nach ZK2 bis zum nächsten Review
     Auswertung und Diskussion           :write3, after zk2, 8d
 
     %% Phase 4: Nach ZK3 bis zum nächsten Review
-    Zusammenfassung und Ausblick        :write4, after zk3, 8d
+    Zusammenfassung und Ausblick        :write4, after zk4, 8d
 
     %% Feinschliff bis zur Abgabe
     Endkorrektur                        :write5, after zk4, 20d
@@ -77,8 +77,8 @@ gantt
     %% Messreihen & Datenerhebung
     %% ============================
     section Messen
-    Programmierung SPS                  :active, crit, prog_1, 2025-11-29, 4d
-    Durchführung der Messreihen         :active, messung_1, 2025-12-01, 12d
+    Programmierung SPS                  :done ,crit, prog_1, 2025-11-29, 4d
+    Durchführung der Messreihen         :active, messung_1, 2025-12-01, 14d
 
     %% ============================
     %% Meetings (Manuell berechnet)
@@ -105,4 +105,5 @@ Dieses Projekt, einschließlich aller Daten, Quellcodes und Dokumentationen, ist
 **Copyright © 2025 Oliver Schmidt & Rolf Janssen GmbH Elektrotechnische Werke**
 
 - Alle Rechte vorbehalten.
+- Die Inhalte sind ausschließlich zur Vorlage bei der prüfenden Hochschule bestimmt.
 - Jede Art der Vervielfältigung, Verbreitung, Veröffentlichung oder Weitergabe an Dritte ist ohne ausdrückliche schriftliche Genehmigung der Rechteinhaber streng untersagt.
