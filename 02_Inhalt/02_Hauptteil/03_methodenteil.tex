@@ -9,11 +9,78 @@
 \section{Versuchsaufbau und Methodik}
 \label{chap:methodik}
 
-\subsection{Prinzip der Vergleichsmessung}
+Für die Charakterisierung der Messstromwandler wurde ein Hochstrom-Prüfstand verwendet, der Ströme von bis zu $6000$~A erzeugen kann. Dies ermöglicht die Analyse der magnetischen Eigenschaften unter Realbedingungen. Das hierfür angewandte Prinzip der Vergleichsmessung zwischen Sekundär- und Referenzstrom wird einleitend in Abschnitt~\ref{sec:prinzip_vergleichsmessung} erläutert. Darauf aufbauend werden in Abschnitt~\ref{sec:beschreibung_hochstrom_pruefstand} der detaillierte Aufbau und die Funktionsweise des Prüfstandes beschrieben. Abschließend legt Abschnitt~\ref{sec:messtechnisches_konzept} das konkrete messtechnische Konzept sowie die Durchführung der Messungen dar.
+
+\subsection{Prüfung der Genauigkeit von Messstromwandlern}
 \label{sec:prinzip_vergleichsmessung}
+
+Für die Bestimmung der Genauigkeit eines Messstromwandlers sind gemäß der DIN EN 61869-2~\cite{din_en_61869_2_2013} für Wandler, die für Messzwecke bestimmt sind, zwei Prüfungen wesentlich: die der Übersetzungsmessabweichung $\varepsilon$ und die des Fehlwinkels $\Delta\phi$.\\
+
+Für die Messungen muss der Wandler mit seiner Nennbürde betrieben werden.
+
+\subsubsection{Fehlwinkel}
+\label{sec:fehlwinkel}
+Letzterer beschreibt die Phasenverschiebung zwischen dem primären und dem sekundären Strom über einen definierten Messbereich. Die Einhaltung der zulässigen Grenzwerte für den Fehlwinkel ist insbesondere für Schutzeinrichtungen mit Richtungsbestimmung von Bedeutung~\cite[S.~51]{din_en_61869_2_2013}. In der Tabelle~\ref{tab:fehlwinkel} sind die nach der Norm definierten Messbereiche für die Wandlerklassen von 0,1 bis 1 dargestellt.
+
+\begin{table}[H]
+    \centering
+    \caption[Grenzwerte für den Fehlwinkel]{Grenzwerte für den Fehlwinkel (gemäß DIN EN 61869-2 Tabelle 201 \cite{din_en_61869_2_2013})}
+    \label{tab:fehlwinkel}
+    \begin{tabular}{lcccccccc}
+        \toprule
+        \textbf{Genauigkeits-} & \multicolumn{8}{c}{\textbf{Fehlwinkel}}                                                                                                                                                \\
+        \textbf{klasse}        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                                                                \\
+        \cmidrule(lr){2-5} \cmidrule(lr){6-9}
+                               & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                                                        \\
+                               & \textbf{5}                                     & \textbf{20}                                    & \textbf{100} & \textbf{120} & \textbf{5} & \textbf{20} & \textbf{100} & \textbf{120} \\
+        \midrule
+        0,1                    & 15                                             & 8                                              & 5            & 5            & 0,45       & 0,24        & 0,15         & 0,15         \\
+        0,2                    & 30                                             & 15                                             & 10           & 10           & 0,90       & 0,45        & 0,30         & 0,30         \\
+        0,5                    & 90                                             & 45                                             & 30           & 30           & 2,70       & 1,35        & 0,90         & 0,90         \\
+        1                      & 180                                            & 90                                             & 60           & 60           & 5,40       & 2,70        & 1,80         & 1,80         \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\newpage
+
+\subsubsection{Übersetzungsmessabweichung}
+\label{sec:uebersetzungsmessabweichung}
+
+Die Übersetzungsmessabweichung~$\varepsilon$ beschreibt die prozentuale Differenz zwischen dem auf die Primärseite bezogenen Sekundärstrom und dem tatsächlichen Primärstrom. Gemäß Gleichung~\eqref{eq:uebersetzungsmessabweichung} berechnet sich dieser Fehler aus der Nennübersetzung $k_r$, dem Sekundärstrom $I_s$ und dem Primärstrom $I_p$:
+
+\begin{equation}
+    \varepsilon = \frac{k_r \cdot I_s - I_p}{I_p} \cdot 100\,\%
+    \label{eq:uebersetzungsmessabweichung}
+\end{equation}
+
+\begin{table}[H]
+    \centering
+    \caption[Grenzwerte für die Übersetzungsmessabweichung]{Grenzwerte für die Übersetzungsmessabweichung (gemäß DIN EN 61869-2 Tabelle 201 \cite{din_en_61869_2_2013})}
+    \label{tab:uebersetzungsmessabweichung}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Genauigkeits-} & \multicolumn{4}{c}{\textbf{Übersetzungsmessabweichung} $\pm \%$}                                             \\
+        \textbf{klasse}        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                               \\
+        \cmidrule(ll){2-5}
+                               & \textbf{5}                                                       & \textbf{20} & \textbf{100} & \textbf{120} \\
+        \midrule
+        0,1                    & 0,40                                                             & 0,20        & 0,1          & 0,1          \\
+        0,2                    & 0,75                                                             & 0,35        & 0,2          & 0,2          \\
+        0,5                    & 1,50                                                             & 0,75        & 0,5          & 0,5          \\
+        1                      & 3,00                                                             & 1,50        & 1,0          & 1,0          \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
 
 \subsection{Beschreibung des Hochstrom-Prüfstands}
 \label{sec:beschreibung_hochstrom_pruefstand}
 
 \subsection{Messtechnisches Konzept}
 \label{sec:messtechnisches_konzept}
+
+Für die praktische Durchführung der Messungen am Hochstrom-Prüfstand wurde folgendes Konzept entwickelt. Die Messpunkte orientieren sich an den Vorgaben der DIN EN 61869-2 für die Genauigkeitsprüfung.
+
