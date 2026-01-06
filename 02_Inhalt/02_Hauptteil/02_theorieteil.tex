@@ -29,15 +29,20 @@ Der Messstromwandler dient primär dazu, Ströme innerhalb des Nennstrombereichs
 
 Im Gegensatz dazu wird der Schutzstromwandler verwendet, um Schutzeinrichtungen (wie Relais) anzusteuern. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus (im Fehlerfall) proportional zum Primärstrom bleibt. Der Kern darf also nicht frühzeitig sättigen, damit die Schutzauslösung zuverlässig erfolgt~\cite[Kap.~2.2]{redur_einmaleins}. Technisch wird dies oft durch Eisenkernmaterialien mit hoher Sättigungsflussdichte oder Luftspalte im Kern realisiert.\\
 
+
+
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
 
-Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren. Dies betrifft zum einen den Fehler durch eine nicht zentrierte Lage des Primärleiters (Lagefehler) und zum anderen die Einwirkung von externen Fremdfeldern, deren physikalische Hintergründe in Kapitel~\ref{sec:auswirkung_fremdfelder} erläutert werden.
+Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren: den Lagefehler durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) und die Einwirkung von externen Fremdfeldern. Die physikalischen Hintergründe zu letzteren werden in Kapitel~\ref{sec:auswirkung_fremdfelder} erläutert.
+
+Eine exzentrische Anordnung der Stromschiene tritt in der Praxis häufig auf, wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Kupferschiene. Durch diesen geometrischen Spielraum ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler_kompensiert.drawio.pdf}{Schematischer Aufbau eines Wandlers mit zusätzlichen Kompensationswicklungen}{pic:aufbau_wandler_kompensationswicklungen}
 
-Die Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} zeigt schematisch, wie diese Wicklungen ($W_1$ bis $W_4$) symmetrisch um den Eisenkern verteilt sind. Technisch ist zu beachten, dass diese Wicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Durch diese Anordnung können sich Ausgleichsströme bilden, die lokale Sättigungserscheinungen oder Asymmetrien im Magnetfluss kompensieren.
+Die Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} zeigt schematisch, wie diese Wicklungen ($W_1$ bis $W_4$) symmetrisch auf dem Umfang des Eisenkerns verteilt sind. Technisch ist diese Anordnung so realisiert, dass die Teilwicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Durch diese Parallelschaltung können sich Ausgleichsströme zwischen den Wicklungssegmenten ausbilden, welche lokale Sättigungserscheinungen oder Asymmetrien im Magnetfluss kompensieren.
 
+\einfuegenBildGross{03_Ressourcen/zeichnungen/kupferschiene_positionierung_vergleich.drawio.pdf}{Schematische Darstellung der zentrischen und exzentrischen Positionierung der Kupferschiene}{pic:schema_kupferschiene_pos}
 
 \subsubsection{Normative Anforderungen und Genauigkeitsklassen}
 \label{sec:normen_klassen}
@@ -62,9 +67,10 @@ Ein Messstromwandler entspricht physikalisch einem Transformator, weshalb sich s
 
 Bei einem Aufsteckstromwandler bildet der durch die Fensteröffnung geführte Leiter die Primärwicklung. Da dieser Leiteranteil sehr kurz ist und keine Wicklung im herkömmlichen Sinne darstellt, können der ohmsche Widerstand $R'_p$ und die Streuinduktivität $L'_p$ in der Regel vernachlässigt werden. Das daraus resultierende vereinfachte Ersatzschaltbild ist in Abbildung~\ref{esb:wandler_vereinfacht} dargestellt.
 
+\einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vollständiges Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
+
 Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ vernachlässigen, vorausgesetzt, der Primärleiter befindet sich zentriert im Eisenkern und die Sekundärwicklung ist gleichmäßig über den Umfang verteilt~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis jedoch weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der hier vorliegenden Betrachtung – wie im vereinfachten Schaltbild ersichtlich – nicht vernachlässigt.
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vereinfachtes Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
 
 \subsection{Physikalisches Wirkprinzip}
 \label{sec:physikalisches_prinzip}
@@ -81,7 +87,7 @@ Da der Sekundärkreis im Betrieb über eine niederohmige Bürde (Messgerät und 
 
 Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Windungszahlen ist. In der Realität ist jedoch ein kleiner Teil des Primärstroms notwendig, um den magnetischen Fluss im Eisenkern aufrechtzuerhalten (Magnetisierungsstrom), was zu den typischen Übersetzungs- und Winkelfehlern führt.
 
-
+\einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Vergleich der Simulationsergebnisse bei zentrischer und exzentrischer Leiteranordnung im Wandler}{pic:sim_wandler_vergleich}
 
 \subsection{Entstehung und Ausbreitung magnetischer Störfelder}
 \label{sec:stoerfelder_schaltanlagen}
