@@ -20,6 +20,34 @@ Das zentrale Element der Übertragung bildet der Magnetkern. Er hat die Aufgabe,
 
 Direkt auf diesen Kern ist die Sekundärwicklung aufgebracht. Sie transformiert den magnetischen Fluss zurück in einen elektrischen Strom und ist mit den externen Anschlussklemmen verbunden. Das Gehäuse umschließt schließlich den gesamten Eisenkern samt Sekundärwicklung und gewährleistet die notwendige elektrische Isolation sowie den mechanischen Schutz.
 
+\subsubsection{Unterscheidung zwischen Mess- und Schutzstromwandlern}
+\label{sec:unterschiede_mess_schutzwandler}
+
+Stromwandler lassen sich je nach Anwendungszweck in zwei Hauptkategorien unterteilen: Messstromwandler und Schutzstromwandler. Zwar basieren beide auf dem gleichen physikalischen Prinzip, sie unterscheiden sich jedoch maßgeblich durch ihr Sättigungsverhalten.\\
+
+Der Messstromwandler dient primär dazu, Ströme innerhalb des Nennstrombereichs zu erfassen, um beispielsweise Energiezähler zu speisen. Ein entscheidendes Kriterium ist hierbei, dass der Kern bei hohen Überströmen (z.\,B. im Kurzschlussfall) schnell in die Sättigung geht. Dies begrenzt den Sekundärstrom und schützt so die angeschlossene empfindliche Messtechnik vor Zerstörung~\cite[Kap.~2.2]{redur_einmaleins}.\\
+
+Im Gegensatz dazu wird der Schutzstromwandler verwendet, um Schutzeinrichtungen (wie Relais) anzusteuern. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus (im Fehlerfall) proportional zum Primärstrom bleibt. Der Kern darf also nicht frühzeitig sättigen, damit die Schutzauslösung zuverlässig erfolgt~\cite[Kap.~2.2]{redur_einmaleins}. Technisch wird dies oft durch Eisenkernmaterialien mit hoher Sättigungsflussdichte oder Luftspalte im Kern realisiert.\\
+
+\subsubsection{Kompensationswicklungen}
+\label{sec:kompensationswicklungen}
+
+Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren. Dies betrifft zum einen den Fehler durch eine nicht zentrierte Lage des Primärleiters (Lagefehler) und zum anderen die Einwirkung von externen Fremdfeldern, deren physikalische Hintergründe in Kapitel~\ref{sec:auswirkung_fremdfelder} erläutert werden.
+
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler_kompensiert.drawio.pdf}{Schematischer Aufbau eines Wandlers mit zusätzlichen Kompensationswicklungen}{pic:aufbau_wandler_kompensationswicklungen}
+
+Die Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} zeigt schematisch, wie diese Wicklungen ($W_1$ bis $W_4$) symmetrisch um den Eisenkern verteilt sind. Technisch ist zu beachten, dass diese Wicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Durch diese Anordnung können sich Ausgleichsströme bilden, die lokale Sättigungserscheinungen oder Asymmetrien im Magnetfluss kompensieren.
+
+
+\subsubsection{Normative Anforderungen und Genauigkeitsklassen}
+\label{sec:normen_klassen}
+
+Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, die in der Norm DIN EN 61869-2 festgelegt sind \cite[S. 22; Tab. 201–203]{din_en_61869_2_2013}. Diese Klassen definieren die zulässigen Messabweichungen (Strom- und Fehlwinkel) und sind entscheidend für die Auswahl des geeigneten Wandlers für die jeweilige Anwendung:
+
+
+
+
+
 %\paragraph{Konstruktive Anpassung an Anlagenanforderungen}
 %Die fortschreitende Miniaturisierung von Niederspannungsschaltanlagen führt zu einem Zielkonflikt bei der Auslegung von Messstromwandlern: Während der verfügbare Bauraum stetig abnimmt, bleiben die physikalischen Anforderungen an die \textit{Genauigkeitsklasse} und die treibbare \textit{Bürde} bestehen. Da die Leistungsfähigkeit eines Wandlers direkt mit dem Eisenquerschnitt korreliert, muss das aktive Kernmaterial (Eisen) möglichst effizient im begrenzten Gehäusevolumen untergebracht werden.
 
@@ -53,16 +81,7 @@ Da der Sekundärkreis im Betrieb über eine niederohmige Bürde (Messgerät und 
 
 Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Windungszahlen ist. In der Realität ist jedoch ein kleiner Teil des Primärstroms notwendig, um den magnetischen Fluss im Eisenkern aufrechtzuerhalten (Magnetisierungsstrom), was zu den typischen Übersetzungs- und Winkelfehlern führt.
 
-\subsection{Normative Anforderungen und Genauigkeitsklassen}
-\label{sec:normen_klassen}
 
-Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, die in der Norm DIN EN 61869-2 festgelegt sind \cite[S. 22; Tab. 201–203]{din_en_61869_2_2013}. Diese Klassen definieren die zulässigen Messabweichungen (Strom- und Fehlwinkel) und sind entscheidend für die Auswahl des geeigneten Wandlers für die jeweilige Anwendung:
-
-\begin{itemize}
-    \item \textbf{Betriebsmessungen:} Für einfache Anzeigen (z. B. Schalttafelanzeigen), bei denen eine grobe Indikation genügt, kommen Klassen mit geringeren Anforderungen (z. B. Klasse 1 oder 3) zum Einsatz.
-    \item \textbf{Verrechnungszwecke:} Für Energiezähler sind präzise Wandler der Klassen 0,2S oder 0,5S erforderlich, die auch bei kleinen Teillasten hohe Genauigkeiten aufweisen.
-    \item \textbf{Anlagenschutz:} Schutzwandler (z. B. Klasse 5P oder 10P) sind so dimensioniert, dass sie auch bei hohen Überströmen im Kurzschlussfall nicht in die Sättigung gehen, um ein zuverlässiges Auslösen der Schutzgeräte zu gewährleisten.
-\end{itemize}
 
 \subsection{Entstehung und Ausbreitung magnetischer Störfelder}
 \label{sec:stoerfelder_schaltanlagen}
