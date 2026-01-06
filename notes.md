@@ -3,3 +3,7 @@
 3.1.2 Übersetzungsmessabweichung
 
 - k_r, I_s, I_p
+
+# Glossar
+
+- Fensteröffnung von einem Messstromwandler

@@ -77,6 +77,50 @@
 \newcommand{\bildMittel}{width=0.6\textwidth}   % Mittleres Bild, ca. 2/3 der Textbreite
 \newcommand{\bildGross}{width=0.9\textwidth}    % Großes Bild, fast die gesamte Textbreite
 
+
+
+% =============================================================================
+% ### BEFEHLE FÜR AUTOMATISIERTE UMGEBUNGEN ###
+% =============================================================================
+
+% Befehl für eine kleine Abbildung (ca. 1/3 der Seitenbreite)
+% #1 = Dateipfad
+% #2 = Caption (Unterschrift)
+% #3 = Label zur Referenzierung
+\newcommand{\einfuegenBildKlein}[3]{%
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\textwidth]{#1}
+        \caption{#2}
+        \label{#3}
+    \end{figure}%
+}
+
+% Befehl für eine mittlere Abbildung (ca. 2/3 der Seitenbreite)
+% #1 = Dateipfad
+% #2 = Caption (Unterschrift)
+% #3 = Label zur Referenzierung
+\newcommand{\einfuegenBildMittel}[3]{%
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\textwidth]{#1}
+        \caption{#2}
+        \label{#3}
+    \end{figure}%
+}
+
+% Befehl für eine große Abbildung (fast die ganze Seitenbreite)
+% #1 = Dateipfad
+% #2 = Caption (Unterschrift)
+% #3 = Label zur Referenzierung
+\newcommand{\einfuegenBildGross}[3]{%
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{#1}
+        \caption{#2}
+        \label{#3}
+    \end{figure}%
+}
 % #############################################################################
 % ### ENDE: GLOBALE LAYOUT- UND SCHRIFTART-EINSTELLUNGEN                    ###
 % #############################################################################
