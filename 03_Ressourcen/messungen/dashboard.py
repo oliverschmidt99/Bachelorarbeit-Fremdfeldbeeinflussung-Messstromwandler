@@ -7,8 +7,6 @@ import os
 # --- KONFIGURATION ---
 DATA_FILE = "messdaten_db.parquet"
 
-# Benutzerdefiniertes Farbschema (Kräftige Farben für Unterscheidbarkeit)
-# Blau, Orange, Grün, Rot, Lila, Braun, Pink, Grau, Gelb, Türkis
 COLOR_PALETTE = [
     "#1f77b4",
     "#ff7f0e",
@@ -23,21 +21,17 @@ COLOR_PALETTE = [
 ]
 PHASES = ["L1", "L2", "L3"]
 
-st.set_page_config(
-    page_title="Wandler Vergleich (Statisch)", layout="wide", page_icon="🖨️"
-)
+st.set_page_config(page_title="Wandler Dashboard", layout="wide", page_icon="📈")
 
-# --- CSS FÜR PDF DRUCK ---
-# Versteckt Streamlit-Elemente beim Drucken (STRG+P) und macht den Hintergrund weiß
+# --- CSS ---
 st.markdown(
     """
 <style>
     @media print {
         .stSidebar, header, footer, .stButton { display: none !important; }
         .block-container { padding: 0 !important; }
-        div[data-testid="stVerticalBlock"] { gap: 0 !important; }
     }
-    .block-container { padding-top: 1rem; padding-bottom: 2rem; }
+    .block-container { padding-top: 1rem; }
 </style>
 """,
     unsafe_allow_html=True,
@@ -49,7 +43,15 @@ st.markdown(
 def load_data():
     if not os.path.exists(DATA_FILE):
         return None
-    return pd.read_parquet(DATA_FILE)
+    df = pd.read_parquet(DATA_FILE)
+
+    # Trace ID erstellen
+    if "dut_name" in df.columns:
+        df["trace_id"] = df["folder"] + " | " + df["dut_name"].astype(str)
+    else:
+        df["trace_id"] = df["folder"]
+
+    return df
 
 
 def get_trumpet_limits(class_val):
@@ -68,231 +70,179 @@ def get_trumpet_limits(class_val):
     return x, y, y_neg
 
 
-# --- APP START ---
+# --- APP ---
 df = load_data()
 if df is None:
-    st.error("⚠️ Datei 'messdaten_db.parquet' fehlt. Bitte erst `precalc.py` ausführen.")
+    st.error(f"⚠️ Datei '{DATA_FILE}' fehlt. Bitte erst `precalc.py` ausführen.")
     st.stop()
 
-# --- SIDEBAR EINSTELLUNGEN ---
-st.sidebar.header("🎛️ Einstellungen")
+# --- SIDEBAR ---
+st.sidebar.header("🎛️ Filter & Settings")
 
-# 1. Y-Achsen Limit (Statisch)
-y_limit = st.sidebar.slider("Y-Achse Skalierung (+/- %)", 0.5, 5.0, 2.0, 0.1)
+# Settings
+y_limit = st.sidebar.slider("Y-Achse Zoom (+/- %)", 0.2, 5.0, 1.5, 0.1)
+acc_class = st.sidebar.selectbox("Norm-Klasse", [0.2, 0.5, 1.0, 3.0], index=1)
+show_err_bars = st.sidebar.checkbox("Fehlerbalken (StdAbw)", value=True)
 
-# 2. Genauigkeitsklasse
-acc_class = st.sidebar.selectbox("Norm-Grenzen (Klasse)", [0.2, 0.5, 1.0, 3.0], index=1)
+st.sidebar.markdown("---")
 
-# 3. Wandler Auswahl (Multi-Select!)
-st.sidebar.subheader("Vergleichsobjekte")
-all_wandlers = sorted(df["wandler_key"].unique())
-# Standardmäßig den ersten auswählen
-sel_wandlers = st.sidebar.multiselect(
-    "Wandler auswählen:", all_wandlers, default=all_wandlers[:1]
+# --- NEU: VERGLEICHSMODUS ---
+# Wir prüfen, ob die Spalte existiert (Kompatibilität mit alten DBs)
+if "comparison_mode" in df.columns:
+    comp_mode_disp = st.sidebar.radio(
+        "Vergleichsgrundlage:", ["Messgerät (z.B. PAC1)", "Nennwert (Ideal)"]
+    )
+    # Mapping auf Datenbank-Werte
+    comp_mode_val = "device_ref" if "Messgerät" in comp_mode_disp else "nominal_ref"
+else:
+    st.sidebar.warning("Datenbank veraltet. Bitte `precalc.py` neu ausführen.")
+    comp_mode_val = None
+
+st.sidebar.markdown("---")
+
+# 1. Nennstrom
+available_currents = sorted(df["nennstrom"].unique())
+sel_current = st.sidebar.selectbox(
+    "1. Nennstrom:", available_currents, format_func=lambda x: f"{int(x)} A"
 )
 
-# 4. Positionen (Filtert basierend auf Wandler-Auswahl)
-if sel_wandlers:
-    relevant_pos = sorted(df[df["wandler_key"].isin(sel_wandlers)]["folder"].unique())
-    sel_pos = st.sidebar.multiselect(
-        "Positionen filtern:", relevant_pos, default=relevant_pos
-    )
-else:
-    sel_pos = []
+# 2. Wandler
+df_curr = df[df["nennstrom"] == sel_current]
+available_wandlers = sorted(df_curr["wandler_key"].unique())
+sel_wandlers = st.sidebar.multiselect(
+    "2. Wandler / Messung:", available_wandlers, default=available_wandlers
+)
 
-if not sel_wandlers or not sel_pos:
-    st.info("Bitte wähle mindestens einen Wandler und eine Position.")
+if not sel_wandlers:
+    st.info("Bitte mindestens einen Wandler auswählen.")
     st.stop()
 
-# --- DATEN FILTERN & AUFBEREITEN ---
-mask = (df["wandler_key"].isin(sel_wandlers)) & (df["folder"].isin(sel_pos))
+# --- DATEN FILTERN ---
+mask = (df["nennstrom"] == sel_current) & (df["wandler_key"].isin(sel_wandlers))
+
+# Filter nach Modus (falls vorhanden)
+if comp_mode_val:
+    mask = mask & (df["comparison_mode"] == comp_mode_val)
+
 df_sub = df[mask].copy()
 
 if df_sub.empty:
-    st.warning("Keine Daten für diese Kombination.")
+    st.warning("Keine Daten für diese Auswahl (evtl. `precalc.py` neu starten?).")
     st.stop()
 
-# Berechnungen (Absolut -> Prozent)
-i_ideal = (df_sub["target_load"] / 100.0) * df_sub["nennstrom"]
-
-# 1. DUT vs REF
-df_sub["err_1"] = (
+# Berechnungen
+df_sub["err_ratio"] = (
     (df_sub["val_dut_mean"] - df_sub["val_ref_mean"]) / df_sub["val_ref_mean"]
 ) * 100
-df_sub["std_1"] = (df_sub["val_dut_std"] / df_sub["val_ref_mean"]) * 100
+df_sub["err_std"] = (df_sub["val_dut_std"] / df_sub["val_ref_mean"]) * 100
 
-# 2. DUT vs SOLL
-df_sub["err_2"] = ((df_sub["val_dut_mean"] - i_ideal) / i_ideal) * 100
-df_sub["std_2"] = (df_sub["val_dut_std"] / i_ideal) * 100
+# Farben zuweisen
+unique_keys = df_sub[["wandler_key", "trace_id"]].drop_duplicates()
+color_map = {}
+for idx, row in unique_keys.iterrows():
+    name = f"{row['wandler_key']} - {row['trace_id']}"
+    color_map[name] = COLOR_PALETTE[idx % len(COLOR_PALETTE)]
 
-# 3. REF vs SOLL
-df_sub["err_3"] = ((df_sub["val_ref_mean"] - i_ideal) / i_ideal) * 100
-df_sub["std_3"] = (df_sub["val_ref_std"] / i_ideal) * 100
-
-# --- FARBEN ZUWEISEN ---
-# Wir weisen jeder Kombination aus (Wandler + Position) eine feste Farbe zu
-unique_traces = df_sub[["wandler_key", "folder"]].drop_duplicates()
-trace_colors = {}
-for idx, row in unique_traces.iterrows():
-    key = f"{row['wandler_key']} | {row['folder']}"
-    # Farbe aus Palette wählen (Modulo falls mehr Traces als Farben)
-    trace_colors[key] = COLOR_PALETTE[len(trace_colors) % len(COLOR_PALETTE)]
-
-# --- PLOTLY FIGUR ERSTELLEN ---
+# --- PLOT ---
 fig = make_subplots(
-    rows=3,
+    rows=2,
     cols=3,
     shared_xaxes=True,
-    shared_yaxes=True,
     vertical_spacing=0.08,
-    horizontal_spacing=0.03,
-    subplot_titles=(
-        "<b>L1</b>: Prüfling vs. Quelle",
-        "<b>L2</b>: Prüfling vs. Quelle",
-        "<b>L3</b>: Prüfling vs. Quelle",
-        "<b>L1</b>: Prüfling vs. Soll",
-        "<b>L2</b>: Prüfling vs. Soll",
-        "<b>L3</b>: Prüfling vs. Soll",
-        "<b>L1</b>: Quelle vs. Soll",
-        "<b>L2</b>: Quelle vs. Soll",
-        "<b>L3</b>: Quelle vs. Soll",
-    ),
+    row_heights=[0.7, 0.3],
+    subplot_titles=("Phase L1", "Phase L2", "Phase L3"),
 )
 
 lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
-row_map = {1: ("err_1", "std_1"), 2: ("err_2", "std_2"), 3: ("err_3", "std_3")}
 
-for row in [1, 2, 3]:
-    err_col, std_col = row_map[row]
+for col_idx, phase in enumerate(PHASES, start=1):
+    # 1. Trompete (Norm)
+    fig.add_trace(
+        go.Scatter(
+            x=lim_x,
+            y=lim_y_p,
+            mode="lines",
+            line=dict(color="black", width=1, dash="dash"),
+            hoverinfo="skip",
+        ),
+        row=1,
+        col=col_idx,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=lim_x,
+            y=lim_y_n,
+            mode="lines",
+            line=dict(color="black", width=1, dash="dash"),
+            hoverinfo="skip",
+        ),
+        row=1,
+        col=col_idx,
+    )
 
-    for col, phase in enumerate(PHASES, start=1):
-        # 1. DIN Grenzen (Hintergrund)
+    # 2. Daten
+    phase_data = df_sub[df_sub["phase"] == phase]
+
+    # Gruppieren pro Trace
+    for name, group in phase_data.groupby(["wandler_key", "trace_id"]):
+        full_name = f"{name[0]} - {name[1]}"
+        group = group.sort_values("target_load")
+
+        color = color_map.get(full_name, "black")
+
+        # Nur beim mittleren Plot die Legende anzeigen (Cleaner)
+        show_leg = col_idx == 1
+
+        # Linie Oben (Fehler)
         fig.add_trace(
             go.Scatter(
-                x=lim_x,
-                y=lim_y_p,
-                mode="lines",
-                line=dict(color="black", width=1, dash="dash"),
-                showlegend=False,
-                hoverinfo="skip",
+                x=group["target_load"],
+                y=group["err_ratio"],
+                mode="lines+markers",
+                name=full_name,
+                line=dict(color=color, width=2),
+                marker=dict(size=6),
+                legendgroup=full_name,
+                showlegend=show_leg,
+                hovertemplate="<b>%{text}</b><br>Last: %{x}%<br>Fehler: %{y:.3f}%<extra></extra>",
+                text=[full_name] * len(group),
             ),
-            row=row,
-            col=col,
-        )
-        fig.add_trace(
-            go.Scatter(
-                x=lim_x,
-                y=lim_y_n,
-                mode="lines",
-                line=dict(color="black", width=1, dash="dash"),
-                showlegend=False,
-                hoverinfo="skip",
-            ),
-            row=row,
-            col=col,
+            row=1,
+            col=col_idx,
         )
 
-        # 2. Datenlinien zeichnen
-        # Wir iterieren über die vorab definierten Traces, damit die Farben konsistent bleiben
-        for trace_name, color in trace_colors.items():
-            # Trace Name splitten um zu filtern
-            w_key, fold = trace_name.split(" | ")
-
-            # Daten für diesen speziellen Plot (Wandler + Position + Phase)
-            mask = (
-                (df_sub["wandler_key"] == w_key)
-                & (df_sub["folder"] == fold)
-                & (df_sub["phase"] == phase)
-            )
-            data = df_sub[mask].sort_values("target_load")
-
-            if data.empty:
-                continue
-
-            # Legende nur im ersten Subplot anzeigen (oben links)
-            show_leg = row == 1 and col == 1
-
-            # Name für die Legende (kürzen wenn möglich)
-            legend_name = trace_name
-
+        # Balken Unten (StdAbw)
+        if show_err_bars:
             fig.add_trace(
-                go.Scatter(
-                    x=data["target_load"],
-                    y=data[err_col],
-                    error_y=dict(
-                        type="data",
-                        array=data[std_col],
-                        visible=True,
-                        thickness=1.5,
-                        width=4,
-                    ),
-                    mode="lines+markers",
-                    line=dict(color=color, width=2),
-                    marker=dict(size=6, symbol="circle"),
-                    name=legend_name,
-                    legendgroup=trace_name,  # Verbindet alle Linien dieses Wandlers über alle Plots
-                    showlegend=show_leg,
-                    hovertemplate=f"<b>{legend_name}</b><br>Last: %{{x}}%<br>Fehler: %{{y:.3f}}%<br>Std: %{{error_y.array:.3f}}%<extra></extra>",
+                go.Bar(
+                    x=group["target_load"],
+                    y=group["err_std"],
+                    marker_color=color,
+                    legendgroup=full_name,
+                    showlegend=False,
+                    hovertemplate="Std: %{y:.4f}%<extra></extra>",
                 ),
-                row=row,
-                col=col,
+                row=2,
+                col=col_idx,
             )
 
-# --- LAYOUT FINESSE (Statisch & Sauber) ---
+# Info für Titel
+ref_info = (
+    "Referenz: Einspeisung"
+    if comp_mode_val == "device_ref"
+    else "Referenz: Nennwert (Ideal)"
+)
+
 fig.update_layout(
-    title_text="Vergleichsanalyse der Messgenauigkeit",
+    title=f"Genauigkeitsanalyse {int(sel_current)} A (Klasse {acc_class}) | {ref_info}",
     template="plotly_white",
-    height=1000,  # Groß genug für A4
-    margin=dict(l=50, r=50, t=100, b=50),
-    legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=1.02,
-        xanchor="left",
-        x=0,
-        bgcolor="rgba(255,255,255,0.9)",
-        bordercolor="Black",
-        borderwidth=1,
-    ),
+    height=800,
+    margin=dict(t=80, b=100),
+    legend=dict(orientation="h", yanchor="top", y=-0.15, xanchor="center", x=0.5),
 )
 
-# Achsen fixieren (KEIN SCROLLEN)
-fig.update_xaxes(
-    range=[0, 125], fixedrange=True, showgrid=True, gridwidth=1, gridcolor="lightgrey"
-)
-fig.update_yaxes(
-    range=[-y_limit, y_limit],
-    fixedrange=True,
-    showgrid=True,
-    gridwidth=1,
-    gridcolor="lightgrey",
-)
+fig.update_yaxes(range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1)
+fig.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
+fig.update_xaxes(title_text="Last [% I_Nenn]", row=2, col=2)
 
-# Achsenbeschriftungen
-fig.update_yaxes(title_text="Fehler [%]", row=2, col=1)
-fig.update_xaxes(title_text="Last [% I_nenn]", row=3, col=2)
-
-# PDF Download Button Config
-config = {
-    "toImageButtonOptions": {
-        "format": "pdf",  # PDF Export
-        "filename": "Wandler_Vergleich",
-        "height": 1123,  # A4 Höhe (px bei 96dpi ca, hier hochskaliert für Qualität)
-        "width": 1587,  # A4 Breite
-        "scale": 2,  # Hohe Qualität
-    },
-    "displayModeBar": True,
-    "scrollZoom": False,  # Mausrad deaktivieren
-    "displaylogo": False,
-}
-
-st.plotly_chart(fig, use_container_width=True, config=config)
-
-st.markdown(
-    """
----
-**Anleitung zum Drucken:**
-1. Klicke auf das **Kamera-Symbol** oben rechts im Diagramm, um genau diese Ansicht als **PDF** herunterzuladen.
-2. Wähle links verschiedene Wandler aus, um sie direkt zu vergleichen (unterschiedliche Farben).
-"""
-)
+st.plotly_chart(fig, use_container_width=True)

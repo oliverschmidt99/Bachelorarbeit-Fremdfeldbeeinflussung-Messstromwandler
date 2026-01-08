@@ -6,45 +6,50 @@ import glob
 
 # --- KONFIGURATION ---
 OUTPUT_FILE = "messdaten_db.parquet"
+SEARCH_DIR = "messungen_sortiert"
 TARGET_LEVELS = [5, 20, 50, 80, 90, 100, 120]
-LEVEL_TOLERANCE_PCT = 3.0
-MIN_PLATEAU_DURATION_SEC = 10
-ASSUMED_SAMPLING_RATE_SEC = 1.0
+PHASES = ["L1", "L2", "L3"]
+
+# Keywords für Referenz-Erkennung
+REF_KEYWORDS = ["einspeisung", "ref", "source", "pac1", "norm"]
 
 
 def extract_metadata(filepath):
     filename = os.path.basename(filepath)
-    dirname = os.path.dirname(filepath)
-    folder_name = os.path.basename(dirname).replace("_", " ")
+    original_name = filename.replace("_sortiert.csv", "")
+    folder_name = os.path.basename(os.path.dirname(filepath))
 
-    match_amp = re.search(r"[-_](\d+)A[-_]", filename)
+    match_amp = re.search(r"[-_](\d+)A[-_]", original_name)
     nennstrom = float(match_amp.group(1)) if match_amp else 0.0
 
-    lower_name = filename.lower()
-    if "mbs" in lower_name:
+    lower_name = original_name.lower()
+
+    if "messstrecke" in lower_name:
+        manufacturer = "Messstrecke"
+    elif "mbs" in lower_name:
         manufacturer = "MBS"
     elif "celsa" in lower_name:
         manufacturer = "Celsa"
     elif "redur" in lower_name:
         manufacturer = "Redur"
     else:
-        manufacturer = "Unbekannt"
+        manufacturer = "Andere"
 
+    # Modellnamen raten
     try:
-        parts = filename.split("-")
+        parts = original_name.split("-")
         candidates = [
             p
             for p in parts
             if not re.match(r"^\d{4}", p)
-            and p.lower() != manufacturer.lower()
+            and manufacturer.lower() not in p.lower()
             and str(int(nennstrom)) not in p
-            and ".csv" not in p
         ]
-        model_str = "_".join(candidates) if candidates else "Standard"
+        model_str = "_".join(candidates) if candidates else original_name
     except:
-        model_str = "Unknown"
+        model_str = original_name
 
-    wandler_key = f"{manufacturer} {model_str} ({int(nennstrom)}A)"
+    wandler_key = f"{manufacturer} {model_str}"
 
     return {
         "filepath": filepath,
@@ -56,127 +61,164 @@ def extract_metadata(filepath):
     }
 
 
-def analyze_file(filepath, meta):
-    if meta["nennstrom"] == 0:
-        return [], "Kein Nennstrom"
-
-    df = None
-    encodings = ["utf-16", "utf-8", "cp1252", "latin1"]
-    for enc in encodings:
-        try:
-            temp = pd.read_csv(
-                filepath, sep=";", decimal=",", encoding=enc, engine="python"
-            )
-            if len(temp.columns) < 2:
-                temp = pd.read_csv(
-                    filepath, sep=",", decimal=".", encoding=enc, engine="python"
-                )
-            if len(temp.columns) > 1:
-                df = temp
-                break
-        except:
-            continue
-
-    if df is None:
+def analyze_sorted_file(filepath, meta):
+    try:
+        df = pd.read_csv(filepath, sep=";")
+    except:
         return [], "Lesefehler"
 
-    try:
-        df.columns = [c.strip().strip('"').strip("'") for c in df.columns]
-        val_cols = [c for c in df.columns if "ValueY" in c]
-        if len(val_cols) < 2:
-            return [], "Keine Messdaten"
+    df.columns = [c.strip() for c in df.columns]
 
-        prefixes = sorted(list(set([c.split("_")[0] for c in val_cols])))
-        if len(prefixes) < 2:
-            return [], "Geräte nicht erkannt"
+    # Suche nach Spalten mit Stromwerten (_I)
+    value_cols = [c for c in df.columns if "_I" in c]
 
-        dev_ref, dev_dut = prefixes[0], prefixes[1]
-        results = []
+    if not value_cols:
+        return [], "Keine Strom-Daten gefunden"
 
-        for phase in ["L1", "L2", "L3"]:
-            col_ref = next((c for c in val_cols if dev_ref in c and phase in c), None)
-            col_dut = next((c for c in val_cols if dev_dut in c and phase in c), None)
-            if not col_ref or not col_dut:
+    results = []
+
+    for level in TARGET_LEVELS:
+        lvl_str = f"{level:02d}"
+        nominal_amp = meta["nennstrom"] * (level / 100.0)
+
+        for phase in PHASES:
+            # Relevante Spalten filtern
+            relevant_cols = [
+                c for c in value_cols if c.startswith(f"{lvl_str}_{phase}")
+            ]
+            if not relevant_cols:
                 continue
 
-            vals_ref = pd.to_numeric(df[col_ref], errors="coerce").fillna(0)
-            vals_dut = pd.to_numeric(df[col_dut], errors="coerce").fillna(0)
+            # --- HEADER ERKENNUNG (Alt vs. Neu) ---
+            devices_map = {}
+            for col in relevant_cols:
+                # 1. Neues Format: 05_L1_PAC1_I
+                match_new = re.search(rf"{lvl_str}_{phase}_(.+)_I$", col)
+                # 2. Altes Format: 05_L1_I_Einspeisung
+                match_old = re.search(rf"{lvl_str}_{phase}_I_(.+)$", col)
 
-            pct_ref = (vals_ref / meta["nennstrom"]) * 100
+                if match_new:
+                    dev_name = match_new.group(1)
+                    devices_map[dev_name] = col
+                elif match_old:
+                    dev_name = match_old.group(1)
+                    devices_map[dev_name] = col
 
-            for target in TARGET_LEVELS:
-                mask = (pct_ref >= target - LEVEL_TOLERANCE_PCT) & (
-                    pct_ref <= target + LEVEL_TOLERANCE_PCT
-                )
-                if not mask.any():
+            if not devices_map:
+                continue
+
+            # --- REFERENZ FINDEN ---
+            phys_ref_device = None
+            for kw in REF_KEYWORDS:
+                for dev in devices_map.keys():
+                    if kw in dev.lower():
+                        phys_ref_device = dev
+                        break
+                if phys_ref_device:
+                    break
+
+            # Fallback: Wenn nur eine da ist oder keine Matches -> Erste nehmen
+            if not phys_ref_device:
+                phys_ref_device = sorted(list(devices_map.keys()))[0]
+
+            # Referenz-Werte laden
+            col_phys_ref = devices_map[phys_ref_device]
+            vals_phys_ref = pd.to_numeric(df[col_phys_ref], errors="coerce").dropna()
+
+            phys_ref_mean = vals_phys_ref.mean() if not vals_phys_ref.empty else 0
+            phys_ref_std = vals_phys_ref.std() if not vals_phys_ref.empty else 0
+
+            # --- ALLE GERÄTE DURCHGEHEN ---
+            for dev, col_dut in devices_map.items():
+                vals_dut = pd.to_numeric(df[col_dut], errors="coerce").dropna()
+                if vals_dut.empty:
                     continue
 
-                valid_idx = np.where(mask)[0]
-                if len(valid_idx) < (
-                    MIN_PLATEAU_DURATION_SEC / ASSUMED_SAMPLING_RATE_SEC
-                ):
-                    continue
+                dut_mean = vals_dut.mean()
+                dut_std = vals_dut.std()
 
-                ref_plateau = vals_ref.iloc[valid_idx]
-                dut_plateau = vals_dut.iloc[valid_idx]
+                # 1. Modus: Gerät vs. Messgerät (Relativ)
+                # Nur wenn es nicht die Referenz selbst ist
+                if dev != phys_ref_device and phys_ref_mean > 0:
+                    results.append(
+                        {
+                            "wandler_key": meta["wandler_key"],
+                            "folder": meta["folder"],
+                            "phase": phase,
+                            "target_load": level,
+                            "nennstrom": meta["nennstrom"],
+                            "val_ref_mean": phys_ref_mean,
+                            "val_ref_std": phys_ref_std,
+                            "val_dut_mean": dut_mean,
+                            "val_dut_std": dut_std,
+                            "dut_name": dev,
+                            "ref_name": phys_ref_device,
+                            "comparison_mode": "device_ref",
+                            "raw_file": meta["dateiname"],
+                        }
+                    )
 
-                # Filter Nullen
-                valid_m = ref_plateau != 0
-                ref_plateau = ref_plateau[valid_m]
-                dut_plateau = dut_plateau[valid_m]
+                # 2. Modus: Gerät vs. Nennwert (Absolut)
+                # Das machen wir auch für die Referenz (PAC1), damit man sieht wie genau die ist
+                if nominal_amp > 0:
+                    results.append(
+                        {
+                            "wandler_key": meta["wandler_key"],
+                            "folder": meta["folder"],
+                            "phase": phase,
+                            "target_load": level,
+                            "nennstrom": meta["nennstrom"],
+                            "val_ref_mean": nominal_amp,  # Referenz ist der Theorie-Wert
+                            "val_ref_std": 0.0,
+                            "val_dut_mean": dut_mean,
+                            "val_dut_std": dut_std,
+                            "dut_name": dev,
+                            "ref_name": "Nennwert",
+                            "comparison_mode": "nominal_ref",
+                            "raw_file": meta["dateiname"],
+                        }
+                    )
 
-                if len(ref_plateau) == 0:
-                    continue
-
-                # Speichern der Statistiken (Mean + Std)
-                results.append(
-                    {
-                        "wandler_key": meta["wandler_key"],
-                        "folder": meta["folder"],
-                        "phase": phase,
-                        "target_load": target,
-                        "nennstrom": meta["nennstrom"],
-                        # Absolutwerte speichern
-                        "val_ref_mean": ref_plateau.mean(),
-                        "val_ref_std": ref_plateau.std(),  # WICHTIG für Zeile 3
-                        "val_dut_mean": dut_plateau.mean(),
-                        "val_dut_std": dut_plateau.std(),  # WICHTIG für Zeile 1+2
-                        "raw_file": meta["dateiname"],
-                    }
-                )
-
-        return results, "OK"
-    except Exception as e:
-        return [], str(e)
+    return results, "OK"
 
 
 def main():
-    print("--- Start: Messdaten-Aufbereitung (V3 - mit StdDev) ---")
-    files = []
-    for root, _, filenames in os.walk("."):
-        if any(x in root for x in ["venv", ".git"]):
-            continue
-        for f in filenames:
-            if f.lower().endswith(".csv") and "messungen_auswerten" not in f:
-                files.append(os.path.join(root, f))
+    print("--- Start: DB-Update (Fix für alte & neue Dateiformate) ---")
 
-    print(f"{len(files)} Dateien gefunden.")
+    files = glob.glob(os.path.join(SEARCH_DIR, "**", "*_sortiert.csv"), recursive=True)
+    print(f"{len(files)} sortierte Dateien gefunden.")
+
     all_data = []
-
     for f in files:
         meta = extract_metadata(f)
-        stats, _ = analyze_file(f, meta)
+        stats, status = analyze_sorted_file(f, meta)
         if stats:
             all_data.extend(stats)
-            print(f"✅ {os.path.basename(f)}")
+            print(f"✅ {os.path.basename(f)} ({len(stats)} Einträge)")
+        else:
+            print(f"⚠️ {os.path.basename(f)}: {status}")
 
     if not all_data:
-        print("Keine Daten.")
+        print("❌ Keine Daten extrahiert.")
         return
 
-    pd.DataFrame(all_data).to_parquet(OUTPUT_FILE)
-    print(f"\n✅ Datenbank aktualisiert: {OUTPUT_FILE}")
-    print("Starte jetzt: streamlit run dashboard.py")
+    df_all = pd.DataFrame(all_data)
+
+    # Deduplizierung
+    df_clean = df_all.drop_duplicates(
+        subset=[
+            "wandler_key",
+            "folder",
+            "phase",
+            "target_load",
+            "dut_name",
+            "comparison_mode",
+        ],
+        keep="last",
+    )
+
+    df_clean.to_parquet(OUTPUT_FILE)
+    print(f"\n✅ Datenbank gespeichert: {OUTPUT_FILE} ({len(df_clean)} Einträge)")
 
 
 if __name__ == "__main__":
