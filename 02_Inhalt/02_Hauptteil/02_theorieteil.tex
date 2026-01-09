@@ -48,19 +48,97 @@ Die Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} zeigt schematisch
 
 \noindent\textcolor{red}{\rule{\textwidth}{1pt}}
 Hier bin ich gerade aktuelle.
+
+
+
 \subsubsection{Normative Anforderungen und Genauigkeitsklassen}
 \label{sec:normen_klassen}
 
-Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, die in der Norm DIN EN 61869-2 festgelegt sind \cite[S. 22; Tab. 201–203]{din_en_61869_2_2013}. Diese Klassen definieren die zulässigen Messabweichungen (Strom- und Fehlwinkel) und sind entscheidend für die Auswahl des geeigneten Wandlers für die jeweilige Anwendung:
+Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, deren Anforderungen in der DIN EN 61869-2 festgelegt sind~\cite[S.~22]{din_en_61869_2_2013}. Diese Klassen definieren die maximal zulässigen Messabweichungen und bilden die Entscheidungsgrundlage für die Auswahl eines Wandlers.
+
+Wie bereits in Abschnitt~\ref{sec:unterschiede_mess_schutzwandler} erläutert, unterscheiden sich die Anforderungen an Mess- und Schutzwandler grundlegend.
+
+\paragraph{Schutzwandler}
+Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend. Sie werden in die Klassen \textbf{P} (Protection) und \textbf{PR} (Protection, niedrige Remanenz) eingeteilt.
+
+Die Bezeichnung der Genauigkeitsklasse setzt sich bei diesen Wandlern aus der höchstzulässigen prozentualen Gesamtmessabweichung, dem Kennbuchstaben und dem Genauigkeitsgrenzfaktor (ALF -- Accuracy Limit Factor) zusammen~\cite[S.~23--24]{din_en_61869_2_2013}:
+\begin{itemize}
+    \item \textbf{Klasse P:} Standard-Schutzwandler (z.\,B. 5P, 10P). Hier ist kein Grenzwert für den Remanenzfluss definiert.
+    \item \textbf{Klasse PR:} Schutzwandler mit begrenztem Remanenzfluss (z.\,B. 5PR, 10PR). Diese müssen nach dem Abschalten von Fehlerströmen eine geringe Remanenz aufweisen, was oft durch Luftspalte im Kern erreicht wird.
+\end{itemize}
+
+Der \textbf{Genauigkeitsgrenzfaktor (ALF)} gibt an, bis zum Wievielfachen des Nennstroms die Fehlergrenzen eingehalten werden. Die Normwerte für den ALF sind 5, 10, 15, 20 und 30~\cite[S.~23]{din_en_61869_2_2013}. Eine Bezeichnung wie \glqq 5P20\grqq{} bedeutet demnach: 5\,\% Gesamtmessabweichung bei 20-fachem Nennstrom.
+
+Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen Schutzklassen.
+
+\begin{table}[H]
+    \centering
+    \caption[Grenzwerte für Schutzwandler der Klassen P und PR]{Grenzwerte der Messabweichung für Stromwandler für Schutzzwecke der Klassen P und PR (gemäß DIN EN 61869-2 Tabelle 205~\cite[S.~24]{din_en_61869_2_2013})}
+    \label{tab:schutzwandler_fehler}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Genauigkeits-} & \textbf{Übersetzungs-}  & \multicolumn{2}{c}{\textbf{Fehlwinkel}} & \textbf{Gesamtmess-}                              \\
+        \textbf{klasse}        & \textbf{messabweichung} & \multicolumn{2}{c}{bei $I_{n}$}         & \textbf{abweichung}                               \\
+                               & bei $I_{n}$ ($\pm$ \%)  & ($\pm$ min)                             & ($\pm$ centigrad)    & bei $ALF \cdot I_{n}$ (\%) \\
+        \midrule
+        5P und 5PR             & 1                       & 60                                      & 1,8                  & 5                          \\
+        10P und 10PR           & 3                       & --                                      & --                   & 10                         \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Messwandler}
+Messwandler untergliedern sich in die Standardklassen \textbf{0,1 -- 0,2 -- 0,5 -- 1}, die Sonderklassen \textbf{0,2S -- 0,5S} (für präzise Messungen auch weit unter Nennstrom) sowie die Klassen \textbf{3 -- 5} für weniger genaue Betriebsmessungen.
+
+Die Einhaltung der Fehlergrenzen ist dabei an die angeschlossene Bürde gekoppelt. Für die Standardklassen (0,1 bis 1) sowie die Sonderklassen (0,2S und 0,5S) dürfen die Grenzwerte im Bürdenbereich von 25\,\% bis 100\,\% der Bemessungsleistung nicht überschritten werden. Für die gröberen Klassen 3 und 5 gilt hingegen ein eingeschränkter Bereich von 50\,\% bis 100\,\% der Bemessungsleistung~\cite[S.~21]{din_en_61869_2_2013}. Zudem sind für die Klassen 3 und 5 normativ keine Grenzwerte für den Fehlwinkel definiert.
+
+Im Folgenden werden die spezifischen Grenzwerte für die Standardklassen betrachtet. Ein wesentliches Kriterium ist die \textbf{Übersetzungsmessabweichung} $\varepsilon$ (Stromfehler), die die prozentuale Abweichung des Sekundärstroms vom idealen Wert angibt (siehe Tabelle~\ref{tab:stromfehler}).
+
+\begin{table}[H]
+    \centering
+    \caption[Grenzwerte für die Übersetzungsmessabweichung]{Grenzwerte für die Übersetzungsmessabweichung (gemäß DIN EN 61869-2 Tabelle 201~\cite[S.~22]{din_en_61869_2_2013})}
+    \label{tab:stromfehler}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Genauigkeits-} & \multicolumn{4}{c}{\textbf{Übersetzungsmessabweichung $\pm$ \%}}                                             \\
+        \textbf{klasse}        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                               \\
+        \cmidrule(lr){2-5}
+                               & \textbf{5}                                                       & \textbf{20} & \textbf{100} & \textbf{120} \\
+        \midrule
+        0,1                    & 0,4                                                              & 0,2         & 0,1          & 0,1          \\
+        0,2                    & 0,75                                                             & 0,35        & 0,2          & 0,2          \\
+        0,5                    & 1,5                                                              & 0,75        & 0,5          & 0,5          \\
+        1                      & 3,0                                                              & 1,5         & 1,0          & 1,0          \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Neben dem Stromfehler ist der \textbf{Fehlwinkel} entscheidend, der die Phasenverschiebung beschreibt. Die Einhaltung der Grenzwerte ist insbesondere für Schutzeinrichtungen mit Richtungsbestimmung von Bedeutung~\cite[S.~51]{din_en_61869_2_2013}. Tabelle~\ref{tab:fehlwinkel} fasst die zulässigen Fehlwinkel für die Klassen 0,1 bis 1 zusammen.
+
+\begin{table}[H]
+    \centering
+    \caption[Grenzwerte für den Fehlwinkel]{Grenzwerte für den Fehlwinkel (gemäß DIN EN 61869-2 Tabelle 201~\cite[S.~22]{din_en_61869_2_2013})}
+    \label{tab:fehlwinkel}
+    \begin{tabular}{lcccccccc}
+        \toprule
+        \textbf{Genauigkeits-} & \multicolumn{8}{c}{\textbf{Fehlwinkel}}                                                                                                                                                \\
+        \textbf{klasse}        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                                                                \\
+        \cmidrule(lr){2-5} \cmidrule(lr){6-9}
+                               & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                                                        \\
+                               & \textbf{5}                                     & \textbf{20}                                    & \textbf{100} & \textbf{120} & \textbf{5} & \textbf{20} & \textbf{100} & \textbf{120} \\
+        \midrule
+        0,1                    & 15                                             & 8                                              & 5            & 5            & 0,45       & 0,24        & 0,15         & 0,15         \\
+        0,2                    & 30                                             & 15                                             & 10           & 10           & 0,90       & 0,45        & 0,30         & 0,30         \\
+        0,5                    & 90                                             & 45                                             & 30           & 30           & 2,70       & 1,35        & 0,90         & 0,90         \\
+        1                      & 180                                            & 90                                             & 60           & 60           & 5,40       & 2,70        & 1,80         & 1,80         \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 
 
 
 
-%\paragraph{Konstruktive Anpassung an Anlagenanforderungen}
-%Die fortschreitende Miniaturisierung von Niederspannungsschaltanlagen führt zu einem Zielkonflikt bei der Auslegung von Messstromwandlern: Während der verfügbare Bauraum stetig abnimmt, bleiben die physikalischen Anforderungen an die \textit{Genauigkeitsklasse} und die treibbare \textit{Bürde} bestehen. Da die Leistungsfähigkeit eines Wandlers direkt mit dem Eisenquerschnitt korreliert, muss das aktive Kernmaterial (Eisen) möglichst effizient im begrenzten Gehäusevolumen untergebracht werden.
-
-%Bei der Verwendung klassischer Ringkerne auf rechteckigen Stromschienen entsteht konstruktionsbedingt ein hoher Anteil an ungenutztem Luftraum zwischen Leiter und Kern, was das Gehäuse unnötig vergrößert. Um diesen Raumverlust zu minimieren und den magnetischen Weg $l_{Fe}$ kurz zu halten, weicht die Bauform moderner Wandlerkerne häufig von der Toroidform ab. Stattdessen kommen ovale oder rechteckige Kerngeometrien zum Einsatz, die der Kontur des Primärleiters (Stromschiene) folgen. Dies ermöglicht es, auch bei engen Platzverhältnissen und großen Schienenquerschnitten die geforderten magnetischen Kennwerte kosteneffizient zu realisieren.
 
 \subsubsection{Ersatzschaltbild eines Messstromwandlers}
 \label{sec:ersatzschaltbild}

@@ -1,86 +1,38 @@
 % =============================================================================
-% KAPITEL 3: METHODIK (03_methodenteil.tex)
-% -----------------------------------------------------------------------------
-% Hier beschreibst du genau, WIE du vorgegangen bist, um deine
-% Forschungsfrage zu beantworten (z.B. Versuchsaufbau, Simulation,
-% Datenanalyse, Experteninterviews).
+% KAPITEL 3: METHODIK
 % =============================================================================
 
 \section{Versuchsaufbau und Methodik}
 \label{chap:methodik}
 
-Für die Charakterisierung der Messstromwandler wurde ein Hochstrom-Prüfstand verwendet, der Ströme von bis zu $6000$~A erzeugen kann. Dies ermöglicht die Analyse der magnetischen Eigenschaften unter Realbedingungen. Das hierfür angewandte Prinzip der Vergleichsmessung zwischen Sekundär- und Referenzstrom wird einleitend in Abschnitt~\ref{sec:prinzip_vergleichsmessung} erläutert. Darauf aufbauend werden in Abschnitt~\ref{sec:hochstrom_pruefstand} der detaillierte Aufbau und die Funktionsweise des Prüfstandes beschrieben. Abschließend legt Abschnitt~\ref{sec:messtechnisches_konzept} das konkrete messtechnische Konzept sowie die Durchführung der Messungen dar.
+Zur Charakterisierung der Messstromwandler wurde ein Hochstrom-Prüfstand eingesetzt, der primäre Wechselströme von bis zu $6000$\,A generieren kann. Dies ermöglichte die Analyse der magnetischen Eigenschaften sowie der Messgenauigkeit unter realitätsnahen Betriebsbedingungen.
 
-\subsection{Prüfung der Genauigkeit von Messstromwandlern}
+Das methodische Vorgehen untergliedert sich in drei Bereiche: Zunächst erläutert Abschnitt~\ref{sec:prinzip_vergleichsmessung} das grundlegende Messprinzip der Fehlerbestimmung. Darauf aufbauend folgt in Abschnitt~\ref{sec:hochstrom_pruefstand} eine detaillierte technische Beschreibung des Prüfstandsaufbaus. Abschließend stellt Abschnitt~\ref{sec:messtechnisches_konzept} das konkrete Versuchskonzept dar, welches die Variation der Prüfparameter (Stromstärke, Bürde, Leiterpositionierung) definiert.
+
+\subsection{Prüfverfahren zur Bestimmung der Genauigkeit}
 \label{sec:prinzip_vergleichsmessung}
 
-Für die Bestimmung der Genauigkeit eines Messstromwandlers sind gemäß der DIN EN 61869-2~\cite{din_en_61869_2_2013} für Wandler, die für Messzwecke bestimmt sind, zwei Prüfungen wesentlich: die der Übersetzungsmessabweichung $\varepsilon$ und die des Fehlwinkels $\Delta\phi$.\\
+Die Bestimmung der Genauigkeit eines Messstromwandlers (Prüfling) erfolgt nach dem Prinzip der Vergleichsmessung gegen ein hochgenaues Referenznormal (Normalwandler).
 
-Für die Messungen muss der Wandler mit seiner Nennbürde betrieben werden.
+Hierbei werden der Prüfling und der Normalwandler primärseitig vom selben Strom durchflossen. Sekundärseitig werden die Ausgangsströme beider Wandler einer Messbrücke oder einem Vektor-Netzwerkanalysator zugeführt. Da der Fehler des Normalwandlers vernachlässigbar klein und bekannt ist, kann aus der Differenz der beiden Sekundärströme direkt auf die Messabweichung des Prüflings geschlossen werden.
 
-\subsubsection{Fehlwinkel}
-\label{sec:fehlwinkel}
-Letzterer beschreibt die Phasenverschiebung zwischen dem primären und dem sekundären Strom über einen definierten Messbereich. Die Einhaltung der zulässigen Grenzwerte für den Fehlwinkel ist insbesondere für Schutzeinrichtungen mit Richtungsbestimmung von Bedeutung~\cite[S.~51]{din_en_61869_2_2013}. In der Tabelle~\ref{tab:fehlwinkel} sind die nach der Norm definierten Messbereiche für die Wandlerklassen von 0,1 bis 1 dargestellt.
+Zu ermitteln sind hierbei zwei zentrale Größen:
+\begin{itemize}
+    \item Die \textbf{Übersetzungsmessabweichung} $\varepsilon$ (Stromfehler), welche die Amplitudendifferenz beschreibt.
+    \item Der \textbf{Fehlwinkel} $\Delta\phi$, welcher die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor angibt.
+\end{itemize}
 
-\begin{table}[H]
-    \centering
-    \caption[Grenzwerte für den Fehlwinkel]{Grenzwerte für den Fehlwinkel (gemäß DIN EN 61869-2 Tabelle 201 \cite{din_en_61869_2_2013})}
-    \label{tab:fehlwinkel}
-    \begin{tabular}{lcccccccc}
-        \toprule
-        \textbf{Genauigkeits-} & \multicolumn{8}{c}{\textbf{Fehlwinkel}}                                                                                                                                                \\
-        \textbf{klasse}        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                                                                \\
-        \cmidrule(lr){2-5} \cmidrule(lr){6-9}
-                               & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                                                        \\
-                               & \textbf{5}                                     & \textbf{20}                                    & \textbf{100} & \textbf{120} & \textbf{5} & \textbf{20} & \textbf{100} & \textbf{120} \\
-        \midrule
-        0,1                    & 15                                             & 8                                              & 5            & 5            & 0,45       & 0,24        & 0,15         & 0,15         \\
-        0,2                    & 30                                             & 15                                             & 10           & 10           & 0,90       & 0,45        & 0,30         & 0,30         \\
-        0,5                    & 90                                             & 45                                             & 30           & 30           & 2,70       & 1,35        & 0,90         & 0,90         \\
-        1                      & 180                                            & 90                                             & 60           & 60           & 5,40       & 2,70        & 1,80         & 1,80         \\
-        \bottomrule
-    \end{tabular}
-\end{table}
+Um normkonforme Ergebnisse gemäß DIN EN 61869-2 zu gewährleisten, ist es zwingend erforderlich, den Prüfling mit seiner Nennbürde zu belasten, da die Impedanz des Sekundärkreises einen signifikanten Einfluss auf beide Fehlergrößen hat.
 
-
-\newpage
-
-\subsubsection{Übersetzungsmessabweichung}
-\label{sec:uebersetzungsmessabweichung}
-
-Die Übersetzungsmessabweichung~$\varepsilon$ beschreibt die prozentuale Differenz zwischen dem auf die Primärseite bezogenen Sekundärstrom und dem tatsächlichen Primärstrom. Gemäß Gleichung~\eqref{eq:uebersetzungsmessabweichung} berechnet sich dieser Fehler aus der Nennübersetzung $k_r$, dem Sekundärstrom $I_s$ und dem Primärstrom $I_p$.
-
-\begin{equation}
-    \varepsilon = \frac{k_r \cdot I_s - I_p}{I_p} \cdot 100\,\%
-    \label{eq:uebersetzungsmessabweichung}
-\end{equation}
-
-\begin{table}[H]
-    \centering
-    \caption[Grenzwerte für die Übersetzungsmessabweichung]{Grenzwerte für die Übersetzungsmessabweichung (gemäß DIN EN 61869-2 Tabelle 201 \cite{din_en_61869_2_2013})}
-    \label{tab:uebersetzungsmessabweichung}
-    \begin{tabular}{lcccc}
-        \toprule
-        \textbf{Genauigkeits-} & \multicolumn{4}{c}{\textbf{Übersetzungsmessabweichung} $\pm \%$}                                             \\
-        \textbf{klasse}        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                               \\
-        \cmidrule(ll){2-5}
-                               & \textbf{5}                                                       & \textbf{20} & \textbf{100} & \textbf{120} \\
-        \midrule
-        0,1                    & 0,40                                                             & 0,20        & 0,1          & 0,1          \\
-        0,2                    & 0,75                                                             & 0,35        & 0,2          & 0,2          \\
-        0,5                    & 1,50                                                             & 0,75        & 0,5          & 0,5          \\
-        1                      & 3,00                                                             & 1,50        & 1,0          & 1,0          \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-
-
-\subsection{Beschreibung des Hochstrom-Prüfstands}
+\subsection{Aufbau des Hochstrom-Prüfstands}
 \label{sec:hochstrom_pruefstand}
 
-\subsection{Messtechnisches Konzept}
+Der experimentelle Aufbau wurde so konzipiert, dass die Einbausituationen von Stromwandlern in Niederspannungsschaltanlagen simuliert werden können. Der Prüfstand setzt sich im Wesentlichen aus drei Komponenten zusammen: der Hochstromquelle, der Primärleiteranordnung und der Messdatenerfassung.
+
+
+
+\subsection{Messtechnisches Konzept und Durchführung}
 \label{sec:messtechnisches_konzept}
 
-Für die praktische Durchführung der Messungen am Hochstrom-Prüfstand wurde folgendes Konzept entwickelt. Die Messpunkte orientieren sich an den Vorgaben der DIN EN 61869-2 für die Genauigkeitsprüfung.
+Für die praktische Durchführung der Messreihen wurde ein systematisches Konzept entwickelt, das sich an den Prüfvorgaben der DIN EN 61869-2 orientiert, diese jedoch um die spezifischen Untersuchungsaspekte dieser Arbeit erweitert.
 

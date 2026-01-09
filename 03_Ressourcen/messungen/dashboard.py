@@ -5,34 +5,18 @@ from plotly.subplots import make_subplots
 import os
 import io
 import zipfile
-import tempfile
-
-# --- MATLAB ENGINE IMPORT VERSUCH ---
-try:
-    import matlab.engine
-
-    MATLAB_AVAILABLE = True
-except ImportError:
-    MATLAB_AVAILABLE = False
+import shutil
+import subprocess
+import time
+import re
 
 # --- KONFIGURATION ---
 DATA_FILE = "messdaten_db.parquet"
-
-COLOR_PALETTE = [
-    "#1f77b4",
-    "#ff7f0e",
-    "#2ca02c",
-    "#d62728",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#7f7f7f",
-    "#bcbd22",
-    "#17becf",
-]
 PHASES = ["L1", "L2", "L3"]
+WORK_DIR = "matlab_working_dir"
+DEFAULT_MATLAB_PATH = r"C:\Program Files\MATLAB\R2025a\bin\matlab.exe"
 
-# Blau (Parallel)
+# --- FARBPALETTEN ---
 BLUES = [
     "#042a5c",
     "#084594",
@@ -47,7 +31,6 @@ BLUES = [
     "#1e90ff",
     "#87cefa",
 ]
-# Orange (Dreieck)
 ORANGES = [
     "#4a1700",
     "#662506",
@@ -62,7 +45,6 @@ ORANGES = [
     "#ffa500",
     "#ffbb78",
 ]
-# Andere
 OTHERS = [
     "#006400",
     "#2ca02c",
@@ -73,6 +55,140 @@ OTHERS = [
     "#bcbd22",
     "#17becf",
 ]
+
+# --- MATLAB SKRIPT TEMPLATE ---
+MATLAB_SCRIPT_TEMPLATE = r"""
+%% Automatische Diagrammerstellung
+clear; clc; close all;
+
+try
+    % Konfiguration
+    filename = 'plot_data.csv';
+    phases = {'L1', 'L2', 'L3'};
+    limits_class = ACC_CLASS_PH; 
+    nennstrom = NOMINAL_CURRENT_PH;
+
+    if ~isfile(filename)
+        error('Datei plot_data.csv nicht gefunden!');
+    end
+
+    data = readtable(filename, 'Delimiter', ',');
+
+    % Farben definieren
+    hex2rgb = @(hex) sscanf(hex(2:end),'%2x%2x%2x',[1 3])/255;
+
+    % Trompeten-Grenzwerte
+    x_lims = [1, 5, 20, 100, 120];
+    if limits_class == 0.2
+        y_lims = [0.75, 0.35, 0.2, 0.2, 0.2];
+    elseif limits_class == 0.5
+        y_lims = [1.5, 1.5, 0.75, 0.5, 0.5];
+    elseif limits_class == 1.0
+        y_lims = [3.0, 1.5, 1.0, 1.0, 1.0];
+    else
+        y_lims = [1.5, 1.5, 0.75, 0.5, 0.5];
+    end
+
+    for i = 1:length(phases)
+        p = phases{i};
+        fprintf('Bearbeite Phase %s...\n', p);
+        
+        % Daten filtern
+        rows = strcmp(data.phase, p);
+        sub_data = data(rows, :);
+        
+        if isempty(sub_data)
+            fprintf('Warnung: Keine Daten fuer Phase %s.\n', p);
+            continue; 
+        end
+        
+        f = figure('Visible', 'off', 'PaperType', 'A4', 'PaperOrientation', 'landscape');
+        set(f, 'Color', 'w'); 
+        set(f, 'Units', 'centimeters', 'Position', [0 0 29.7 21]);
+        
+        t = tiledlayout(f, 2, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
+        
+        % --- PLOT 1: Fehler ---
+        ax1 = nexttile;
+        hold(ax1, 'on'); grid(ax1, 'on'); box(ax1, 'on');
+        set(ax1, 'Color', 'w', 'XColor', 'k', 'YColor', 'k', 'GridColor', [0.8 0.8 0.8]);
+        
+        plot(ax1, x_lims, y_lims, 'k--', 'LineWidth', 1.2, 'HandleVisibility', 'off');
+        plot(ax1, x_lims, -y_lims, 'k--', 'LineWidth', 1.2, 'HandleVisibility', 'off');
+        
+        % Eindeutige Kurven anhand der trace_id finden
+        [unique_traces, ~, ~] = unique(sub_data.trace_id, 'stable');
+        
+        for k = 1:length(unique_traces)
+            trace = unique_traces{k};
+            trace_rows = strcmp(sub_data.trace_id, trace);
+            d = sub_data(trace_rows, :);
+            [~, sort_idx] = sort(d.target_load);
+            d = d(sort_idx, :);
+            
+            % HIER WAR DER FEHLER: Wir nutzen jetzt die korrekten Spaltennamen der CSV
+            col_rgb = hex2rgb(d.color_hex{1});
+            
+            % Unterstriche escapen
+            leg_lbl = strrep(d.legend_name{1}, '_', '\_');
+            
+            plot(ax1, d.target_load, d.err_ratio, '-o', 'Color', col_rgb, ...
+                'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', col_rgb, ...
+                'DisplayName', leg_lbl);
+        end
+        
+        title(ax1, sprintf('Fehlerverlauf - Phase %s (%d A)', p, nennstrom), 'Color', 'k');
+        ylabel(ax1, 'Fehler [%]', 'Color', 'k');
+        ylim(ax1, [- Y_LIMIT_PH, Y_LIMIT_PH]);
+        xlim(ax1, [0, 125]);
+        
+        lgd = legend(ax1, 'Location', 'southoutside', 'Orientation', 'horizontal');
+        set(lgd, 'TextColor', 'k', 'Color', 'w', 'Interpreter', 'tex');
+        lgd.NumColumns = 2;
+        
+        % --- PLOT 2: StdAbw (Side-by-Side) ---
+        ax2 = nexttile;
+        hold(ax2, 'on'); grid(ax2, 'on'); box(ax2, 'on');
+        set(ax2, 'Color', 'w', 'XColor', 'k', 'YColor', 'k', 'GridColor', [0.8 0.8 0.8]);
+        
+        num_groups = length(unique_traces);
+        total_group_width = 5; 
+        single_bar_width = total_group_width / num_groups;
+        if single_bar_width > 1.5; single_bar_width = 1.5; end
+        
+        for k = 1:length(unique_traces)
+            trace = unique_traces{k};
+            trace_rows = strcmp(sub_data.trace_id, trace);
+            d = sub_data(trace_rows, :);
+            [~, sort_idx] = sort(d.target_load);
+            d = d(sort_idx, :);
+            
+            col_rgb = hex2rgb(d.color_hex{1});
+            leg_lbl = strrep(d.legend_name{1}, '_', '\_');
+            
+            offset = (k - 1 - (num_groups - 1) / 2) * single_bar_width;
+            x_pos = d.target_load + offset;
+            
+            bar(ax2, x_pos, d.err_std, 'FaceColor', col_rgb, 'EdgeColor', 'none', ...
+                'FaceAlpha', 0.8, 'BarWidth', 0.1, 'DisplayName', leg_lbl);
+        end
+        
+        title(ax2, sprintf('Standardabweichung - Phase %s (%d A)', p, nennstrom), 'Color', 'k');
+        ylabel(ax2, 'StdAbw [%]', 'Color', 'k');
+        xlabel(ax2, 'Last [% I_{Nenn}]', 'Color', 'k');
+        xlim(ax2, [0, 125]);
+        
+        out_name = sprintf('Detail_%s_%dA.pdf', p, nennstrom);
+        exportgraphics(f, out_name, 'ContentType', 'vector', 'BackgroundColor', 'w');
+        close(f);
+    end
+catch ME
+    disp('FEHLER:');
+    disp(ME.message);
+    exit(1); 
+end
+exit(0);
+"""
 
 st.set_page_config(page_title="Wandler Dashboard", layout="wide", page_icon="📈")
 
@@ -120,16 +236,56 @@ def get_trumpet_limits(class_val):
     return x, y, y_neg
 
 
-def hex_to_rgb_matlab(hex_color):
-    """Wandelt Hex '#RRGGBB' in MATLAB RGB [0-1, 0-1, 0-1] um"""
-    hex_color = hex_color.lstrip("#")
-    return [int(hex_color[i : i + 2], 16) / 255.0 for i in (0, 2, 4)]
+# --- INTELLIGENTE NAMENSFORMATIERUNG ---
+def auto_format_name(row):
+    """
+    Zerlegt den Namen in Token (getrennt durch _ oder Leerzeichen).
+    Erkennt Bürden (0R1, 8R1) und formatiert sie.
+    Setzt den Rest ohne Unterstriche wieder zusammen.
+    """
+    raw_key = str(row["wandler_key"])
+    folder_lower = str(row["folder"]).lower()
+
+    # 1. Alles in Token zerlegen (Unterstrich oder Leerzeichen als Trenner)
+    tokens = re.split(r"[_\s]+", raw_key)
+
+    name_parts = []
+    burden_part = ""
+
+    for t in tokens:
+        if not t:
+            continue
+        # Regex für Bürde (z.B. 0R1, 8R1, 10R)
+        if re.match(r"^\d+R\d*$", t):
+            val = t.replace("R", ",")
+            burden_part = f"{val} Ω"
+        else:
+            name_parts.append(t)
+
+    # 2. Basis Name wieder zusammenbauen (mit Leerzeichen)
+    base_name = " ".join(name_parts)
+
+    # 3. Prüfling hinzufügen falls noch nicht drin
+    dut = str(row["dut_name"])
+    if dut.lower() not in base_name.lower():
+        base_name = f"{base_name} | {dut}"
+
+    # 4. Bürde anfügen
+    if burden_part:
+        base_name = f"{base_name} | {burden_part}"
+
+    # 5. Arrangement
+    if "parallel" in folder_lower:
+        base_name += " | Parallel"
+    elif "dreieck" in folder_lower:
+        base_name += " | Dreieck"
+
+    return base_name
 
 
 def create_single_phase_figure(
-    df_sub, phase, acc_class, y_limit, color_map, show_err_bars, title_prefix=""
+    df_sub, phase, acc_class, y_limit, show_err_bars, title_prefix=""
 ):
-    """Erstellt Figur für Einzel-Export (Python/Kaleido)"""
     fig = make_subplots(
         rows=2,
         cols=1,
@@ -141,7 +297,6 @@ def create_single_phase_figure(
 
     lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
 
-    # Trompete
     fig.add_trace(
         go.Scatter(
             x=lim_x,
@@ -165,50 +320,36 @@ def create_single_phase_figure(
         col=1,
     )
 
-    # Daten
     phase_data = df_sub[df_sub["phase"] == phase]
 
-    # Sortieren
-    grouped = []
-    for name, group in phase_data.groupby(["wandler_key", "trace_id"]):
-        sort_key = group.iloc[0]["trace_id"]
-        if group.iloc[0]["dut_name"] in group.iloc[0]["wandler_key"]:
-            legend_name = group.iloc[0]["wandler_key"]
-        else:
-            legend_name = (
-                f"{group.iloc[0]['wandler_key']} | {group.iloc[0]['dut_name']}"
-            )
-        grouped.append((sort_key, legend_name, group, name))
-
-    grouped.sort(key=lambda x: x[0])
-
-    for _, legend_name, group, name_tuple in grouped:
+    for uid, group in phase_data.groupby("unique_id"):
         group = group.sort_values("target_load")
-        full_key_for_color = f"{name_tuple[0]} - {name_tuple[1]}"
-        color = color_map.get(full_key_for_color, "black")
+
+        first_row = group.iloc[0]
+        leg_name = first_row["final_legend"]
+        color = first_row["final_color"]
 
         fig.add_trace(
             go.Scatter(
                 x=group["target_load"],
                 y=group["err_ratio"],
                 mode="lines+markers",
-                name=legend_name,
+                name=leg_name,
                 line=dict(color=color, width=2),
                 marker=dict(size=6),
-                legendgroup=legend_name,
+                legendgroup=leg_name,
                 showlegend=True,
             ),
             row=1,
             col=1,
         )
-
         if show_err_bars:
             fig.add_trace(
                 go.Bar(
                     x=group["target_load"],
                     y=group["err_std"],
                     marker_color=color,
-                    legendgroup=legend_name,
+                    legendgroup=leg_name,
                     showlegend=False,
                 ),
                 row=2,
@@ -230,143 +371,15 @@ def create_single_phase_figure(
     return fig
 
 
-def generate_matlab_pdf(
-    eng, df_sub, phase, acc_class, y_limit, color_map, title_prefix, temp_dir
-):
-    """
-    Steuert MATLAB fern, um ein Diagramm zu erstellen.
-    """
-    lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
-
-    # MATLAB Figure erstellen (unsichtbar)
-    eng.eval(
-        "f = figure('Visible', 'off', 'PaperType', 'A4', 'PaperOrientation', 'landscape');",
-        nargout=0,
-    )
-    eng.eval("t = tiledlayout(2,1, 'TileSpacing', 'compact');", nargout=0)
-
-    # --- PLOT 1: Fehler ---
-    eng.eval("nexttile;", nargout=0)
-    eng.eval("hold on;", nargout=0)
-    eng.eval("grid on;", nargout=0)
-
-    # Trompete
-    eng.plot(
-        matlab.double(lim_x),
-        matlab.double(lim_y_p),
-        "k--",
-        "LineWidth",
-        1.0,
-        "HandleVisibility",
-        "off",
-        nargout=0,
-    )
-    eng.plot(
-        matlab.double(lim_x),
-        matlab.double(lim_y_n),
-        "k--",
-        "LineWidth",
-        1.0,
-        "HandleVisibility",
-        "off",
-        nargout=0,
-    )
-
-    # Daten vorbereiten
-    phase_data = df_sub[df_sub["phase"] == phase]
-    grouped = []
-    for name, group in phase_data.groupby(["wandler_key", "trace_id"]):
-        sort_key = group.iloc[0]["trace_id"]
-        if group.iloc[0]["dut_name"] in group.iloc[0]["wandler_key"]:
-            legend_name = group.iloc[0]["wandler_key"]
-        else:
-            legend_name = (
-                f"{group.iloc[0]['wandler_key']} | {group.iloc[0]['dut_name']}"
-            )
-        grouped.append((sort_key, legend_name, group, name))
-    grouped.sort(key=lambda x: x[0])
-
-    for _, legend_name, group, name_tuple in grouped:
-        group = group.sort_values("target_load")
-        full_key_for_color = f"{name_tuple[0]} - {name_tuple[1]}"
-        hex_col = color_map.get(full_key_for_color, "#000000")
-        mat_col = hex_to_rgb_matlab(hex_col)
-
-        x_val = group["target_load"].tolist()
-        y_val = group["err_ratio"].tolist()
-
-        # Plot Linie
-        eng.plot(
-            matlab.double(x_val),
-            matlab.double(y_val),
-            "-o",
-            "Color",
-            matlab.double(mat_col),
-            "LineWidth",
-            1.5,
-            "DisplayName",
-            legend_name,
-            "MarkerSize",
-            4,
-            nargout=0,
-        )
-
-    eng.title(f"{title_prefix} - Phase {phase}", nargout=0)
-    eng.ylabel("Fehler [%]", nargout=0)
-    eng.ylim(matlab.double([-y_limit, y_limit]), nargout=0)
-    # Legende
-    eng.eval(
-        "lgd = legend('Location', 'southoutside', 'Orientation', 'horizontal');",
-        nargout=0,
-    )
-    eng.eval("lgd.NumColumns = 3;", nargout=0)
-
-    # --- PLOT 2: StdAbw ---
-    eng.eval("nexttile;", nargout=0)
-    eng.eval("hold on;", nargout=0)
-    eng.eval("grid on;", nargout=0)
-
-    for _, legend_name, group, name_tuple in grouped:
-        group = group.sort_values("target_load")
-        full_key_for_color = f"{name_tuple[0]} - {name_tuple[1]}"
-        hex_col = color_map.get(full_key_for_color, "#000000")
-        mat_col = hex_to_rgb_matlab(hex_col)
-
-        x_val = group["target_load"].tolist()
-        y_std = group["err_std"].tolist()
-
-        # Bar Chart tricksen mit 'bar'
-        eng.bar(
-            matlab.double(x_val),
-            matlab.double(y_std),
-            "FaceColor",
-            matlab.double(mat_col),
-            "EdgeColor",
-            "none",
-            "FaceAlpha",
-            0.6,
-            "DisplayName",
-            legend_name,
-            "BarWidth",
-            1,
-            nargout=0,
-        )
-
-    eng.ylabel("StdAbw [%]", nargout=0)
-    eng.xlabel("Last [% I_Nenn]", nargout=0)
-
-    # Speichern
-    filename = f"Detail_{phase}_MATLAB.pdf"
-    full_path = os.path.join(temp_dir, filename)
-    eng.eval(f"exportgraphics(f, '{full_path}', 'ContentType', 'vector');", nargout=0)
-    eng.eval("close(f);", nargout=0)
-
-    return full_path
-
-
 def clear_cache():
     if "zip_data" in st.session_state:
         del st.session_state["zip_data"]
+
+
+def ensure_working_dir():
+    if not os.path.exists(WORK_DIR):
+        os.makedirs(WORK_DIR)
+    return os.path.abspath(WORK_DIR)
 
 
 # --- APP START ---
@@ -375,7 +388,7 @@ if df is None:
     st.error(f"⚠️ Datei '{DATA_FILE}' fehlt. Bitte erst `precalc.py` ausführen.")
     st.stop()
 
-# --- SIDEBAR ---
+# --- SIDEBAR: FILTER ---
 st.sidebar.header("🎛️ Filter & Settings")
 
 sync_axes = st.sidebar.checkbox(
@@ -439,7 +452,7 @@ sel_duts = st.sidebar.multiselect(
 if not sel_duts:
     st.stop()
 
-# --- DATEN FILTERN ---
+# --- DATEN FILTERN & BERECHNEN ---
 mask = (
     (df["nennstrom"] == sel_current)
     & (df["wandler_key"].isin(sel_wandlers))
@@ -462,19 +475,26 @@ df_sub["err_ratio"] = (
 ) * 100
 df_sub["err_std"] = (df_sub["val_dut_std"] / df_sub["val_ref_mean"]) * 100
 
-# --- FARBEN ---
-unique_keys = df_sub[["wandler_key", "trace_id"]].drop_duplicates()
-unique_keys["folder_helper"] = unique_keys["trace_id"].apply(
-    lambda x: x.split(" | ")[0]
-)
-unique_keys = unique_keys.sort_values(["folder_helper", "wandler_key"])
+# --- EINDEUTIGE ID ---
+df_sub["unique_id"] = df_sub["wandler_key"] + " - " + df_sub["trace_id"]
 
-color_map = {}
+# --- SIDEBAR: DESIGN-EDITOR ---
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🎨 Design anpassen")
+
+unique_curves = df_sub[
+    ["unique_id", "wandler_key", "folder", "dut_name", "trace_id"]
+].drop_duplicates()
+
+config_data = []
 b_idx, o_idx, x_idx = 0, 0, 0
 
-for idx, row in unique_keys.iterrows():
-    full_key = f"{row['wandler_key']} - {row['trace_id']}"
-    folder_lower = row["trace_id"].lower()
+for idx, row in unique_curves.iterrows():
+    # Neue Namenslogik anwenden
+    auto_name = auto_format_name(row)
+
+    # Auto-Farbe
+    folder_lower = str(row["folder"]).lower()
     if "parallel" in folder_lower:
         col = BLUES[b_idx % len(BLUES)]
         b_idx += 1
@@ -484,7 +504,43 @@ for idx, row in unique_keys.iterrows():
     else:
         col = OTHERS[x_idx % len(OTHERS)]
         x_idx += 1
-    color_map[full_key] = col
+
+    config_data.append({"ID": row["unique_id"], "Legende": auto_name, "Farbe": col})
+
+df_config_default = pd.DataFrame(config_data)
+
+# Versuche Farbwähler zu nutzen
+try:
+    color_col_config = st.column_config.ColorColumn("Farbe (Wähler)")
+except AttributeError:
+    color_col_config = st.column_config.TextColumn(
+        "Farbe (Hex)",
+        help="Bitte 'pip install --upgrade streamlit' ausführen für Farbrad!",
+    )
+
+with st.sidebar.expander("Namen & Farben bearbeiten", expanded=False):
+    edited_config = st.data_editor(
+        df_config_default,
+        column_config={
+            "ID": None,
+            "Legende": st.column_config.TextColumn("Legende"),
+            "Farbe": color_col_config,
+        },
+        disabled=["ID"],
+        hide_index=True,
+        # Alte API war use_container_width=True, neue API erlaubt das auch,
+        # aber st.plotly_chart meckert. Hier ist es für data_editor:
+        use_container_width=True,
+        key="design_editor",
+    )
+
+# Änderungen anwenden
+map_legend = dict(zip(edited_config["ID"], edited_config["Legende"]))
+map_color = dict(zip(edited_config["ID"], edited_config["Farbe"]))
+
+df_sub["final_legend"] = df_sub["unique_id"].map(map_legend)
+df_sub["final_color"] = df_sub["unique_id"].map(map_color)
+
 
 # --- SCREEN PLOT ---
 ref_name_disp = "Einspeisung"
@@ -529,21 +585,11 @@ for col_idx, phase in enumerate(PHASES, start=1):
     )
 
     phase_data = df_sub[df_sub["phase"] == phase]
-    grouped_phase = []
-    for name, group in phase_data.groupby(["wandler_key", "trace_id"]):
-        grouped_phase.append((group.iloc[0]["trace_id"], name, group))
-    grouped_phase.sort(key=lambda x: x[0])
 
-    for _, name_tuple, group in grouped_phase:
-        if group.iloc[0]["dut_name"] in group.iloc[0]["wandler_key"]:
-            legend_name = group.iloc[0]["wandler_key"]
-        else:
-            legend_name = (
-                f"{group.iloc[0]['wandler_key']} | {group.iloc[0]['dut_name']}"
-            )
-
+    for uid, group in phase_data.groupby("unique_id"):
         group = group.sort_values("target_load")
-        color = color_map.get(f"{name_tuple[0]} - {name_tuple[1]}", "black")
+        leg_name = group.iloc[0]["final_legend"]
+        color = group.iloc[0]["final_color"]
         show_leg = col_idx == 1
 
         fig.add_trace(
@@ -551,9 +597,9 @@ for col_idx, phase in enumerate(PHASES, start=1):
                 x=group["target_load"],
                 y=group["err_ratio"],
                 mode="lines+markers",
-                name=legend_name,
+                name=leg_name,
                 line=dict(color=color, width=2),
-                legendgroup=legend_name,
+                legendgroup=leg_name,
                 showlegend=show_leg,
             ),
             row=1,
@@ -565,7 +611,7 @@ for col_idx, phase in enumerate(PHASES, start=1):
                     x=group["target_load"],
                     y=group["err_std"],
                     marker_color=color,
-                    legendgroup=legend_name,
+                    legendgroup=leg_name,
                     showlegend=False,
                 ),
                 row=2,
@@ -587,72 +633,111 @@ if not sync_axes:
     fig.update_yaxes(range=[-y_limit, y_limit], row=1, col=3)
 fig.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
 fig.update_xaxes(title_text="Last [% I_Nenn]", row=2, col=2)
-st.plotly_chart(fig, use_container_width=True)
+# FIX: width="stretch" für plotly_chart um Warnungen zu vermeiden
+st.plotly_chart(
+    fig,
+    width=(
+        "stretch"
+        if "use_container_width" not in st.plotly_chart.__code__.co_varnames
+        else None
+    ),
+    use_container_width=True,
+)
 
 # --- EXPORT LOGIK ---
 st.sidebar.markdown("---")
 st.sidebar.markdown("### 📥 PDF Export")
 
-# Engine Auswahl
-engine_options = ["Python (Standard)"]
-if MATLAB_AVAILABLE:
-    engine_options.append("MATLAB (High-Quality)")
+engine_mode = st.sidebar.selectbox(
+    "Modus:", ["Python (Direkt)", "MATLAB (Automatischer Start)"], index=0
+)
 
-engine_mode = st.sidebar.selectbox("Render-Engine:", engine_options, index=0)
+if "MATLAB" in engine_mode:
+    matlab_exe = st.sidebar.text_input("Pfad zu matlab.exe:", value=DEFAULT_MATLAB_PATH)
+else:
+    matlab_exe = None
 
-if st.sidebar.button("🔄 PDFs jetzt generieren", type="primary"):
+if st.sidebar.button("🔄 Export starten", type="primary"):
     zip_buffer = io.BytesIO()
 
-    # --- MATLAB MODUS ---
     if "MATLAB" in engine_mode:
-        with st.spinner("Starte MATLAB Engine... (Dies dauert beim ersten Mal länger)"):
-            try:
-                eng = matlab.engine.start_matlab()
-                with tempfile.TemporaryDirectory() as temp_dir:
+        if not os.path.exists(matlab_exe):
+            st.error(
+                f"❌ matlab.exe nicht gefunden unter:\n{matlab_exe}\nBitte Pfad korrigieren."
+            )
+        else:
+            with st.spinner("MATLAB rendert im Hintergrund..."):
+                work_dir_abs = ensure_working_dir()
+
+                export_df = df_sub.copy()
+                export_df = export_df.rename(
+                    columns={"final_color": "color_hex", "final_legend": "legend_name"}
+                )
+                export_df["trace_id"] = export_df["legend_name"]
+                export_df = export_df.drop_duplicates(
+                    subset=["trace_id", "target_load", "phase"], keep="last"
+                )
+
+                csv_str = export_df.to_csv(index=False)
+                matlab_code = MATLAB_SCRIPT_TEMPLATE.replace(
+                    "ACC_CLASS_PH", str(acc_class)
+                )
+                matlab_code = matlab_code.replace("Y_LIMIT_PH", str(y_limit))
+                matlab_code = matlab_code.replace(
+                    "NOMINAL_CURRENT_PH", str(int(sel_current))
+                )
+
+                try:
+                    with open(
+                        os.path.join(work_dir_abs, "plot_data.csv"),
+                        "w",
+                        encoding="utf-8",
+                    ) as f:
+                        f.write(csv_str)
+                    with open(
+                        os.path.join(work_dir_abs, "create_plots.m"),
+                        "w",
+                        encoding="utf-8",
+                    ) as f:
+                        f.write(matlab_code)
+                except OSError as e:
+                    st.error(f"❌ Dateizugriff fehlgeschlagen: {e}.")
+                    st.stop()
+
+                cmd = [matlab_exe, "-batch", "create_plots"]
+                try:
+                    subprocess.run(cmd, cwd=work_dir_abs, check=True)
                     with zipfile.ZipFile(
                         zip_buffer, "a", zipfile.ZIP_DEFLATED, False
                     ) as zip_file:
-
-                        # Einzelne Phasen via MATLAB rendern
-                        for phase in PHASES:
-                            pdf_path = generate_matlab_pdf(
-                                eng,
-                                df_sub,
-                                phase,
-                                acc_class,
-                                y_limit,
-                                color_map,
-                                main_title,
-                                temp_dir,
+                        found_pdfs = False
+                        for file in os.listdir(work_dir_abs):
+                            if file.endswith(".pdf"):
+                                found_pdfs = True
+                                zip_file.write(os.path.join(work_dir_abs, file), file)
+                        if found_pdfs:
+                            st.success("✅ Fertig! MATLAB hat die PDFs erstellt.")
+                        else:
+                            st.error(
+                                "❌ MATLAB lief durch, aber keine PDFs gefunden. Prüfe matlab_working_dir."
                             )
-                            zip_file.write(
-                                pdf_path,
-                                f"Detail_{phase}_{int(sel_current)}A_MATLAB.pdf",
-                            )
-
-                    st.success("✅ MATLAB-Diagramme generiert!")
-                eng.quit()
-            except Exception as e:
-                st.error(f"Fehler mit MATLAB: {e}")
-                st.stop()
-
-    # --- PYTHON MODUS ---
+                except subprocess.CalledProcessError as e:
+                    st.error(f"❌ MATLAB Fehler. Exit Code: {e.returncode}")
+                except Exception as e:
+                    st.error(f"❌ Allgemeiner Fehler: {e}")
     else:
-        with st.spinner("Erstelle Diagramme mit Python..."):
+        with st.spinner("Generiere PDFs..."):
             with zipfile.ZipFile(
                 zip_buffer, "a", zipfile.ZIP_DEFLATED, False
             ) as zip_file:
-                # 1. Zusammenfassung (Screenshot Main Fig)
                 img_bytes = fig.to_image(format="pdf", width=1169, height=827)
                 zip_file.writestr(f"Zusammenfassung_{int(sel_current)}A.pdf", img_bytes)
-                # 2. Einzelne Phasen
                 for phase in PHASES:
                     fig_single = create_single_phase_figure(
                         df_sub,
                         phase,
                         acc_class,
                         y_limit,
-                        color_map,
                         show_err_bars,
                         title_prefix=main_title,
                     )
