@@ -10,8 +10,8 @@ SEARCH_DIR = "messungen_sortiert"
 TARGET_LEVELS = [5, 20, 50, 80, 90, 100, 120]
 PHASES = ["L1", "L2", "L3"]
 
-# Keywords für Referenz-Erkennung
-REF_KEYWORDS = ["einspeisung", "ref", "source", "pac1", "norm"]
+# Priorität für Referenz: PAC1 steht ganz oben!
+REF_KEYWORDS = ["pac1", "einspeisung", "ref", "source", "norm"]
 
 
 def extract_metadata(filepath):
@@ -69,9 +69,7 @@ def analyze_sorted_file(filepath, meta):
 
     df.columns = [c.strip() for c in df.columns]
 
-    # Suche nach Spalten mit Stromwerten (_I)
     value_cols = [c for c in df.columns if "_I" in c]
-
     if not value_cols:
         return [], "Keine Strom-Daten gefunden"
 
@@ -82,33 +80,31 @@ def analyze_sorted_file(filepath, meta):
         nominal_amp = meta["nennstrom"] * (level / 100.0)
 
         for phase in PHASES:
-            # Relevante Spalten filtern
+            # 1. Spalten identifizieren
             relevant_cols = [
                 c for c in value_cols if c.startswith(f"{lvl_str}_{phase}")
             ]
             if not relevant_cols:
                 continue
 
-            # --- HEADER ERKENNUNG (Alt vs. Neu) ---
             devices_map = {}
             for col in relevant_cols:
-                # 1. Neues Format: 05_L1_PAC1_I
+                # Format: 05_L1_PAC1_I
                 match_new = re.search(rf"{lvl_str}_{phase}_(.+)_I$", col)
-                # 2. Altes Format: 05_L1_I_Einspeisung
+                # Format: 05_L1_I_Einspeisung
                 match_old = re.search(rf"{lvl_str}_{phase}_I_(.+)$", col)
 
                 if match_new:
-                    dev_name = match_new.group(1)
-                    devices_map[dev_name] = col
+                    devices_map[match_new.group(1)] = col
                 elif match_old:
-                    dev_name = match_old.group(1)
-                    devices_map[dev_name] = col
+                    devices_map[match_old.group(1)] = col
 
             if not devices_map:
                 continue
 
-            # --- REFERENZ FINDEN ---
+            # 2. Referenz identifizieren
             phys_ref_device = None
+            # Wir gehen die Keywords durch. Sobald eines passt (z.B. "pac1"), ist das die Ref.
             for kw in REF_KEYWORDS:
                 for dev in devices_map.keys():
                     if kw in dev.lower():
@@ -117,18 +113,18 @@ def analyze_sorted_file(filepath, meta):
                 if phys_ref_device:
                     break
 
-            # Fallback: Wenn nur eine da ist oder keine Matches -> Erste nehmen
+            # Fallback
             if not phys_ref_device:
                 phys_ref_device = sorted(list(devices_map.keys()))[0]
 
-            # Referenz-Werte laden
+            # Referenz-Daten laden
             col_phys_ref = devices_map[phys_ref_device]
             vals_phys_ref = pd.to_numeric(df[col_phys_ref], errors="coerce").dropna()
 
             phys_ref_mean = vals_phys_ref.mean() if not vals_phys_ref.empty else 0
             phys_ref_std = vals_phys_ref.std() if not vals_phys_ref.empty else 0
 
-            # --- ALLE GERÄTE DURCHGEHEN ---
+            # 3. Berechnungen für ALLE Geräte (DUTs)
             for dev, col_dut in devices_map.items():
                 vals_dut = pd.to_numeric(df[col_dut], errors="coerce").dropna()
                 if vals_dut.empty:
@@ -137,8 +133,9 @@ def analyze_sorted_file(filepath, meta):
                 dut_mean = vals_dut.mean()
                 dut_std = vals_dut.std()
 
-                # 1. Modus: Gerät vs. Messgerät (Relativ)
-                # Nur wenn es nicht die Referenz selbst ist
+                # --- FALL A: Gerät gegen Messgerät (Relativ) ---
+                # WICHTIG: Wir überspringen das Gerät, wenn es selbst die Referenz ist.
+                # PAC1 vs PAC1 macht keinen Sinn.
                 if dev != phys_ref_device and phys_ref_mean > 0:
                     results.append(
                         {
@@ -153,13 +150,13 @@ def analyze_sorted_file(filepath, meta):
                             "val_dut_std": dut_std,
                             "dut_name": dev,
                             "ref_name": phys_ref_device,
-                            "comparison_mode": "device_ref",
+                            "comparison_mode": "device_ref",  # <--- Relativ
                             "raw_file": meta["dateiname"],
                         }
                     )
 
-                # 2. Modus: Gerät vs. Nennwert (Absolut)
-                # Das machen wir auch für die Referenz (PAC1), damit man sieht wie genau die ist
+                # --- FALL B: Gerät gegen Nennwert (Absolut) ---
+                # Hier nehmen wir AUCH die Referenz (PAC1) mit auf!
                 if nominal_amp > 0:
                     results.append(
                         {
@@ -168,13 +165,13 @@ def analyze_sorted_file(filepath, meta):
                             "phase": phase,
                             "target_load": level,
                             "nennstrom": meta["nennstrom"],
-                            "val_ref_mean": nominal_amp,  # Referenz ist der Theorie-Wert
+                            "val_ref_mean": nominal_amp,  # <--- Absolut
                             "val_ref_std": 0.0,
                             "val_dut_mean": dut_mean,
                             "val_dut_std": dut_std,
                             "dut_name": dev,
                             "ref_name": "Nennwert",
-                            "comparison_mode": "nominal_ref",
+                            "comparison_mode": "nominal_ref",  # <--- Absolut
                             "raw_file": meta["dateiname"],
                         }
                     )
@@ -183,7 +180,7 @@ def analyze_sorted_file(filepath, meta):
 
 
 def main():
-    print("--- Start: DB-Update (Fix für alte & neue Dateiformate) ---")
+    print("--- Start: DB-Update (Strikte Trennung PAC1/Nennwert) ---")
 
     files = glob.glob(os.path.join(SEARCH_DIR, "**", "*_sortiert.csv"), recursive=True)
     print(f"{len(files)} sortierte Dateien gefunden.")
@@ -204,7 +201,6 @@ def main():
 
     df_all = pd.DataFrame(all_data)
 
-    # Deduplizierung
     df_clean = df_all.drop_duplicates(
         subset=[
             "wandler_key",
