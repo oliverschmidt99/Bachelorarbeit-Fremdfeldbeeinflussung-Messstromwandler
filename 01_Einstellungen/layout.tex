@@ -1,4 +1,35 @@
+% =============================================================================
+% LAYOUT-EINSTELLUNGEN (layout.tex)
+% =============================================================================
 
-\clubpenalty = 10000 % schliesst Schusterjungen aus
-\widowpenalty = 10000 % schliesst Hurenkinder aus
-\hyphenpenalty = 1000 % Keine Silbentrennung
+% --- SEITENRÄNDER UND GRÖSSE DER KOPF-/FUSSZEILE ---
+\usepackage[
+    a4paper,
+    left=25mm,
+    right=25mm,
+    top=25mm,
+    bottom=25mm,
+    headheight=2cm,
+    footskip=15mm
+]{geometry}
+
+% --- KOPF- UND FUSSZEILE (scrlayer-scrpage) ---
+\usepackage{scrlayer-scrpage}
+\KOMAoptions{headsepline=0.4pt, footsepline=0.4pt} % Korrekte Aktivierung der Linien
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\automark[section]{section}
+
+% Kopfzeile befüllen
+\ihead{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo_rolf-janssen_2024.pdf}}
+\ohead{{\normalfont\normalsize\praktikumstitel} \normalfont~|~\Large\autorenname}
+
+% Fußzeile befüllen
+\ifoot{\rightmark}
+\ofoot{Seite \thepage\ von \ref{TotPages}} % \ref ist korrekt für totpages
+
+% --- SCHRIFTARTEN ---
+\setkomafont{pagehead}{\kopfzeilenSchrift}
+\setkomafont{pagefoot}{\fusszeilenSchrift}
+\setkomafont{section}{\sectionSchrift}
+\setkomafont{subsection}{\subsectionSchrift}

@@ -11,16 +11,8 @@
 \usepackage{graphicx}
 \usepackage{csquotes}
 
-% --- LAYOUT-DATEI LADEN ---
-\input{01_Einstellungen/layout.tex}
-
-
 % --- LITERATURVERZEICHNIS (BIBLATEX) ---
-\usepackage[
-    backend=biber,
-    style=numeric,
-    sorting=none
-]{biblatex}
+\usepackage[backend=biber, style=alphabetic, sorting=ynt]{biblatex}
 
 % --- MATHEMATIK ---
 \usepackage{amsmath, amssymb, amsthm, latexsym, derivative}
@@ -31,18 +23,19 @@
 \usepackage{siunitx}
 \sisetup{locale = DE}
 
-\usepackage{svg}
 \usepackage{filecontents}
 
 % --- TABELLEN ---
+\usepackage[table]{xcolor} % table-Option für colortbl-Kompatibilität
 \usepackage{booktabs, multirow, colortbl}
 
 % --- SONSTIGE PAKETE ---
 \usepackage{enumitem}
-\usepackage{lastpage}
 \usepackage{makeidx}
-\makeindex
-\usepackage[colorlinks=true, linkcolor=blue, citecolor=green, urlcolor=magenta, hidelinks]{hyperref}
+% \makeindex % Vorerst auskommentiert
+\usepackage{totpages} % Robustes Paket für Gesamtseitenzahl
+\usepackage[acronym, nonumberlist, toc, section]{glossaries}
+\makeglossaries
 \usepackage{chngcntr}
 \usepackage[normalem]{ulem}
 \usepackage{calc}
@@ -50,14 +43,20 @@
 \usepackage{blindtext}
 \usepackage{float}
 \usepackage{newfloat}
-\usepackage{xcolor}
 \usepackage[most]{tcolorbox}
 \usepackage[framemethod=TikZ]{mdframed}
 \usepackage{etoolbox}
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=green, urlcolor=magenta, hidelinks]{hyperref} % Besser als letztes laden
+
+% --- LAYOUT-DATEI LADEN ---
+% (Wird in der Haupt-Datei geladen)
+
+% --- EINSTELLUNG FÜR KOMA-SKRIPT (entfernt Punkte im InIV) ---
+\KOMAoptions{numbers=noenddot}
 
 % --- BENUTZERDEFINIERTE EINSTELLUNGEN ---
 \setlength{\parindent}{0em}
-% GELÖSCHT: \setkomafont{sectioning}{\sffamily} - wird jetzt in layout.tex gemacht
+\setlength{\parskip}{0.5em}
 
 % --- DEINE FLOAT-UMGEBUNGEN ---
 \DeclareFloatingEnvironment[listname={Diagrammverzeichnis}, name=Diagramm, fileext=lod, placement=htp]{diagram}
@@ -74,7 +73,8 @@
 \newmdenv[linecolor=gray, linewidth=1pt, frametitle=Aufgabe, frametitlebackgroundcolor=white, frametitlefont=\color{black}\bfseries, frametitlerule=true, backgroundcolor=white, roundcorner=2pt]{aufgabenbox}
 \newcounter{rechnungbox}[section]
 \renewcommand{\therechnungbox}{\arabic{rechnungbox}}
-\newtcolorbox{rechnungbox}[1][]{colframe=darkgray, colback=white, coltitle=white, colbacktitle=gray, title={Rechnung \therechnungbox}, fonttitle=\bfseries, boxed title style={size=small}, boxrule=1pt, sharp corners=south, before upper=\stepcounter{rechnungbox}, #1}
+\newtcolorbox{rechnungbox}[1][]{colframe=darkgray, colback=white, coltitle=white, colbacktitle=gray, title={Rechnung \therechnungbox}, fonttitle=\bfseries, boxed title style={size=small},
+    boxrule=1pt, sharp corners=south, before upper=\stepcounter{rechnungbox}, #1}
 
 % --- DEINE TOGGLES ---
 \newtoggle{showtoc}
