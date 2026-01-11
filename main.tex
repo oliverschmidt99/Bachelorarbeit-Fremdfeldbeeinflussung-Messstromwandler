@@ -10,6 +10,7 @@
 % --- EINSTELLUNGEN LADEN ---
 \input{01_Einstellungen/praeambel.tex}
 \input{01_Einstellungen/befehle.tex}
+\input{01_Einstellungen/layout.tex}
 
 % --- LITERATURQUELLE ANGEBEN ---
 \addbibresource{bibliographie.bib}
@@ -29,7 +30,13 @@
 \clearpage
 \pagenumbering{Roman}
 
-\include{02_Inhalt/01_Vorspann/01_abstract}
+% In 02_Inhalt/01_Vorspann/02_verzeichnisse.tex
+
+% Abkürzungsverzeichnis ausgeben
+\printglossary[type=\acronymtype, title=Abkürzungsverzeichnis]
+
+% (Optional) Normales Glossar ausgeben, falls du eines hast:
+% \printglossary[title=Glossar]
 \newpage
 \input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
 \newpage

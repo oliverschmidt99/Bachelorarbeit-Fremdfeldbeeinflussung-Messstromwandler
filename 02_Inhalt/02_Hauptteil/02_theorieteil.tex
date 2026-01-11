@@ -36,7 +36,7 @@ Eine weitere spezielle Wandlertyp wird im folgenden Kapitel \ref{sec:kompensatio
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
 
-Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren: den Lagefehler durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) und die Einwirkung von externen Fremdfeldern. Die physikalischen Hintergründe zu letzteren werden in Kapitel~\ref{sec:auswirkung_fremdfelder} erläutert.
+Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren: den Lagefehler durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) und die Einwirkung von externen Fremdfeldern. Die physikalischen Hintergründe zu letzteren werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} erläutert.
 
 Eine exzentrische Anordnung der Stromschiene tritt in der Praxis häufig auf, wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Kupferschiene. Durch diesen geometrischen Spielraum ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
 
@@ -136,10 +136,6 @@ Neben dem Stromfehler ist der \textbf{Fehlwinkel} entscheidend, der die Phasenve
 \end{table}
 
 
-
-
-
-
 \subsubsection{Ersatzschaltbild eines Messstromwandlers}
 \label{sec:ersatzschaltbild}
 
@@ -152,7 +148,6 @@ Bei einem Aufsteckstromwandler bildet der durch die Fensteröffnung geführte Le
 \einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vollständiges Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
 
 Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ vernachlässigen, vorausgesetzt, der Primärleiter befindet sich zentriert im Eisenkern und die Sekundärwicklung ist gleichmäßig über den Umfang verteilt~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis jedoch weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der hier vorliegenden Betrachtung – wie im vereinfachten Schaltbild ersichtlich – nicht vernachlässigt.
-
 
 \subsection{Physikalisches Wirkprinzip}
 \label{sec:physikalisches_prinzip}
@@ -168,17 +163,15 @@ Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Wind
 
 \einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Vergleich der Simulationsergebnisse bei zentrischer und exzentrischer Leiteranordnung im Wandler}{pic:sim_wandler_vergleich}
 
-\subsection{Entstehung und Ausbreitung magnetischer Störfelder}
+\subsubsection{Entstehung und Ausbreitung magnetischer Störfelder}
 \label{sec:stoerfelder_schaltanlagen}
 
 Die Fremdfelder, die in Niederspannungsschaltanlagen auftreten und Messergebnisse beeinflussen können, entstehen primär durch hohe Ströme in benachbarten Leitern (ab ca. 2000 A). In typischen Sammelschienensystemen ist dabei häufig der mittlere Leiter (L2) von den Einflüssen der Außenleiter am stärksten betroffen, da sich hier die Felder der benachbarten Phasen überlagern.
 
-\subsection{Physikalische Auswirkungen von Fremdfeldern auf den Wandlerkern}
-\label{sec:auswirkung_fremdfelder}
-
-% Hier kommt dein Text zur Sättigung / Permeabilitätsänderung durch Fremdfelder
-
 \subsection{Messabweichung und Fehlerfortpflanzung}
 \label{sec:messabweichung_fehlerfortpflanzung}
 
-% Hier Formeln für den Gesamtfehler
+\subsection{Aufbau Niederspannungsschaltanlagen}
+\label{sec:aufbau_niederspannungsschaltanlagen}
+
+
