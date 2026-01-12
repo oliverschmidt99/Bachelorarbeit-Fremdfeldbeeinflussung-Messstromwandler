@@ -18,43 +18,46 @@ DEFAULT_MATLAB_PATH = r"C:\Program Files\MATLAB\R2025a\bin\matlab.exe"
 
 # --- FARBPALETTEN ---
 BLUES = [
-    "#042a5c",
-    "#084594",
-    "#2171b5",
-    "#4292c6",
-    "#6baed6",
-    "#9ecae1",
-    "#c6dbef",
-    "#000080",
-    "#0000cd",
-    "#4169e1",
-    "#1e90ff",
-    "#87cefa",
+    "#1f4e8c",
+    "#2c6fb2",
+    "#4a8fd1",
+    "#6aa9e3",
+    "#8fc0ee",
+    "#b3d5f7",
+    "#d6e8fb",
+    "#5f7fd9",
+    "#6fa3ff",
+    "#8bb8ff",
+    "#a6ccff",
+    "#cfe2ff",
 ]
+
 ORANGES = [
-    "#4a1700",
-    "#662506",
-    "#993404",
-    "#cc4c02",
-    "#ec7014",
-    "#fe9929",
-    "#fec44f",
-    "#d95f0e",
-    "#f16913",
-    "#ff7f0e",
-    "#ffa500",
-    "#ffbb78",
+    "#8c4a2f",
+    "#a65a2a",
+    "#c96a2a",
+    "#e07b39",
+    "#f28e4b",
+    "#f6a25e",
+    "#f9b872",
+    "#f4a261",
+    "#f7b267",
+    "#ff9f4a",
+    "#ffb347",
+    "#ffd199",
 ]
+
 OTHERS = [
-    "#006400",
-    "#2ca02c",
-    "#7f7f7f",
-    "#9467bd",
-    "#8c564b",
-    "#e377c2",
-    "#bcbd22",
-    "#17becf",
+    "#4caf50",  # Grün
+    "#6bd36b",  # Hellgrün
+    "#b0b0b0",  # Grau
+    "#b39ddb",  # Violett
+    "#bc8f6f",  # Braun
+    "#f2a7d6",  # Pink
+    "#d4d65a",  # Gelbgrün
+    "#6fd6e5",  # Cyan
 ]
+
 
 # --- MATLAB SKRIPT TEMPLATE ---
 MATLAB_SCRIPT_TEMPLATE = r"""
