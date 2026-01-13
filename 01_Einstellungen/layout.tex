@@ -21,8 +21,22 @@
 \automark[section]{section}
 
 % Kopfzeile befüllen
+% Vorherige Kopfzeilen-Einstellungen bereinigen
+\clearpairofpagestyles
+
+% Links: Logo
 \ihead{\includegraphics[height=1.5cm,keepaspectratio]{03_Ressourcen/Logo/logo_rolf-janssen_2024.pdf}}
-\ohead{{\normalfont\normalsize\praktikumstitel} \normalfont~|~\Large\autorenname}
+
+% Mitte: Überschrift zentriert (eingerahmt von Linien)
+\chead{%
+    \normalfont\normalsize%
+    \vlinie\quad\versuchstitel\quad\vlinie%
+}
+
+% Rechts: Name
+\ohead{%
+    \normalfont\normalsize\autorenname%
+}
 
 % Fußzeile befüllen
 \ifoot{\rightmark}

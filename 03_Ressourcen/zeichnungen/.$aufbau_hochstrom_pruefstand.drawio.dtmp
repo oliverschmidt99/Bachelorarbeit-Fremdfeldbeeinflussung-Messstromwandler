@@ -242,7 +242,7 @@
         <mxCell id="JsNOWj3ZBV7EMRkf2o5w-26" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.527;entryY=2.328;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=4;" edge="1" parent="1" source="CxRArKm7OdYySSBrYKai-100" target="CxRArKm7OdYySSBrYKai-20">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="JsNOWj3ZBV7EMRkf2o5w-27" value="&lt;b data-path-to-node=&quot;14,3,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Messumformer&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;14,3,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;K3&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+        <mxCell id="JsNOWj3ZBV7EMRkf2o5w-27" value="&lt;h1 class=&quot;product_title entry-title elementor-heading-title elementor-size-default&quot;&gt;Strommessumformer&lt;/h1&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;14,3,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;3-K&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="920" y="640" width="200" height="70" as="geometry" />
         </mxCell>
         <mxCell id="JsNOWj3ZBV7EMRkf2o5w-29" value="" style="group" vertex="1" connectable="0" parent="1">
