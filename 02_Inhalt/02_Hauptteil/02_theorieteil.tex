@@ -3,10 +3,10 @@
 
 \noindent\textcolor{red}{\rule{\textwidth}{1pt}}
 
-\subsection{Grundlagen induktiver Messstromwandler}
+\subsection{Grundlagen Messstromwandler}
 \label{sec:grundlagen_wandler}
 
-Ein induktiver Messstromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
+Ein Stromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
 Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von 1 A oder 5 A ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
 
 \subsection{Aufbau und Bauformen}
@@ -16,11 +16,14 @@ Konstruktiv setzt sich der betrachtete Messstromwandler im Wesentlichen aus sech
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler.drawio.pdf}{Schematischer Aufbau eines Aufsteckstromwandlers}{pic:aufbau_wandler}
 
-Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen; eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:hochstrom_pruefstand} (Hochstromprüfstand). Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Um dabei eine zentrierte Leiterführung zu gewährleisten, bieten einige Hersteller spezielle Vorrichtungen an, mit denen sich unterschiedliche Schienengeometrien im Fensterausschnitt fixieren lassen.
+Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:hochstrom_pruefstand} (Hochstromprüfstand). Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung bezeichnet man als Durchsteck- oder Aufsteckstromwandler. Sie entspricht physikalisch einer Windungszahl von eins ($N_1 = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Um dabei eine zentrierte Leiterführung zu gewährleisten, bieten einige Hersteller spezielle Vorrichtungen an, mit denen sich unterschiedliche Schienengeometrien im Fensterausschnitt fixieren lassen.
 
-Das zentrale Element der Übertragung bildet der Magnetkern. Er hat die Aufgabe, den magnetischen Fluss bei geringstmöglichem magnetischen Widerstand zu bündeln und besteht aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$), um die Übertragungsverluste zu minimieren. Die magnetischen Eigenschaften des Kernmaterials bestimmen dabei maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
+Das zentrale Element der Übertragung bildet der Magnetkern. Er hat die Aufgabe, den magnetischen Fluss bei geringstmöglichem magnetischen Widerstand zu bündeln. Ist dieser Kern als geschlossener Toroid ohne Luftspalt ausgeführt, spricht man von einem Ringkern. Der Kern besteht aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$), um die Übertragungsverluste zu minimieren. Die magnetischen Eigenschaften des Kernmaterials bestimmen dabei maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
 
-Direkt auf diesen Kern ist die Sekundärwicklung aufgebracht. Sie transformiert den magnetischen Fluss zurück in einen elektrischen Strom und ist mit den externen Anschlussklemmen verbunden. Das Gehäuse umschließt schließlich den gesamten Eisenkern samt Sekundärwicklung und gewährleistet die notwendige elektrische Isolation sowie den mechanischen Schutz.
+Direkt auf diesen Ringkern ist die Sekundärwicklung aufgebracht. Sie transformiert den magnetischen Fluss zurück in einen elektrischen Strom und ist mit den externen Anschlussklemmen verbunden. Das Gehäuse umschließt schließlich den gesamten Eisenkern samt Sekundärwicklung und gewährleistet die notwendige elektrische Isolation sowie den mechanischen Schutz.
+
+
+
 
 \subsubsection{Unterscheidung zwischen Mess- und Schutzstromwandlern}
 \label{sec:unterschiede_mess_schutzwandler}
@@ -36,13 +39,15 @@ Eine weitere spezielle Wandlertyp wird im folgenden Kapitel \ref{sec:kompensatio
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
 
-Kompensationswicklungen werden eingesetzt, um zwei wesentliche Störeinflüsse bei Messstromwandlern zu reduzieren: den Lagefehler durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) und die Einwirkung von externen Fremdfeldern. Die physikalischen Hintergründe zu letzteren werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} erläutert.
+Kompensationswicklungen dienen primär dazu, zwei signifikante Störeinflüsse bei Messstromwandlern zu minimieren. Dies sind der Lagefehler, verursacht durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}), sowie die Einwirkung externer Fremdfelder. Die physikalischen Grundlagen zu letzterem Aspekt werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} detailliert.
 
-Eine exzentrische Anordnung der Stromschiene tritt in der Praxis häufig auf, wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Kupferschiene. Durch diesen geometrischen Spielraum ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
+Eine exzentrische Leiteranordnung tritt in der Praxis häufig auf, insbesondere wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Stromschiene. Aufgrund des geometrischen Spielraums ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler_kompensiert.drawio.pdf}{Schematischer Aufbau eines Wandlers mit zusätzlichen Kompensationswicklungen}{pic:aufbau_wandler_kompensationswicklungen}
 
-Die Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} zeigt schematisch, wie diese Wicklungen ($W_1$ bis $W_4$) symmetrisch auf dem Umfang des Eisenkerns verteilt sind. Technisch ist diese Anordnung so realisiert, dass die Teilwicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Durch diese Parallelschaltung können sich Ausgleichsströme zwischen den Wicklungssegmenten ausbilden, welche lokale Sättigungserscheinungen oder Asymmetrien im Magnetfluss kompensieren.
+Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} veranschaulicht das grundlegende Funktionsprinzip. Die Wicklungen ($W_1$ bis $W_4$) sind symmetrisch über den Umfang des Eisenkerns verteilt. Technisch wird dies realisiert, indem Teilwicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Diese Parallelschaltung ermöglicht den Fluss von Ausgleichsströmen zwischen den Segmenten, wodurch lokale Sättigungserscheinungen und Asymmetrien im Magnetfluss kompensiert werden.
+
+Es ist zu beachten, dass die Abbildung lediglich die allgemeine Kompensationswicklungstechnik nach \cite[S.77]{minkner2020messwandler} darstellt. In der Praxis setzen Hersteller oft individuelle, teils proprietäre Wicklungsdesigns ein, um spezifische Optimierungen zu erreichen. Die tatsächliche technische Ausführung kann daher von dieser schematischen Darstellung abweichen.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/kupferschiene_positionierung_vergleich.drawio.pdf}{Schematische Darstellung der zentrischen und exzentrischen Positionierung der Kupferschiene}{pic:schema_kupferschiene_pos}
 

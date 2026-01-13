@@ -35,6 +35,20 @@ Abbildung~\ref{pic:aufbau_hochstrom_pruefstand} zeigt den Aufbau des Prüfstande
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Aufbau des Hochstrom-Prüfstandes}{pic:aufbau_hochstrom_pruefstand}
 
+\begin{table}[H]
+    \centering
+    \caption{Komponenten und technische Daten der Hochstromquelle}
+    \label{tab:komponenten_hochstrom}
+    \begin{tabular}{@{}p{3.5cm}p{4cm}p{6cm}@{}}
+        \toprule
+        \textbf{Komponente}      & \textbf{Hersteller / Typ}         & \textbf{Technische Daten}                                                                    \\ \midrule
+        Säulenstelltransformator & Ruhstrat                          & \SI{90}{kVA}; Prim: \SI{380}{V}; Sek: \SI{0}{V} bis \SI{380}{V}; \SI{70}{A}; Schaltgruppe D0 \\ \addlinespace
+        Festtransformator        & Janssen \newline Typ UI 260/420 M & \SI{30}{kVA}; Prim: \SI{380}{V}; Sek: \SI{6}{V}; \SI{5000}{A}                                \\ \addlinespace
+        Stromwandler             & Celsa \newline Typ ICG            & Prim: \SI{6000}{A}; Sek: \SI{5}{A}; Bürde: \SI{5}{VA}; Klasse 0,2S                           \\ \addlinespace
+        Steuerung                & Siemens ET 200S                   & Profinet-Anbindung, Modularer Aufbau, Stromregelung                                          \\ \addlinespace
+        Visualisierung           & Siemens WinCC                     & HMI-System, Prozessüberwachung, Sollwertvorgabe                                              \\ \bottomrule
+    \end{tabular}
+\end{table}
 
 
 \subsection{Messtechnisches Konzept und Durchführung}
