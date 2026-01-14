@@ -26,38 +26,45 @@ Um normkonforme Ergebnisse gemäß DIN EN 61869-2 zu gewährleisten, ist es zwin
 \subsection{Hochstrom-Prüfstand}
 \label{sec:hochstrom_pruefstand}
 
+Der Hochstrom-Prüfstand dient der Erzeugung und Regelung hoher Wechselströme für thermische und elektrodynamische Untersuchungen an elektrischen Betriebsmitteln. Als Prüflinge fungieren hierbei in der Regel Niederspannungsschaltanlagen oder deren Teilkomponenten, wie beispielsweise Stromschienensysteme und Schaltgeräte, die unter realitätsnahen Lastbedingungen auf ihre thermische Belastbarkeit und Festigkeit geprüft werden. Die Anlage ermöglicht die Bereitstellung von Strömen bis \SI{5000}{A} bei einer geringen Sekundärspannung. Im Folgenden werden der elektrotechnische Aufbau, das darauf abgestimmte Messkonzept sowie die Implementierung der Stromregelung detailliert beschrieben.
+
+
 \subsubsection{Aufbau und Funktionsweise}
+\label{sec:aufbau_funktionsweise}
 
-Das Blockschaltbild in Abbildung~\ref{pic:aufbau_hochstrom_pruefstand} veranschaulicht die Topologie des verwendeten Hochstrom-Prüfstandes. Die Anlage wird über eine dreiphasige 160\,A-Einspeisung versorgt und besteht im Wesentlichen aus einer zweistufigen Transformatorenkaskade sowie der zugehörigen Steuerungsperipherie.
 
-Als zentrales Stellglied im Leistungskreis fungiert ein motorbetriebener Säulenstelltransformator der Firma \glqq RPT Ruhstrat Power Technology GmbH\grqq. Dieser stellt die Primärspannung für den nachgeschalteten Hochstromtransformator (Festtransformator) variabel von 0 bis 380\,V bereit. Der Spannungsabgriff erfolgt konstruktiv über zwei auf den Säulen laufende Kohlerollbürsten. An einer Säule sind zwei Außenleiter angeschlossen, wobei die Abgriffe gegenläufig verfahren werden, um die Ausgangsspannung zu variieren.
+Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstelltransformator der Firma Ruhstrat, der mit einer Leistung von \SI{90}{kVA} als zentrales Stellglied fungiert. Dem Transformator sind Netzdrosseln nachgeschaltete, die zur Entkopplung von Stromspitzen dienen. Die Spannungsstellung erfolgt stufenlos über verstellbare Kohlerollbürsten, wodurch eine variable Ausgangsspannung zwischen \SI{0}{V} und \SI{380}{V} bereitgestellt wird. Diese Spannung speist den nachgeschalteten Hochstrom-Festtransformator von Rolf Janssen (Typ UI 260/420 M). Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf eine Kleinspannung von \SI{6}{V} herab, was sekundärseitig die Realisierung von Prüfströmen bis zu \SI{5000}{A} am dreiphasigen Abgang ermöglicht.
 
-Die so eingestellte Spannung wird über Netzdrosseln an den Festtransformator weitergeleitet. Dieser transformiert die Spannung auf eine Kleinspannung von 6\,V herab und stellt sekundärseitig die benötigten Prüfströme von bis zu 5000\,A zur Verfügung.
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Blockschaltbild des Hochstrom-Prüfstandes mit Leistungs- und Signalpfaden}{pic:aufbau_hochstrom_pruefstand}
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Blockschaltbild des Hochstrom-Prüfstandes}{pic:aufbau_hochstrom_pruefstand}
+Zur Überwachung und Regelung des Systems ist eine Sensorik integriert. Die Erfassung der Ströme erfolgt über Celsa-Stromwandler der Klasse 0,2S, deren Signale durch Messumformer des Typs K-3 (3-K Elektrik) in analoge Normsignale (\SI{0}{\milli\ampere} bis \SI{20}{\milli\ampere}) gewandelt werden. Diese Signale dienen der dezentralen Peripherie Siemens ET 200S als Istwerte für die Stromregelung. Zusätzlich können Rogowskispulen zur Erfassung von Stromverläufen sowie Temperatursensoren zur thermischen Überwachung des Prüflings angeschlossen werden. Die gesamte Steuerung, Parametrierung und das Datenlogging erfolgen über ein HMI-System auf Basis von Siemens WinCC. Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
 
-Die technischen Spezifikationen der verwendeten Komponenten sind in Tabelle~\ref{tab:komponenten_hochstrom_v2} zusammengefasst.
+
 
 \begin{table}[htbp]
     \centering
     \caption{Detaillierte Spezifikation der Komponenten}
-    \label{tab:komponenten_hochstrom_v2}
+    \label{tab:komponenten_hochstrom}
     \small
-    \begin{tabular}{@{}p{3cm} p{2.5cm} p{2cm} p{2.5cm} p{2.5cm}@{}}
+    \begin{tabular}{@{}l l l l l@{}}
         \toprule
-        \textbf{Komponente}  & \textbf{Typ}                       & \textbf{Leistung / Bürde}                                             & \textbf{Primär / Input}            & \textbf{Sekundär / Output}                   \\ \midrule
+        \textbf{Komponente}  & \textbf{Typ}    & \textbf{Leistung / Bürde}                                             & \textbf{Primär / Input} & \textbf{Sekundär / Output} \\ \midrule
 
-        Säulenstelltrafo     & Ruhstrat                           & \SI{90}{kVA}                                                          & \SI{380}{V}                        & \SI{0}{V}--\SI{380}{V} \newline (\SI{70}{A}) \\ \addlinespace
+        Säulenstelltrafo     & Ruhstrat        & \SI{90}{kVA}                                                          & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V}     \\
+                             &                 &                                                                       &                         & (\SI{70}{A})               \\ \addlinespace
 
-        Festtransformator    & Janssen \newline UI 260/420 M      & \SI{30}{kVA}                                                          & \SI{380}{V}                        & \SI{6}{V} \newline (\SI{5000}{A})            \\ \addlinespace
+        Festtransformator    & Janssen         & \SI{30}{kVA}                                                          & \SI{380}{V}             & \SI{6}{V}                  \\
+                             & UI 260/420 M    &                                                                       &                         & (\SI{5000}{A})             \\ \addlinespace
 
-        Stromwandler         & Celsa ICG                          & \SI{5}{VA}                                                            & \SI{6000}{A}                       & \SI{5}{A} \newline (Kl. 0,2S)                \\ \addlinespace
+        Stromwandler         & Celsa ICG       & \SI{5}{VA}                                                            & \SI{6000}{A}            & \SI{5}{A}                  \\
+                             &                 &                                                                       &                         & (Kl. 0,2S)                 \\ \addlinespace
 
-        Messumformer (K3)    & 3-K Elektrik \newline DMI30-05-V01 & --                                                                    & \SI{0}{A}--\SI{5}{A} \newline (AC) & \SI{0}{mA}--\SI{20}{mA} \newline (DC)        \\ \midrule
+        Messumformer (K-3)   & 3-K Elektrik    & --                                                                    & \SI{0}{A}--\SI{5}{A}    & \SI{0}{mA}--\SI{20}{mA}    \\
+                             & DMI30-05-V01    &                                                                       & (AC)                    & (DC)                       \\ \midrule
 
-        \textbf{Leittechnik} & \textbf{Typ}                       & \multicolumn{3}{l}{\textbf{Beschreibung}}                                                                                                                 \\ \cmidrule(r){1-2}
-        Steuerung            & Siemens ET 200S                    & \multicolumn{3}{l}{Profinet-Anbindung, Stromregelung, Analogeingänge}                                                                                     \\
-        Visualisierung       & Siemens WinCC                      & \multicolumn{3}{l}{HMI-System, Prozessüberwachung, Logging}                                                                                               \\ \bottomrule
+        \textbf{Leittechnik} & \textbf{Typ}    & \multicolumn{3}{l}{\textbf{Beschreibung}}                                                                                    \\ \cmidrule(r){1-2}
+        Steuerung            & Siemens ET 200S & \multicolumn{3}{l}{Profinet-Anbindung, Stromregelung, Analogeingänge}                                                        \\
+        Visualisierung       & Siemens WinCC   & \multicolumn{3}{l}{HMI-System, Prozessüberwachung, Datenlogging}                                                             \\ \bottomrule
     \end{tabular}
 \end{table}
 
@@ -65,25 +72,22 @@ Die technischen Spezifikationen der verwendeten Komponenten sind in Tabelle~\ref
 \subsubsection{Messkonzept}
 \label{sec:Messkonzept}
 
-Um den Prüfstrom präzise regeln zu können, ist eine exakte Erfassung des Istwertes erforderlich. Die Messkette ist dabei mehrstufig aufgebaut:
-Zunächst wird der tatsächliche Hochstrom auf der Sekundärseite des Festtransformators über einen Präzisions-Stromwandler der Klasse 0,2S erfasst. Dieser wandelt den Primärstrom von bis zu \SI{6000}{A} auf ein handhabbares Sekundärsignal von \SI{5}{A} (AC).
+Das Messkonzept ist darauf ausgelegt, sowohl die Regelgröße für die SPS bereitzustellen als auch eine umfassende Charakterisierung des Prüflings zu ermöglichen. Wie im Blockschaltbild ersichtlich, erfolgt die Signalerfassung über drei Wege:
 
-Da die analoge Eingangsbaugruppe der Speicherprogrammierbaren Steuerung (SPS) dieses Wechselstromsignal nicht direkt verarbeiten kann, ist eine Signalkonditionierung notwendig. Hierfür wird ein Strommessumformer des Typs K3 (DMI30-05-V01) eingesetzt. Dieser erfüllt zwei Funktionen:
 
-Das resultierende Stromsignal wird schließlich von der Analogeingangskarte der ET 200S eingelesen und digitalisiert.
-
+\textbf{Stromregelung (Primärkreis):}Drei Celsa-Stromwandler erfassen den Strom im Primärkreis des Festtransformators. Die Wandlersignale (\SI{0}{A} bis \SI{5}{A} AC) werden durch Messumformer des Typs K-3 in ein analoges Normsignal (\SI{0}{mA} bis \SI{20}{mA} DC) umgesetzt. Dieses Signal wird von der Siemens ET 200S eingelesen und dient als Istwert für den Regelalgorithmus.
+\textbf{Prüfstromerfassung (Sekundärkreis):}Optional können Rogowski-Spulen am Abgang genutzt werden, um hochfrequente Anteile oder Transienten im Prüfstrom ohne magnetische Sättigungseffekte zu erfassen.
+\textbf{Thermische Überwachung:}Über Analogeingänge der ET 200S werden Temperatursensoren (z.\,B. Pt100) direkt am Prüfling oder an kritischen Komponenten des Prüfstandes überwacht.
 
 \subsubsection{Regelungskonzept}
 \label{sec:regelungskonzept}
 
-Die Regelung des Prüfstroms erfolgt digital über die Siemens ET 200S Steuerung. In der SPS ist ein Regelalgorithmus implementiert, der als geschlossener Regelkreis arbeitet.
+\subsubsection{Regelungskonzept}
+\label{sec:regelungskonzept}
 
-Der digitalisierte Messwert aus dem Messkonzept dient dabei als Istgröße (Rückführgröße). Der Sollwert (Führungsgröße) wird durch den Bediener oder ein automatisiertes Prüfprogramm über das Visualisierungssystem (Siemens WinCC HMI) vorgegeben.
-Die SPS berechnet zyklisch die Regelabweichung und steuert daraufhin den Motor des Säulenstelltransformators an. Da der Stelltransformator durch die mechanische Verstellung über den Motor ein integrierendes Verhalten aufweist (der Strom ändert sich so lange, wie der Motor läuft), ist die Regelung entsprechend parametriert, um ein Übersteuern oder Schwingen um den Sollwert zu verhindern.
+Die Stromregelung wird als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vor. Die SPS vergleicht diesen mit dem rückgeführten Istwert der K-3 Messumformer.
 
-Zusätzlich übernimmt das WinCC-System das Datenlogging, wodurch der zeitliche Verlauf von Soll- und Iststrom für die Dokumentation der Versuchsergebnisse aufgezeichnet wird.
-
-
+Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators. Um mechanischen Verschleiß durch permanentes Nachregeln (Toter Gang) zu vermeiden, ist eine Hysterese in den Regelalgorithmus integriert. Die Visualisierung übernimmt dabei nicht nur die Parametrierung, sondern auch das lückenlose Datenlogging der Versuchsverläufe.
 
 \subsection{Messtechnisches Konzept und Durchführung}
 \label{sec:messtechnisches_konzept}
