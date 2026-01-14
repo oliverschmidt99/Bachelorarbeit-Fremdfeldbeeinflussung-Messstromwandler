@@ -96,13 +96,18 @@ Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor de
 \subsection{Messtechnisches Konzept und Durchführung}
 \label{sec:messtechnisches_konzept}
 
-% 1. Der Teil, in dem du erklärst, wie die elektrischen Werte entstehen
+Im Rahmen dieser Arbeit wird ausschließlich die Übersetzungsmessabweichung $\varepsilon$ betrachtet. Diese stellt die entscheidende Kenngröße für den Einsatz von Messkomponenten in Niederspannungsschaltanlagen dar.
+
 \subsubsection{Versuchsaufbau zur Ermittlung der Messabweichung}
 \label{sec:versuchsaufbau_genauigkeit}
-% Hier beschreibst du die Referenzmessgeräte, die Stromquelle 
-% und das Verfahren (z.B. Vergleichsmethode), um die Werte zu erhalten.
 
-% 2. Der Teil, in dem es um die physische Anordnung geht
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
+
+Der Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) basiert auf einer Vergleichsmessung zwischen der Einspeisung als Referenz und dem eigentlichen Prüfling.
+
+Die Ermittlung der Messwerte erfolgt über zwei parallele Pfade, um eine direkte Vergleichbarkeit zwischen Referenz und Prüfling zu gewährleisten. Zur Erfassung der Referenzwerte an der Einspeisung werden K-3-Messumformer eingesetzt, welche das Primärsignal umformen und an die SPS übermitteln. Die anschließende Auswertung erfolgt im Visualisierungssystem WinCC, wobei der Messwert als zeitlicher Mittelwert aus einem Diagramm abgelesen wird. Parallel dazu wird das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke erfasst. Um Messwertschwankungen auszugleichen und eine konsistente Datenbasis zur Referenzmessung zu schaffen, wird das Multimeter im Modus „Acquire“ betrieben, wodurch ebenfalls ein gemittelter Wert für die weitere Analyse zur Verfügung steht.
+
+
 \subsubsection{Konstruktive Gestaltung der Primärleiterführung}
 \label{sec:geometrie_kupferschienen}
 
