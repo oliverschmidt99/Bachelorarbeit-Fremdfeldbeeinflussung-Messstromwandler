@@ -75,15 +75,15 @@ Zur Überwachung und Regelung des Systems ist eine Sensorik integriert. Die Erfa
 Das Messkonzept ist darauf ausgelegt, sowohl die Regelgröße für die SPS bereitzustellen als auch eine umfassende Charakterisierung des Prüflings zu ermöglichen. Wie im Blockschaltbild ersichtlich, erfolgt die Signalerfassung über drei Wege:
 
 
-\textbf{Stromregelung (Primärkreis):}Drei Celsa-Stromwandler erfassen den Strom im Primärkreis des Festtransformators. Die Wandlersignale (\SI{0}{A} bis \SI{5}{A} AC) werden durch Messumformer des Typs K-3 in ein analoges Normsignal (\SI{0}{mA} bis \SI{20}{mA} DC) umgesetzt. Dieses Signal wird von der Siemens ET 200S eingelesen und dient als Istwert für den Regelalgorithmus.
-\textbf{Prüfstromerfassung (Sekundärkreis):}Optional können Rogowski-Spulen am Abgang genutzt werden, um hochfrequente Anteile oder Transienten im Prüfstrom ohne magnetische Sättigungseffekte zu erfassen.
-\textbf{Thermische Überwachung:}Über Analogeingänge der ET 200S werden Temperatursensoren (z.\,B. Pt100) direkt am Prüfling oder an kritischen Komponenten des Prüfstandes überwacht.
+\begin{itemize}
+    \item \textbf{Stromregelung (Primärkreis):} Drei Celsa-Stromwandler erfassen den Strom im Primärkreis des Festtransformators. Die Wandlersignale (\SI{0}{A} bis \SI{5}{A} AC) werden durch Messumformer des Typs K-3 in ein analoges Normsignal (\SI{0}{mA} bis \SI{20}{mA} DC) umgesetzt. Dieses Signal wird von der Siemens ET 200S eingelesen und dient als Istwert für den Regelalgorithmus.
+    \item \textbf{Prüfstromerfassung (Sekundärkreis):} Optional können Rogowski-Spulen am Abgang genutzt werden, um hochfrequente Anteile oder Transienten im Prüfstrom ohne magnetische Sättigungseffekte zu erfassen.
+    \item \textbf{Thermische Überwachung:} Über Analogeingänge der ET 200S werden Temperatursensoren (z.\,B. Pt100) direkt am Prüfling oder an kritischen Komponenten des Prüfstandes überwacht.
+\end{itemize}
 
 \subsubsection{Regelungskonzept}
 \label{sec:regelungskonzept}
 
-\subsubsection{Regelungskonzept}
-\label{sec:regelungskonzept}
 
 Die Stromregelung wird als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vor. Die SPS vergleicht diesen mit dem rückgeführten Istwert der K-3 Messumformer.
 
