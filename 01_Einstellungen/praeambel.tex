@@ -24,7 +24,6 @@
 \sisetup{locale = DE}
 
 %\usepackage{filecontents}
-
 % --- TABELLEN ---
 \usepackage[table]{xcolor} % table-Option für colortbl-Kompatibilität
 \usepackage{booktabs, multirow, colortbl}
@@ -93,3 +92,18 @@
 
 % --- Globale Schriftart für den Haupttext aktivieren ---
 \AtBeginDocument{\haupttextSchrift}
+
+
+
+% Definition von \subsubsubsection
+\makeatletter
+\newcommand{\subsubsubsection}{\@startsection{paragraph}{4}{\z@}%
+    {-3.25ex \@plus -1ex \@minus -.2ex}%
+    {1.5ex \@plus .2ex}%
+    {\normalfont\normalsize\bfseries}}
+\makeatother
+
+% Sorgt dafür, dass die vierte Ebene nummeriert wird (secnumdepth)
+% und im Inhaltsverzeichnis erscheint (tocdepth)
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
