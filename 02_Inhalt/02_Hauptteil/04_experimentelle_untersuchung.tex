@@ -3,7 +3,7 @@
 
 Nachdem der theoretische Rahmen und der technische Aufbau des Prüfstandes dargelegt wurden, befasst sich dieses Kapitel mit der praktischen Inbetriebnahme und der anschließenden Optimierung des Messsystems. [cite: 366, 370]
 
-\section{Inbetriebnahme und Plausibilitätsprüfung}
+\subsection{Inbetriebnahme und Plausibilitätsprüfung}
 \label{sec:inbetriebnahme}
 
 Die initiale Inbetriebnahme des Hochstrom-Prüfstandes diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter realen Lastbedingungen zu verifizieren. [cite: 367] Bei der Auswertung der ersten Messreihen wurde jedoch eine signifikante systematische Abweichung festgestellt, die außerhalb der zulässigen Toleranzen der angestrebten Genauigkeitsklassen lag.
@@ -14,7 +14,7 @@ Die detaillierte Fehleranalyse ergab zwei primäre Schwachstellen im ursprüngli
     \item \textbf{Messsynchronität:} Die manuelle Erfassung der Prüflingsdaten mittels Fluke-Multimetern erfolgte nicht zeitgleich zur Referenzmessung der Einspeisung. Bedingt durch geringfügige Lastschwankungen im Hochstrompfad und menschliche Ablesefehler konnte keine konsistente Datenbasis für die Berechnung der Messabweichung $\epsilon$ gemäß Gleichung (2) geschaffen werden. [cite: 265]
 \end{itemize}
 
-\section{Optimierung der Messdatenerfassung}
+\subsection{Optimierung der Messdatenerfassung}
 \label{sec:optimierung}
 
 Um die identifizierten Fehlerquellen zu eliminieren, wurde eine grundlegende technologische Neuausrichtung der Messtechnik vorgenommen. [cite: 368] Anstelle der analogen Signalpfade kommen nun digitale Energiemessgeräte der Siemens SENTRON-Reihe zum Einsatz:
@@ -25,7 +25,7 @@ Um die identifizierten Fehlerquellen zu eliminieren, wurde eine grundlegende tec
 
 Diese Geräte werden direkt über PROFINET in die Systemstruktur eingebunden. Hierdurch entfallen parasitäre Effekte, die bei der Übertragung analoger Normsignale in einer Hochstromumgebung auftreten können. Durch die Nutzung der Geräteklasse 0,2 wird eine hochpräzise und einheitliche Messbasis sichergestellt. Da beide Geräte ihre Daten zeitsynchron über den Bus an die CPU der Siemens ET 200S liefern, ist eine exakte zeitliche Korrelation der Messwerte für die Einspeisung und den Prüfling gewährleistet.
 
-\section{Validierung des optimierten Systems}
+\subsection{Validierung des optimierten Systems}
 \label{sec:validierung}
 
 Zur Validierung des optimierten Prüfstandes wurde ein automatisierter Messablauf implementiert. [cite: 369] Hierfür wurde ein Steuerungsprogramm in Siemens Step 7 (TIA Portal) entwickelt, welches die Kennlinienaufnahme vollständig automatisiert:
