@@ -116,23 +116,101 @@ Bei einem Aufsteckstromwandler bildet der durch die Fensteröffnung geführte Le
 
 Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ vernachlässigen, vorausgesetzt, der Primärleiter befindet sich zentriert im Eisenkern und die Sekundärwicklung ist gleichmäßig über den Umfang verteilt~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis jedoch weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der hier vorliegenden Betrachtung nicht vernachlässigt.
 
-\subsection{Physikalisches Wirkprinzip}
+\subsection{Physikalische Grundlagen}
 \label{sec:physikalisches_prinzip}
 
-Physikalisch betrachtet arbeitet der Messstromwandler wie ein kurzgeschlossener Transformator. Jeder stromdurchflossene Leiter ist von einem magnetischen Feld umgeben. Nach dem Durchflutungssatz (Ampèresches Gesetz) erzeugt der Strom $I_p$ im Primärleiter eine magnetische Feldstärke $H$.
+Physikalisch betrachtet arbeitet der Messstromwandler nach dem Prinzip eines kurzgeschlossenen Transformators. Die Wandlung basiert auf der elektromagnetischen Kopplung zwischen dem Primärleiter und der Sekundärwicklung über einen Magnetkern.
+
+\subsubsection{Magnetfelder und Induktion}
+
+Jeder stromdurchflossene Leiter ist von einem magnetischen Kraftfeld umgeben. Nach dem Durchflutungsgesetz (Ampèresches Gesetz) erzeugt der Primärstrom $I_p$ im Leiter eine magnetische Feldstärke $H$. Für einen unendlich langen, geraden Leiter im Abstand $r$ ergibt sich diese zu:
 
 \begin{equation}
-    I_p \cdot N_p \approx I_s \cdot N_s
+    H = \frac{I_p}{2 \cdot \pi \cdot r}
+    \label{equ:h_feld_leiter}
 \end{equation}
 
-Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Windungszahlen ist. In der Realität ist jedoch ein kleiner Teil des Primärstroms notwendig, um den magnetischen Fluss im Eisenkern aufrechtzuerhalten (Magnetisierungsstrom), was zu den typischen Übersetzungs- und Winkelfehlern führt.
+Das Magnetfeld ist ein wesentlicher Bestandteil der elektromagnetischen Wechselwirkung, einer der vier fundamentalen Grundkräfte der Natur. Historisch prägten Michael Faraday durch die Definition von Feldlinien und James Clerk Maxwell durch die mathematische Vereinheitlichung der Elektrodynamik das heutige Verständnis dieser Kraftwirkung \cite{leifi_magnetfeld}.
 
-\einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Vergleich der Simulationsergebnisse bei zentrischer und exzentrischer Leiteranordnung im Wandler}{pic:sim_wandler_vergleich}
+In einem Messstromwandler konzentriert sich dieser magnetische Fluss $\Phi$ im Weg mit dem geringsten magnetischen Widerstand $R_m$ (Reluktanz), also im hochpermeablen Eisenkern. Dieser Widerstand ist umgekehrt proportional zur relativen Permeabilität $\mu_r$ des Mediums:
 
-\subsubsection{Entstehung und Ausbreitung magnetischer Störfelder}
+\begin{equation}
+    R_m = \frac{l}{\mu_0 \cdot \mu_r \cdot A}
+    \label{equ:magnetischer_widerstand}
+\end{equation}
+
+In einem Medium mit hohem $\mu_r$ führt eine vorhandene magnetische Feldstärke $H$ zu einer wesentlich höheren magnetischen Flussdichte $B$:
+
+\begin{equation}
+    B = \mu_0 \cdot \mu_r \cdot H
+    \label{equ:magnetische_flussdichte}
+\end{equation}
+
+Da Messstromwandler mit Wechselstrom betrieben werden, erzeugt der zeitlich veränderliche magnetische Fluss $\Phi$ im Kern gemäß dem Induktionsgesetz eine Spannung $u_{s}$ in der Sekundärwicklung:
+
+\begin{equation}
+    u_{s} = -N_s \cdot \frac{d\Phi}{dt}
+    \label{equ:induktion}
+\end{equation}
+
+Hierbei entspricht $N_s$ der Windungszahl der Sekundärwicklung. Im Idealfall entspricht die primäre Durchflutung der sekundären Durchflutung ($I_p \cdot N_p = I_s \cdot N_s$). In der Realität wird jedoch ein Teil des Primärstroms als Magnetisierungsstrom $I_\mu$ benötigt, um den Fluss im Kern aufzubauen, was die grundlegende Ursache für Messabweichungen darstellt.
+
+\subsubsection{Magnetische Stoffeigenschaften}
+
+Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf ein äußeres Magnetfeld charakterisieren. Maßgeblich hierfür ist die relative Permeabilität $\mu_r$, welche das Verhältnis der Flussdichte im Medium zur Flussdichte im Vakuum beschreibt. In Tabelle \ref{tab:magnetische_stoffe} sind die verschiedenen Stoffeigenschaften nach Kuchling zusammengefasst.
+
+\begin{table}[H]
+    \centering
+    \caption{Magnetische Stoffeigenschaften und ihre Permeabilitätszahlen \cite[Tab. 48]{kuchling2014taschenbuch}}
+    \label{tab:magnetische_stoffe}
+    \begin{tabular}{@{}lcll@{}}
+        \toprule
+        \textbf{Eigenschaft} & \textbf{Permeabilität $\mu_r$} & \textbf{Verhalten}        & \textbf{Materialien}   \\ \midrule
+        Diamagnetismus       & $\mu_r < 1$                    & Feldschwächung            & Bi, Cu, Ag, Au, $H_2O$ \\
+        Paramagnetismus      & $\mu_r > 1$                    & Schwache Verstärkung      & Al, Pt, Mg, Luft       \\
+        Ferromagnetismus     & $\mu_r \gg 1$                  & Starke Verstärkung        & Fe, Co, Ni, Mu-Metall  \\
+        Ferrimagnetismus     & $\mu_r \gg 1$                  & Permanente Magnetisierung & Ferrite, Magnetit      \\
+        Antiferromagnetismus & $\mu_r \approx 1$              & Keine äußere Wirkung      & Mn, Cr, MnO            \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+Stoffe mit einer Permeabilität von $\mu_r < 1$ werden als diamagnetisch bezeichnet (z. B. Kupfer oder Wasser). In der Elektrotechnik werden Diamagnetika und Paramagnetika meist näherungsweise wie das Vakuum ($\mu_r \approx 1$) behandelt. Für die Funktion von Messstromwandlern sind ferromagnetische Stoffe aufgrund ihrer extrem hohen Permeabilität von entscheidender Bedeutung, da sie den magnetischen Fluss im Kern führen. Da $\mu_r$ bei Ferromagnetika jedoch feldstärkeabhängig ist, führen starke Felder zu Sättigungseffekten, welche die Genauigkeit bei Fremdfeldeinfluss massiv beeinträchtigen können.
+
+\subsubsection{Hysterese}
+
+\subsubsection{Störeinflüsse bei Messstromwandlern}
 \label{sec:stoerfelder_schaltanlagen}
 
-Die Fremdfelder, die in Niederspannungsschaltanlagen auftreten und Messergebnisse beeinflussen können, entstehen primär durch hohe Ströme in benachbarten Leitern ab ca. 2000 A. In typischen Sammelschienensystemen ist dabei häufig der mittlere Leiter (L2) von den Einflüssen der Außenleiter am stärksten betroffen, da sich hier die Felder der benachbarten Phasen überlagern.
+Die Genauigkeit von Messstromwandlern im Betrieb wird maßgeblich von externen und systembedingten Faktoren beeinflusst. Die wesentlichen Störeinflüsse lassen sich in drei Kategorien unterteilen: die fehlerhafte Bürdenbeschaltung, die Einwirkung externer magnetischer Fremdfelder sowie die geometrische Positionierung des Primärleiters.
+
+\textbf{Einfluss der Bürde:} 
+Die Bürde stellt einen kritischen Betriebsparameter dar. Eine fehlerhafte Bebürdung des Sekundärkreises – etwa durch zu hohe Leitungswiderstände oder zusätzliche Messgeräte – führt dazu, dass der Wandler eine höhere Sekundärspannung induzieren muss, um den Stromfluss aufrechtzuerhalten. Gemäß dem Induktionsgesetz führt dies zu einer höheren magnetischen Flussdichte im Kern. Wird die Bemessungsbürde überschritten, treibt dies den Eisenkern vorzeitig in die Sättigung, was die Messabweichung $\varepsilon$ massiv ansteigen lässt.
+
+
+\begin{align*}
+    U_s(t) &= -N_s \frac{\diff \Phi (t)}{\diff t} \\ 
+    \Leftrightarrow \quad \frac{U_s(t)}{-N_s} &= \frac{\diff \Phi(t)}{\diff t} \\
+    \Rightarrow \quad \Phi(t) &= -\frac{1}{N_s} \int U_s(t) \, dt \tag{Hallo}
+\end{align*}
+
+\begin{equation}
+    R_{\text{Kompensation}}(I_s) = \frac{S_{\text{Bürde}}}{I_s^2} - (R_{\text{Kabel}}+R_{\text{Messgerät}})
+\end{equation}
+
+
+
+
+\textbf{Magnetische Fremdfelder:} 
+In Niederspannungsschaltanlagen liegen die Stromschienen oft eng beieinander. Die hohen Ströme benachbarter Leiter erzeugen magnetische Felder, die das Feld des zu messenden Leiters überlagern. Diese Fremdfelder dringen in den Kern des Wandlers ein und führen zu einer lokalen magnetischen Übersteuerung. Da ferromagnetische Werkstoffe eine nichtlineare Kennlinie aufweisen, resultiert daraus eine asymmetrische Flussverteilung, welche die Proportionalität zwischen Primär- und Sekundärstrom stört.
+
+\textbf{Exzentrische Positionierung:} 
+Eine exzentrische Installation der Kupferschiene innerhalb der Fensteröffnung des Wandlers ist in der Praxis aufgrund unterschiedlicher Schienendimensionen häufig unvermeidlich. Obwohl das Ampèresche Gesetz für einen idealen, homogenen Ringkern eine Unabhängigkeit von der Leiterposition postuliert, führen reale Materialinhomogenitäten und Fertigungstoleranzen der Wicklung dazu, dass die Position einen messbaren Einfluss hat. 
+
+
+
+Abbildung \ref{pic:sim_wandler_vergleich} zeigt die resultierende asymmetrische Flussverteilung bei exzentrischer Lage oder Fremdfeldeinfluss in einer Simulation. Man erkennt deutlich, dass die Flussdichte in den Bereichen des Kerns, die dem Primärleiter näher liegen oder in denen sich das Fremdfeld konstruktiv überlagert, deutlich höhere Werte annimmt. Dies kann selbst bei moderaten Primärströmen zu lokalen Sättigungseffekten führen, noch bevor der gesamte Kern seine Sättigungsgrenze erreicht.
+
+\einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Vergleich der Simulationsergebnisse bei zentrischer und exzentrischer Leiteranordnung im Wandler}{pic:sim_wandler_vergleich}
 
 \subsection{Messabweichung und Fehlerfortpflanzung}
 \label{sec:messabweichung_fehlerfortpflanzung}

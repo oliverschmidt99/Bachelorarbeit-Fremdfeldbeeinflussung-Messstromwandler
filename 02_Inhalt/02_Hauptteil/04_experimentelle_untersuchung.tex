@@ -1,38 +1,19 @@
 \section{Experimentelle Untersuchung}
 \label{chap:experiment}
 
-Nachdem der theoretische Rahmen und der technische Aufbau des Prüfstandes dargelegt wurden, befasst sich dieses Kapitel mit der praktischen Inbetriebnahme und der anschließenden Optimierung des Messsystems. [cite: 366, 370]
+Nachdem der Rahmen und der Aufbau des Prüfstandes dargelegt wurden, befasst sich dieses Kapitel mit der Inbetriebnahme und der Optimierung des Messsystems. Die Inbetriebnahme des Prüfstandes diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter Lastbedingungen zu verifizieren. Bei der Auswertung der Messreihen wurde jedoch eine Abweichung festgestellt, die außerhalb der Toleranzen der Genauigkeitsklassen lag.
 
 \subsection{Inbetriebnahme und Plausibilitätsprüfung}
 \label{sec:inbetriebnahme}
 
-Die initiale Inbetriebnahme des Hochstrom-Prüfstandes diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter realen Lastbedingungen zu verifizieren. [cite: 367] Bei der Auswertung der ersten Messreihen wurde jedoch eine signifikante systematische Abweichung festgestellt, die außerhalb der zulässigen Toleranzen der angestrebten Genauigkeitsklassen lag.
-
-Die detaillierte Fehleranalyse ergab zwei primäre Schwachstellen im ursprünglichen Messkonzept:
-\begin{itemize}
-    \item \textbf{Signalumformung:} Die verwendeten 3-K Messumformer, welche die Wandlersignale für die SPS aufbereiteten, wiesen Nichtlinearitäten und Skalierungsfehler auf. Dies führte dazu, dass der Steuerung bereits fehlerhafte Istwerte übermittelt wurden.
-    \item \textbf{Messsynchronität:} Die manuelle Erfassung der Prüflingsdaten mittels Fluke-Multimetern erfolgte nicht zeitgleich zur Referenzmessung der Einspeisung. Bedingt durch geringfügige Lastschwankungen im Hochstrompfad und menschliche Ablesefehler konnte keine konsistente Datenbasis für die Berechnung der Messabweichung $\epsilon$ gemäß Gleichung (2) geschaffen werden. [cite: 265]
-\end{itemize}
+Die Fehleranalyse ergab zwei Schwachstellen im Messkonzept. Einerseits wiesen die Messumformer, welche die Wandlersignale für die SPS aufbereiteten, Nichtlinearitäten und Skalierungsfehler auf. Dies führte dazu, dass der Steuerung bereits Istwerte übermittelt wurden. Andererseits erfolgte die Erfassung der Prüflingsdaten mittels Multimetern nicht zur Referenzmessung der Einspeisung. Bedingt durch Lastschwankungen im Pfad und Ablesefehler konnte keine Datenbasis für die Berechnung der Messabweichung $\epsilon$ gemäß Gleichung (2) geschaffen werden.
 
 \subsection{Optimierung der Messdatenerfassung}
 \label{sec:optimierung}
 
-Um die identifizierten Fehlerquellen zu eliminieren, wurde eine grundlegende technologische Neuausrichtung der Messtechnik vorgenommen. [cite: 368] Anstelle der analogen Signalpfade kommen nun digitale Energiemessgeräte der Siemens SENTRON-Reihe zum Einsatz:
-\begin{itemize}
-    \item \textbf{PAC 4220 (PAC 1):} Überwachung der Einspeisung.
-    \item \textbf{PAC 3220 (PAC 2):} Erfassung der Messwerte des Prüflings.
-\end{itemize}
-
-Diese Geräte werden direkt über PROFINET in die Systemstruktur eingebunden. Hierdurch entfallen parasitäre Effekte, die bei der Übertragung analoger Normsignale in einer Hochstromumgebung auftreten können. Durch die Nutzung der Geräteklasse 0,2 wird eine hochpräzise und einheitliche Messbasis sichergestellt. Da beide Geräte ihre Daten zeitsynchron über den Bus an die CPU der Siemens ET 200S liefern, ist eine exakte zeitliche Korrelation der Messwerte für die Einspeisung und den Prüfling gewährleistet.
+Um die Fehlerquellen zu eliminieren, wurde eine Neuausrichtung der Messtechnik vorgenommen. Anstelle der Signalpfade kommen nun Energiemessgeräte der Siemens SENTRON-Reihe zum Einsatz, wie das PAC 4220 zur Überwachung der Einspeisung und das PAC 3220 zur Erfassung der Messwerte des Prüflings. Diese Geräte werden über PROFINET in die Systemstruktur eingebunden. Hierdurch entfallen Effekte, die bei der Übertragung von Normsignalen in einer Umgebung auftreten können. Durch die Nutzung der Geräteklasse wird eine Messbasis sichergestellt. Da beide Geräte ihre Daten über den Bus an die CPU liefern, ist eine Korrelation der Messwerte für die Einspeisung und den Prüfling gewährleistet.
 
 \subsection{Validierung des optimierten Systems}
 \label{sec:validierung}
 
-Zur Validierung des optimierten Prüfstandes wurde ein automatisierter Messablauf implementiert. [cite: 369] Hierfür wurde ein Steuerungsprogramm in Siemens Step 7 (TIA Portal) entwickelt, welches die Kennlinienaufnahme vollständig automatisiert:
-\begin{enumerate}
-    \item Das Programm fährt die in der DIN EN 61869-2 definierten relevanten Prozentwerte des Nennstroms (z.B. 5\%, 20\%, 100\%, 120\%) automatisch an.
-    \item An jedem Messpunkt wird eine Haltezeit von 5 Minuten eingehalten, um thermische Stabilität zu gewährleisten.
-    \item Während dieser Zeit erfolgt eine kontinuierliche Mittelwertbildung der Messdaten.
-    \item Die Ergebnisse werden automatisch in das WinCC-Datenlogging übernommen und für die abschließende Auswertung bereitgestellt.
-\end{enumerate}
-Durch diesen automatisierten Ablauf werden menschliche Fehlereinflüsse minimiert und die Reproduzierbarkeit der Messergebnisse signifikant gesteigert.
+Zur Validierung des Prüfstandes wurde ein Messablauf implementiert. Hierfür wurde ein Steuerungsprogramm entwickelt, welches die Kennlinienaufnahme automatisiert. Das Programm fährt die in der DIN EN 61869-2 definierten Prozentwerte des Nennstroms automatisch an. An jedem Messpunkt wird eine Haltezeit von 5 Minuten eingehalten, um Stabilität zu gewährleisten. Während dieser Zeit erfolgt eine Mittelwertbildung der Messdaten. Die Ergebnisse werden in das WinCC-Datenlogging übernommen und für die Auswertung bereitgestellt. Durch diesen Ablauf werden Fehlereinflüsse minimiert und die Reproduzierbarkeit der Messergebnisse gesteigert.
