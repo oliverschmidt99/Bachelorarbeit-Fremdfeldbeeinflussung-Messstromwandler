@@ -1,13 +1,10 @@
 \section{Theoretische Grundlagen und aktueller Forschungsstand}
 \label{chap:theorie}
 
-\noindent\textcolor{red}{\rule{\textwidth}{1pt}}
-
 \subsection{Grundlagen Messstromwandler}
 \label{sec:grundlagen_wandler}
 
-Ein Stromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen.
-Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von 1 A oder 5 A ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
+Ein Stromwandler dient dazu, hohe Wechselströme aus dem Primärnetz in kleine, messbare Ströme auf der Sekundärseite zu transformieren. Dabei fungiert er als Bindeglied zwischen dem Hochstrombereich und den Mess- oder Schutzeinrichtungen. Das grundlegende Funktionsprinzip basiert auf der galvanischen Trennung zwischen dem Primär- und dem Sekundärkreis. Dies ermöglicht den Anschluss von standardisierten Messgeräten, Zählern oder Schutzrelais, die üblicherweise für Nennströme von 1 A oder 5 A ausgelegt sind, ohne diese dem hohen Potenzial oder den hohen Strömen des Primärleiters auszusetzen.
 
 \subsection{Aufbau und Bauformen}
 \label{sec:aufbau_wandler}
@@ -16,65 +13,36 @@ Konstruktiv setzt sich der betrachtete Messstromwandler im Wesentlichen aus sech
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler.drawio.pdf}{Schematischer Aufbau eines Aufsteckstromwandlers}{pic:aufbau_wandler}
 
-Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:hochstrom_pruefstand} (Hochstromprüfstand). Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung bezeichnet man als Durchsteck- oder Aufsteckstromwandler. Sie entspricht physikalisch einer Windungszahl von eins ($N_1 = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Um dabei eine zentrierte Leiterführung zu gewährleisten, bieten einige Hersteller spezielle Vorrichtungen an, mit denen sich unterschiedliche Schienengeometrien im Fensterausschnitt fixieren lassen.
+Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:geometrie_kupferschienen}. Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung bezeichnet man als Durchsteck- oder Aufsteckstromwandler. Sie entspricht physikalisch einer Windungszahl von eins ($N_1 = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Um dabei eine zentrierte Leiterführung zu gewährleisten, bieten einige Hersteller spezielle Vorrichtungen an, mit denen sich unterschiedliche Schienengeometrien im Fensterausschnitt fixieren lassen.
 
-Das zentrale Element der Übertragung bildet der Magnetkern. Er hat die Aufgabe, den magnetischen Fluss bei geringstmöglichem magnetischen Widerstand zu bündeln. Ist dieser Kern als geschlossener Toroid ohne Luftspalt ausgeführt, spricht man von einem Ringkern. Der Kern besteht aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$), um die Übertragungsverluste zu minimieren. Die magnetischen Eigenschaften des Kernmaterials bestimmen dabei maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
+Das zentrale Element der Übertragung bildet der Magnetkern. Ist dieser Kern als geschlossener Toroid ohne Luftspalt ausgeführt, spricht man von einem Ringkern. Der Kern besteht aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$), um die Übertragungsverluste zu minimieren. Die magnetischen Eigenschaften des Kernmaterials bestimmen dabei maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
 
 Direkt auf diesen Ringkern ist die Sekundärwicklung aufgebracht. Sie transformiert den magnetischen Fluss zurück in einen elektrischen Strom und ist mit den externen Anschlussklemmen verbunden. Das Gehäuse umschließt schließlich den gesamten Eisenkern samt Sekundärwicklung und gewährleistet die notwendige elektrische Isolation sowie den mechanischen Schutz.
-
-
-
 
 \subsubsection{Unterscheidung zwischen Mess- und Schutzstromwandlern}
 \label{sec:unterschiede_mess_schutzwandler}
 
-Stromwandler lassen sich je nach Anwendungszweck in zwei Hauptkategorien unterteilen: Messstromwandler und Schutzstromwandler. Zwar basieren beide auf dem gleichen physikalischen Prinzip, sie unterscheiden sich jedoch maßgeblich durch ihr Sättigungsverhalten.\\
+Stromwandler lassen sich je nach Anwendungszweck in zwei Hauptkategorien unterteilen: Messstromwandler und Schutzstromwandler. Zwar basieren beide auf dem gleichen physikalischen Prinzip, sie unterscheiden sich jedoch maßgeblich durch ihr Sättigungsverhalten. Der Messstromwandler dient primär dazu, Ströme innerhalb des Nennstrombereichs zu erfassen, um beispielsweise Energiezähler zu speisen. Ein entscheidendes Kriterium ist hierbei, dass der Kern bei hohen Überströmen schnell in die Sättigung geht. Dies begrenzt den Sekundärstrom und schützt so die angeschlossene empfindliche Messtechnik vor Zerstörung~\cite[Kap.~2.2]{redur_einmaleins}.
 
-Der Messstromwandler dient primär dazu, Ströme innerhalb des Nennstrombereichs zu erfassen, um beispielsweise Energiezähler zu speisen. Ein entscheidendes Kriterium ist hierbei, dass der Kern bei hohen Überströmen (z.\,B. im Kurzschlussfall) schnell in die Sättigung geht. Dies begrenzt den Sekundärstrom und schützt so die angeschlossene empfindliche Messtechnik vor Zerstörung~\cite[Kap.~2.2]{redur_einmaleins}.\\
-
-Im Gegensatz dazu wird der Schutzstromwandler verwendet, um Schutzeinrichtungen (wie Relais) anzusteuern. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus (im Fehlerfall) proportional zum Primärstrom bleibt. Der Kern darf also nicht frühzeitig sättigen, damit die Schutzauslösung zuverlässig erfolgt~\cite[Kap.~2.2]{redur_einmaleins}. Technisch wird dies oft durch Eisenkernmaterialien mit hoher Sättigungsflussdichte oder Luftspalte im Kern realisiert.\\
-
-Eine weitere spezielle Wandlertyp wird im folgenden Kapitel \ref{sec:kompensationswicklungen} Kompensationswicklungen erklärt.
+Im Gegensatz dazu wird der Schutzstromwandler verwendet, um Schutzeinrichtungen wie Relais anzusteuern. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus proportional zum Primärstrom bleibt. Der Kern darf also nicht frühzeitig sättigen, damit die Schutzauslösung zuverlässig erfolgt~\cite[Kap.~2.2]{redur_einmaleins}. Eine weitere spezielle Wandlerart stellen die im folgenden Abschnitt behandelten Kompensationswicklungen dar.
 
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
 
-Kompensationswicklungen dienen primär dazu, zwei signifikante Störeinflüsse bei Messstromwandlern zu minimieren. Dies sind der Lagefehler, verursacht durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}), sowie die Einwirkung externer Fremdfelder. Die physikalischen Grundlagen zu letzterem Aspekt werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} detailliert.
-
-Eine exzentrische Leiteranordnung tritt in der Praxis häufig auf, insbesondere wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Stromschiene. Aufgrund des geometrischen Spielraums ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
+Kompensationswicklungen dienen primär dazu, zwei signifikante Störeinflüsse bei Messstromwandlern zu minimieren. Dies sind der Lagefehler, verursacht durch eine exzentrische Positionierung des Primärleiters (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}), sowie die Einwirkung externer Fremdfelder. Die physikalischen Grundlagen zu letzterem Aspekt werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} detailliert. Eine exzentrische Leiteranordnung tritt in der Praxis häufig auf, insbesondere wenn die Fensteröffnung des Wandlers deutlich größer dimensioniert ist als der Querschnitt der verwendeten Stromschiene. Aufgrund des geometrischen Spielraums ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler_kompensiert.drawio.pdf}{Schematischer Aufbau eines Wandlers mit zusätzlichen Kompensationswicklungen}{pic:aufbau_wandler_kompensationswicklungen}
 
-Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} veranschaulicht das grundlegende Funktionsprinzip. Die Wicklungen ($W_1$ bis $W_4$) sind symmetrisch über den Umfang des Eisenkerns verteilt. Technisch wird dies realisiert, indem Teilwicklungen zusätzlich zur eigentlichen Sekundärwicklung aufgebracht und – wie im rechten Teil der Grafik dargestellt – parallel geschaltet werden. Diese Parallelschaltung ermöglicht den Fluss von Ausgleichsströmen zwischen den Segmenten, wodurch lokale Sättigungserscheinungen und Asymmetrien im Magnetfluss kompensiert werden.
-
-Es ist zu beachten, dass die Abbildung lediglich die allgemeine Kompensationswicklungstechnik nach \cite[S.77]{minkner2020messwandler} darstellt. In der Praxis setzen Hersteller oft individuelle, teils proprietäre Wicklungsdesigns ein, um spezifische Optimierungen zu erreichen. Die tatsächliche technische Ausführung kann daher von dieser schematischen Darstellung abweichen.
+Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} veranschaulicht das grundlegende Funktionsprinzip. Die Wicklungen $W_1$ bis $W_4$ sind symmetrisch über den Umfang des Eisenkerns verteilt. Technisch wird dies realisiert, indem Teilwicklungen zusätzlich zur eigentlichen Sekundärwicklung $W_0$ aufgebracht und parallel geschaltet werden. Diese Parallelschaltung ermöglicht den Fluss von Ausgleichsströmen zwischen den Segmenten, wodurch lokale Sättigungserscheinungen und Asymmetrien im Magnetfluss kompensiert werden~\cite[S. 77]{minkner2020messwandler}. Es ist zu beachten, dass die Abbildung lediglich die allgemeine Kompensationswicklungstechnik darstellt. In der Praxis setzen Hersteller oft individuelle, teils proprietäre Wicklungsdesigns ein, weshalb die tatsächliche technische Ausführung von dieser schematischen Darstellung abweichen kann.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/kupferschiene_positionierung_vergleich.drawio.pdf}{Schematische Darstellung der zentrischen und exzentrischen Positionierung der Kupferschiene}{pic:schema_kupferschiene_pos}
-
-\noindent\textcolor{red}{\rule{\textwidth}{1pt}}
-Hier bin ich gerade aktuelle.
-
-
 
 \subsubsection{Normative Anforderungen und Genauigkeitsklassen}
 \label{sec:normen_klassen}
 
-Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, deren Anforderungen in der DIN EN 61869-2 festgelegt sind~\cite[S.~22]{din_en_61869_2_2013}. Diese Klassen definieren die maximal zulässigen Messabweichungen und bilden die Entscheidungsgrundlage für die Auswahl eines Wandlers.
+Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt, deren Anforderungen in der DIN EN 61869-2~\cite[S.~22]{din_en_61869_2_2013} festgelegt sind. Diese Klassen definieren die maximal zulässigen Messabweichungen und bilden die Entscheidungsgrundlage für die Auswahl eines Wandlers. Wie bereits erläutert, unterscheiden sich die Anforderungen an Mess- und Schutzwandler grundlegend.
 
-Wie bereits in Abschnitt~\ref{sec:unterschiede_mess_schutzwandler} erläutert, unterscheiden sich die Anforderungen an Mess- und Schutzwandler grundlegend.
-
-\paragraph{Schutzwandler}
-Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend. Sie werden in die Klassen \textbf{P} (Protection) und \textbf{PR} (Protection, niedrige Remanenz) eingeteilt.
-
-Die Bezeichnung der Genauigkeitsklasse setzt sich bei diesen Wandlern aus der höchstzulässigen prozentualen Gesamtmessabweichung, dem Kennbuchstaben und dem Genauigkeitsgrenzfaktor (ALF -- Accuracy Limit Factor) zusammen~\cite[S.~23--24]{din_en_61869_2_2013}:
-\begin{itemize}
-    \item \textbf{Klasse P:} Standard-Schutzwandler (z.\,B. 5P, 10P). Hier ist kein Grenzwert für den Remanenzfluss definiert.
-    \item \textbf{Klasse PR:} Schutzwandler mit begrenztem Remanenzfluss (z.\,B. 5PR, 10PR). Diese müssen nach dem Abschalten von Fehlerströmen eine geringe Remanenz aufweisen, was oft durch Luftspalte im Kern erreicht wird.
-\end{itemize}
-
-Der \textbf{Genauigkeitsgrenzfaktor (ALF)} gibt an, bis zum Wievielfachen des Nennstroms die Fehlergrenzen eingehalten werden. Die Normwerte für den ALF sind 5, 10, 15, 20 und 30~\cite[S.~23]{din_en_61869_2_2013}. Eine Bezeichnung wie \glqq 5P20\grqq{} bedeutet demnach: 5\,\% Gesamtmessabweichung bei 20-fachem Nennstrom.
-
-Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen Schutzklassen.
+Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend. Sie werden in die Klassen P (Protection) und PR (Protection, niedrige Remanenz) eingeteilt. Die Bezeichnung der Genauigkeitsklasse setzt sich aus der höchstzulässigen prozentualen Gesamtmessabweichung, dem Kennbuchstaben und dem Genauigkeitsgrenzfaktor (ALF) zusammen~\cite[S.~23--24]{din_en_61869_2_2013}. Die Klasse P beschreibt dabei Standard-Schutzwandler, für die kein Grenzwert für den Remanenzfluss definiert ist. Im Gegensatz dazu kennzeichnet die Klasse PR Schutzwandler mit begrenztem Remanenzfluss. Diese müssen nach dem Abschalten von Fehlerströmen eine geringe Remanenz aufweisen, was in der Praxis häufig durch konstruktive Maßnahmen wie Luftspalte~\cite[S. 82]{minkner2020messwandler} im Kern erreicht wird. Der Genauigkeitsgrenzfaktor gibt an, bis zum Wievielfachen des Nennstroms die Fehlergrenzen eingehalten werden. Eine Bezeichnung wie „5P20“ bedeutet demnach eine Gesamtmessabweichung von 5\,\% bei 20-fachem Nennstrom. Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen Schutzklassen.
 
 \begin{table}[H]
     \centering
@@ -82,22 +50,17 @@ Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen S
     \label{tab:schutzwandler_fehler}
     \begin{tabular}{lcccc}
         \toprule
-        \textbf{Genauigkeits-} & \textbf{Übersetzungs-}  & \multicolumn{2}{c}{\textbf{Fehlwinkel}} & \textbf{Gesamtmess-}                              \\
-        \textbf{klasse}        & \textbf{messabweichung} & \multicolumn{2}{c}{bei $I_{n}$}         & \textbf{abweichung}                               \\
-                               & bei $I_{n}$ ($\pm$ \%)  & ($\pm$ min)                             & ($\pm$ centigrad)    & bei $ALF \cdot I_{n}$ (\%) \\
+        Genauigkeits- & Übersetzung-           & \multicolumn{2}{c}{Fehlwinkel}  & Gesamtmess-                                    \\
+        klasse        & messabweichung         & \multicolumn{2}{c}{bei $I_{n}$} & abweichung                                     \\
+                      & bei $I_{n}$ ($\pm$ \%) & ($\pm$ min)                     & ($\pm$ centigrad) & bei $ALF \cdot I_{n}$ (\%) \\
         \midrule
-        5P und 5PR             & 1                       & 60                                      & 1,8                  & 5                          \\
-        10P und 10PR           & 3                       & --                                      & --                   & 10                         \\
+        5P und 5PR    & 1                      & 60                              & 1,8               & 5                          \\
+        10P und 10PR  & 3                      & --                              & --                & 10                         \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\paragraph{Messwandler}
-Messwandler untergliedern sich in die Standardklassen \textbf{0,1 -- 0,2 -- 0,5 -- 1}, die Sonderklassen \textbf{0,2S -- 0,5S} (für präzise Messungen auch weit unter Nennstrom) sowie die Klassen \textbf{3 -- 5} für weniger genaue Betriebsmessungen.
-
-Die Einhaltung der Fehlergrenzen ist dabei an die angeschlossene Bürde gekoppelt. Für die Standardklassen (0,1 bis 1) sowie die Sonderklassen (0,2S und 0,5S) dürfen die Grenzwerte im Bürdenbereich von 25\,\% bis 100\,\% der Bemessungsleistung nicht überschritten werden. Für die gröberen Klassen 3 und 5 gilt hingegen ein eingeschränkter Bereich von 50\,\% bis 100\,\% der Bemessungsleistung~\cite[S.~21]{din_en_61869_2_2013}. Zudem sind für die Klassen 3 und 5 normativ keine Grenzwerte für den Fehlwinkel definiert.
-
-Im Folgenden werden die spezifischen Grenzwerte für die Standardklassen betrachtet. Ein wesentliches Kriterium ist die \textbf{Übersetzungsmessabweichung} $\varepsilon$ (Stromfehler), die die prozentuale Abweichung des Sekundärstroms vom idealen Wert angibt (siehe Tabelle~\ref{tab:stromfehler}).
+Messwandler untergliedern sich in die Standardklassen 0,1 bis 1, die Sonderklassen 0,2S und 0,5S für präzise Messungen weit unter Nennstrom sowie die Klassen 3 und 5 für weniger genaue Betriebsmessungen. Die Einhaltung der Fehlergrenzen ist dabei an die angeschlossene Bürde gekoppelt. Für die Standard- sowie die Sonderklassen dürfen die Grenzwerte im Bürdenbereich von 25\,\% bis 100\,\% der Bemessungsleistung nicht überschritten werden. Für die Klassen 3 und 5 gilt hingegen ein Bereich von 50\,\% bis 100\,\%~\cite[S.~21]{din_en_61869_2_2013}. Ein wesentliches Kriterium ist die Übersetzungsmessabweichung $\varepsilon$, die die prozentuale Abweichung des Sekundärstroms vom idealen Wert angibt (siehe Tabelle~\ref{tab:stromfehler}).
 
 \begin{table}[H]
     \centering
@@ -105,20 +68,20 @@ Im Folgenden werden die spezifischen Grenzwerte für die Standardklassen betrach
     \label{tab:stromfehler}
     \begin{tabular}{lcccc}
         \toprule
-        \textbf{Genauigkeits-} & \multicolumn{4}{c}{\textbf{Übersetzungsmessabweichung $\pm$ \%}}                                             \\
-        \textbf{klasse}        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                               \\
+        Genauigkeits- & \multicolumn{4}{c}{Übersetzungsmessabweichung $\pm$ \%}                    \\
+        klasse        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                             \\
         \cmidrule(lr){2-5}
-                               & \textbf{5}                                                       & \textbf{20} & \textbf{100} & \textbf{120} \\
+                      & 5                                                       & 20   & 100 & 120 \\
         \midrule
-        0,1                    & 0,4                                                              & 0,2         & 0,1          & 0,1          \\
-        0,2                    & 0,75                                                             & 0,35        & 0,2          & 0,2          \\
-        0,5                    & 1,5                                                              & 0,75        & 0,5          & 0,5          \\
-        1                      & 3,0                                                              & 1,5         & 1,0          & 1,0          \\
+        0,1           & 0,4                                                     & 0,2  & 0,1 & 0,1 \\
+        0,2           & 0,75                                                    & 0,35 & 0,2 & 0,2 \\
+        0,5           & 1,5                                                     & 0,75 & 0,5 & 0,5 \\
+        1             & 3,0                                                     & 1,5  & 1,0 & 1,0 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-Neben dem Stromfehler ist der \textbf{Fehlwinkel} entscheidend, der die Phasenverschiebung beschreibt. Die Einhaltung der Grenzwerte ist insbesondere für Schutzeinrichtungen mit Richtungsbestimmung von Bedeutung~\cite[S.~51]{din_en_61869_2_2013}. Tabelle~\ref{tab:fehlwinkel} fasst die zulässigen Fehlwinkel für die Klassen 0,1 bis 1 zusammen.
+Neben dem Stromfehler ist der Fehlwinkel entscheidend, der die Phasenverschiebung beschreibt. Die Einhaltung der Grenzwerte ist insbesondere für Schutzeinrichtungen mit Richtungsbestimmung von Bedeutung~\cite[S.~51]{din_en_61869_2_2013}. Tabelle~\ref{tab:fehlwinkel} fasst die zulässigen Fehlwinkel für die Klassen 0,1 bis 1 zusammen.
 
 \begin{table}[H]
     \centering
@@ -126,20 +89,19 @@ Neben dem Stromfehler ist der \textbf{Fehlwinkel} entscheidend, der die Phasenve
     \label{tab:fehlwinkel}
     \begin{tabular}{lcccccccc}
         \toprule
-        \textbf{Genauigkeits-} & \multicolumn{8}{c}{\textbf{Fehlwinkel}}                                                                                                                                                \\
-        \textbf{klasse}        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                                                                \\
+        Genauigkeits- & \multicolumn{8}{c}{Fehlwinkel}                                                                                                          \\
+        klasse        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                 \\
         \cmidrule(lr){2-5} \cmidrule(lr){6-9}
-                               & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                                                                        \\
-                               & \textbf{5}                                     & \textbf{20}                                    & \textbf{100} & \textbf{120} & \textbf{5} & \textbf{20} & \textbf{100} & \textbf{120} \\
+                      & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                         \\
+                      & 5                                              & 20                                             & 100 & 120 & 5    & 20   & 100  & 120  \\
         \midrule
-        0,1                    & 15                                             & 8                                              & 5            & 5            & 0,45       & 0,24        & 0,15         & 0,15         \\
-        0,2                    & 30                                             & 15                                             & 10           & 10           & 0,90       & 0,45        & 0,30         & 0,30         \\
-        0,5                    & 90                                             & 45                                             & 30           & 30           & 2,70       & 1,35        & 0,90         & 0,90         \\
-        1                      & 180                                            & 90                                             & 60           & 60           & 5,40       & 2,70        & 1,80         & 1,80         \\
+        0,1           & 15                                             & 8                                              & 5   & 5   & 0,45 & 0,24 & 0,15 & 0,15 \\
+        0,2           & 30                                             & 15                                             & 10  & 10  & 0,90 & 0,45 & 0,30 & 0,30 \\
+        0,5           & 90                                             & 45                                             & 30  & 30  & 2,70 & 1,35 & 0,90 & 0,90 \\
+        1             & 180                                            & 90                                             & 60  & 60  & 5,40 & 2,70 & 1,80 & 1,80 \\
         \bottomrule
     \end{tabular}
 \end{table}
-
 
 \subsubsection{Ersatzschaltbild eines Messstromwandlers}
 \label{sec:ersatzschaltbild}
@@ -150,15 +112,14 @@ Ein Messstromwandler entspricht physikalisch einem Transformator, weshalb sich s
 
 Bei einem Aufsteckstromwandler bildet der durch die Fensteröffnung geführte Leiter die Primärwicklung. Da dieser Leiteranteil sehr kurz ist und keine Wicklung im herkömmlichen Sinne darstellt, können der ohmsche Widerstand $R'_p$ und die Streuinduktivität $L'_p$ in der Regel vernachlässigt werden. Das daraus resultierende vereinfachte Ersatzschaltbild ist in Abbildung~\ref{esb:wandler_vereinfacht} dargestellt.
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vollständiges Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
+\einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vereinfachtes Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
 
-Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ vernachlässigen, vorausgesetzt, der Primärleiter befindet sich zentriert im Eisenkern und die Sekundärwicklung ist gleichmäßig über den Umfang verteilt~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis jedoch weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der hier vorliegenden Betrachtung – wie im vereinfachten Schaltbild ersichtlich – nicht vernachlässigt.
+Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ vernachlässigen, vorausgesetzt, der Primärleiter befindet sich zentriert im Eisenkern und die Sekundärwicklung ist gleichmäßig über den Umfang verteilt~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis jedoch weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der hier vorliegenden Betrachtung nicht vernachlässigt.
 
 \subsection{Physikalisches Wirkprinzip}
 \label{sec:physikalisches_prinzip}
 
 Physikalisch betrachtet arbeitet der Messstromwandler wie ein kurzgeschlossener Transformator. Jeder stromdurchflossene Leiter ist von einem magnetischen Feld umgeben. Nach dem Durchflutungssatz (Ampèresches Gesetz) erzeugt der Strom $I_p$ im Primärleiter eine magnetische Feldstärke $H$.
-
 
 \begin{equation}
     I_p \cdot N_p \approx I_s \cdot N_s
@@ -171,12 +132,22 @@ Daraus resultiert das Übersetzungsverhältnis, das antiproportional zu den Wind
 \subsubsection{Entstehung und Ausbreitung magnetischer Störfelder}
 \label{sec:stoerfelder_schaltanlagen}
 
-Die Fremdfelder, die in Niederspannungsschaltanlagen auftreten und Messergebnisse beeinflussen können, entstehen primär durch hohe Ströme in benachbarten Leitern (ab ca. 2000 A). In typischen Sammelschienensystemen ist dabei häufig der mittlere Leiter (L2) von den Einflüssen der Außenleiter am stärksten betroffen, da sich hier die Felder der benachbarten Phasen überlagern.
+Die Fremdfelder, die in Niederspannungsschaltanlagen auftreten und Messergebnisse beeinflussen können, entstehen primär durch hohe Ströme in benachbarten Leitern ab ca. 2000 A. In typischen Sammelschienensystemen ist dabei häufig der mittlere Leiter (L2) von den Einflüssen der Außenleiter am stärksten betroffen, da sich hier die Felder der benachbarten Phasen überlagern.
 
 \subsection{Messabweichung und Fehlerfortpflanzung}
 \label{sec:messabweichung_fehlerfortpflanzung}
 
+Zur Sicherstellung der normativ geforderten Genauigkeitsklassen wird in der Prüftechnik das Prinzip der Vergleichsmessung angewendet. Hierbei werden der zu prüfende Wandler und ein hochgenaues Referenznormal primärseitig vom identischen Strom durchflossen. Da die Fehlercharakteristik des Normals bekannt und dessen Eigenabweichung vernachlässigbar klein ist, lässt sich die Messabweichung des Prüflings direkt aus der Differenz der sekundärseitigen Ausgangssignale ableiten.
+
+
+
+Gemäß DIN EN 61869-2 müssen dabei zwei zentrale Kenngrößen ermittelt werden. Die Übersetzungsmessabweichung $\varepsilon$ beschreibt die prozentuale Differenz der Stromamplituden und wird nach folgender Gleichung berechnet:
+
+\begin{equation}
+    \varepsilon = \frac{k_n \cdot I_s - I_p}{I_p} \cdot 100\,\%
+\end{equation}
+
+Hierbei entspricht $k_n$ dem Bemessungsübersetzungsverhältnis. Der zweite Parameter ist der Fehlwinkel $\Delta\phi$, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert. Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
+
 \subsection{Aufbau Niederspannungsschaltanlagen}
 \label{sec:aufbau_niederspannungsschaltanlagen}
-
-
