@@ -183,34 +183,94 @@ Stoffe mit einer Permeabilität von $\mu_r < 1$ werden als diamagnetisch bezeich
 
 Die Genauigkeit von Messstromwandlern im Betrieb wird maßgeblich von externen und systembedingten Faktoren beeinflusst. Die wesentlichen Störeinflüsse lassen sich in drei Kategorien unterteilen: die fehlerhafte Bürdenbeschaltung, die Einwirkung externer magnetischer Fremdfelder sowie die geometrische Positionierung des Primärleiters.
 
-\textbf{Einfluss der Bürde:} 
-Die Bürde stellt einen kritischen Betriebsparameter dar. Eine fehlerhafte Bebürdung des Sekundärkreises – etwa durch zu hohe Leitungswiderstände oder zusätzliche Messgeräte – führt dazu, dass der Wandler eine höhere Sekundärspannung induzieren muss, um den Stromfluss aufrechtzuerhalten. Gemäß dem Induktionsgesetz führt dies zu einer höheren magnetischen Flussdichte im Kern. Wird die Bemessungsbürde überschritten, treibt dies den Eisenkern vorzeitig in die Sättigung, was die Messabweichung $\varepsilon$ massiv ansteigen lässt.
+\textbf{Einfluss der Bürde}
 
+Die Impedanz der Bürde bestimmt das Betriebsverhalten des Stromwandlers. Ein erhöhter Widerstand im Sekundärkreis, verursacht durch Leitungswiderstände oder Messgeräte, erfordert eine höhere induzierte Sekundärspannung zur Aufrechterhaltung des Stromflusses. Dies resultiert gemäß dem Induktionsgesetz in einer Zunahme der magnetischen Flussdichte im Kern. Bei einer Überschreitung der Bemessungsbürde erreicht der Eisenkern die Sättigung, wodurch die Messabweichung $\varepsilon$ ansteigt.
 
-\begin{align*}
-    U_s(t) &= -N_s \frac{\diff \Phi (t)}{\diff t} \\ 
-    \Leftrightarrow \quad \frac{U_s(t)}{-N_s} &= \frac{\diff \Phi(t)}{\diff t} \\
-    \Rightarrow \quad \Phi(t) &= -\frac{1}{N_s} \int U_s(t) \, dt \tag{Hallo}
-\end{align*}
+Der Einfluss des Kompensationswiderstandes auf die Sättigung lässt sich über die induzierte Spannung $U_i$ herleiten. Diese entspricht der Summe der Spannungsabfälle über der gesamten Sekundärbürde
 
 \begin{equation}
-    R_{\text{Kompensation}}(I_s) = \frac{S_{\text{Bürde}}}{I_s^2} - (R_{\text{Kabel}}+R_{\text{Messgerät}})
+    U_i = I_s \cdot (R_{\text{Wicklung}} + R_{\text{Leitung}} + R_{\text{Mess}} + R_{\text{Komp}})
+    \label{equ:spannung_widerstand}
 \end{equation}
 
+wobei der Restwiderstand definiert ist als
+
+\begin{equation}
+    R_{\text{Rest}} = R_{\text{Wicklung}} + R_{\text{Leitung}} + R_{\text{Mess}}
+    \label{equ:widerstand_rest}
+\end{equation}
+
+Nach dem Induktionsgesetz (Transformator-Hauptgleichung) besteht ein proportionaler Zusammenhang zwischen der induzierten Spannung und dem magnetischen Fluss $\Phi$
+
+\begin{equation}
+    U_i = 4,44 \cdot f \cdot N_s \cdot \Phi
+    \label{equ:trafo_hauptgleichung}
+\end{equation}
+
+Durch Gleichsetzen von (\ref{equ:spannung_widerstand}) und (\ref{equ:trafo_hauptgleichung}) sowie anschließender Auflösung nach $\Phi$ ergibt sich
+
+\begin{equation}
+    \Phi = \frac{I_s \cdot (R_{\text{Rest}} + R_{\text{Komp}})}{4,44 \cdot f \cdot N_s}
+\end{equation}
+
+Aus dieser Beziehung geht hervor, dass ein Anstieg von $R_{\text{Komp}}$ bei eingeprägtem Strom $I_s$ zu einer linearen Erhöhung des magnetischen Flusses $\Phi$ führt. Bei Überschreitung des Sättigungsflusses $\Phi_{\text{sat}}$ verlässt der Wandler den linearen Arbeitsbereich.
 
 
 
-\textbf{Magnetische Fremdfelder:} 
-In Niederspannungsschaltanlagen liegen die Stromschienen oft eng beieinander. Die hohen Ströme benachbarter Leiter erzeugen magnetische Felder, die das Feld des zu messenden Leiters überlagern. Diese Fremdfelder dringen in den Kern des Wandlers ein und führen zu einer lokalen magnetischen Übersteuerung. Da ferromagnetische Werkstoffe eine nichtlineare Kennlinie aufweisen, resultiert daraus eine asymmetrische Flussverteilung, welche die Proportionalität zwischen Primär- und Sekundärstrom stört.
+\textbf{Magnetische Fremdfelder}
 
-\textbf{Exzentrische Positionierung:} 
-Eine exzentrische Installation der Kupferschiene innerhalb der Fensteröffnung des Wandlers ist in der Praxis aufgrund unterschiedlicher Schienendimensionen häufig unvermeidlich. Obwohl das Ampèresche Gesetz für einen idealen, homogenen Ringkern eine Unabhängigkeit von der Leiterposition postuliert, führen reale Materialinhomogenitäten und Fertigungstoleranzen der Wicklung dazu, dass die Position einen messbaren Einfluss hat. 
+Jeder stromdurchflossene Leiter ist von einem konzentrischen Magnetfeld umgeben. Befinden sich mehrere Leiter in unmittelbarer Nähe zueinander, überlagern sich deren magnetische Felder gemäß dem Superpositionsprinzip. Die Abhängigkeit der magnetischen Flussdichte $B$ vom Abstand $r$ zu einem geraden, unendlich langen Leiter wird durch das Gesetz von Biot-Savart beschrieben:
+
+\begin{equation}
+    B(r) = \frac{\mu_0 \cdot I}{2 \pi \cdot r}
+    \label{equ:biot_savart}
+\end{equation}
+
+Hierbei beschreibt $\mu_0$ die magnetische Feldkonstante und $I$ die Stromstärke im Leiter.
+
+Ein Stromwandler ist idealerweise so konstruiert, dass sein Kern nur den magnetischen Fluss des umschlossenen Primärleiters führt. In der Praxis, insbesondere in Hochstrom-Schaltanlagen, verlaufen die Sammelschienen der drei Phasen jedoch oft parallel und mit geringem Abstand zueinander \cite{Pfuntner1951}. Die von den Nachbarleitern erzeugten starken Magnetfelder können als Streufluss in den Eisenkern des betrachteten Wandlers eindringen und sich dem Nutzfluss überlagern.
+
+Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den benachbarten Kernsegmenten zu einer lokalen Sättigung führen. Zur Quantifizierung dieses Effekts wird eine Näherungsgleichung der MBS AG herangezogen. Diese berechnet explizit den zusätzlichen Anteil der Flussdichte $B_{\text{Fremd}}$, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}:
+
+\begin{equation}
+    B_{\text{Fremd}} \approx 10^{-6} \cdot I_p \cdot \frac{R + 0,5 \cdot W}{A} \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
+    \label{equ:stray_flux_mbs}
+\end{equation}
+
+Die Variablen sind gemäß der MBS-Spezifikation wie folgt definiert: $B_{\text{Fremd}}$ ist die zusätzlich induzierte magnetische Flussdichte im Kern (in T), $I_p$ der Strom im Nachbarleiter (in A), $R$ der äußere Radius (in m), $W$ die Breite (in m), $A$ der Querschnitt des Eisenkerns (in m$^2$) und $D$ der Außenphasenabstand (in m).
+
+\einfuegenBildGross{03_Ressourcen/simulation/fremdfeld_ra_pfunder/Vergleich_Geometrie_und_Strom.pdf}{Einfluss von Kerngröße und Stromstärke auf den zusätzlichen Streufluss}{pic:sim_streufluss_abhaengigkeit}
+
+Die Abbildung \ref{pic:sim_streufluss_abhaengigkeit} visualisiert den zusätzlichen magnetischen Fluss $\Phi_{\text{Fremd}}$, der durch den benachbarten Leiter in den Kern eingekoppelt wird. Es werden zwei Szenarien verglichen: Ein kleiner Kern (blau) und ein großer Kern (rot).
+
+Aus den Verläufen wird deutlich, dass ein geometrisch größerer Kern (rote Kurve) aufgrund seiner größeren räumlichen Ausdehnung absolut gesehen deutlich mehr Störfluss aufnimmt als ein kleinerer Kern. Dieser im Diagramm dargestellte Fluss addiert sich im Betrieb zum Nutzfluss des Wandlers.
+
+Dass ein größerer Wandler in der Praxis dennoch meist unkritischer gegenüber Fremdfeldern ist, liegt an der Relation zur Sättigungsgrenze. Die Sättigung wird nicht durch den absoluten Fluss $\Phi$, sondern durch die resultierende Flussdichte $B$ bestimmt:
+
+\begin{equation}
+      B_{\text{res}} = B_{\text{Nutz}} + \underbrace{\frac{\Phi_{\text{Fremd}}}{A}}_{B_{\text{Fremd}}}
+      \label{eq:b_phi_relation}
+\end{equation}
+
+Ein größerer Kern verfügt in der Regel über einen signifikant größeren Eisenquerschnitt $A$. Während der kleine Kern zwar weniger Störfluss einfängt (siehe Diagramm, blau), verteilt sich dieser auf eine sehr kleine Fläche $A$, was zu einer starken Erhöhung der Flussdichte $B_{\text{Fremd}}$ führt und die Sättigungsgrenze schnell erreichen lässt. Der große Kern kompensiert die höhere Flussaufnahme (Diagramm, rot) durch seinen massiven Querschnitt, wodurch der Anstieg der Flussdichte $\Delta B$ gering bleibt.
+
+Die Unabhängigkeit des im Diagramm gezeigten absoluten Störflusses vom Kernquerschnitt lässt sich durch Einsetzen von Gleichung (\ref{equ:stray_flux_mbs}) in die Flussdefinition herleiten. Dabei kürzt sich der Querschnitt $A$ heraus:
+
+\begin{equation} 
+    \Phi_{\text{Fremd}} \approx 10^{-6} \cdot I_p \cdot (R + 0{,}5 \cdot W) \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
+\end{equation}
+
+Diese Beziehung bestätigt, dass der reine Störfluss $\Phi_{\text{Fremd}}$ nur von der Geometrie ($R, W, D$) und dem Störstrom abhängt, nicht jedoch von der Kerntiefe (und damit dem Querschnitt). Die Robustheit großer Kerne resultiert also nicht aus einer geringeren Einkopplung (das Gegenteil ist der Fall, wie das Bild zeigt), sondern aus ihrer höheren Kapazität zur Aufnahme dieses Zusatzflusses.
 
 
+\subsection{Exzentrische Positionierung der Kupferschiene}
 
-Abbildung \ref{pic:sim_wandler_vergleich} zeigt die resultierende asymmetrische Flussverteilung bei exzentrischer Lage oder Fremdfeldeinfluss in einer Simulation. Man erkennt deutlich, dass die Flussdichte in den Bereichen des Kerns, die dem Primärleiter näher liegen oder in denen sich das Fremdfeld konstruktiv überlagert, deutlich höhere Werte annimmt. Dies kann selbst bei moderaten Primärströmen zu lokalen Sättigungseffekten führen, noch bevor der gesamte Kern seine Sättigungsgrenze erreicht.
+Wie bereits in Abschnitt \ref{sec:kompensationswicklungen} dargelegt, ist eine ideal zentrierte Installation der Primärleiter (Kupferschienen) in der Praxis konstruktionsbedingt nicht immer realisierbar. Eine Abweichung von der zentrischen Lage führt jedoch zu einer inhomogenen Feldverteilung im Eisenkern, was wiederum lokale Sättigungserscheinungen begünstigen kann. Dieser Zusammenhang wird in Abbildung \ref{pic:sim_exzentrische_moniert} verdeutlicht.
 
-\einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Vergleich der Simulationsergebnisse bei zentrischer und exzentrischer Leiteranordnung im Wandler}{pic:sim_wandler_vergleich}
+\einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Einfluss der Leiterpositionierung auf die Flussverteilung im Kern}{pic:sim_exzentrische_moniert}
+
+Auf der Abszisse (X-Achse) ist der Weg entlang des mittleren Kernumfangs aufgetragen. Der blaue Graph zeigt den Referenzverlauf bei zentrierter Leiteranordnung: Hier ist eine homogene, symmetrische Verteilung des magnetischen Flusses über den gesamten Kernumfang zu erkennen. Im Gegensatz dazu weist der orangefarbene Verlauf, der eine exzentrische Positionierung repräsentiert, eine starke Asymmetrie auf. Es wird deutlich, dass in den Bereichen, in denen der Leiter dem Kern näher liegt, die magnetische Belastung signifikant ansteigt, während sie auf der gegenüberliegenden Seite abfällt.
 
 \subsection{Messabweichung und Fehlerfortpflanzung}
 \label{sec:messabweichung_fehlerfortpflanzung}
