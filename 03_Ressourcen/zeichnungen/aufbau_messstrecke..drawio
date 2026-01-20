@@ -254,6 +254,18 @@
         <mxCell id="IYwfCUkhuQJsomUwHCb2-107" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;div&gt;&lt;span data-path-to-node=&quot;2,2,0&quot; data-index-in-node=&quot;0&quot; style=&quot;font-size: 24px;&quot;&gt;&lt;font style=&quot;&quot;&gt;&lt;b&gt;Strommessung&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;Einspeisung&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;2,2,0&quot; data-index-in-node=&quot;0&quot; style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;K-3&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="90" width="220" x="830" y="720" as="geometry" />
         </mxCell>
+        <mxCell id="2nZmy8MUIeLzbZEpGSnm-1" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="270" width="200" x="160" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="2nZmy8MUIeLzbZEpGSnm-2" parent="2nZmy8MUIeLzbZEpGSnm-1" style="whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;" value="" vertex="1">
+          <mxGeometry height="200" width="200" as="geometry" />
+        </mxCell>
+        <mxCell id="2nZmy8MUIeLzbZEpGSnm-3" parent="2nZmy8MUIeLzbZEpGSnm-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b data-path-to-node=&quot;14,3,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;Datenspeicher&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;span data-path-to-node=&quot;14,3,0&quot; data-index-in-node=&quot;0&quot;&gt;&lt;font style=&quot;font-size: 20px;&quot;&gt;WinCC&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="200" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="2nZmy8MUIeLzbZEpGSnm-4" parent="2nZmy8MUIeLzbZEpGSnm-1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" value="" vertex="1">
+          <mxGeometry height="80" width="60" x="70" y="60" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>

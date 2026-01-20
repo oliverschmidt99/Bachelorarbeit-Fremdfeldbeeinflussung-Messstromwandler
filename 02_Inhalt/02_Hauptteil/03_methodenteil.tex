@@ -1,21 +1,24 @@
 \section{Versuchsaufbau und Methodik}
 \label{chap:methodik}
 
-Zur Charakterisierung der Messstromwandler wurde ein Hochstrom-Prüfstand eingesetzt, der primäre Wechselströme von bis zu \SI{6000}{A} generieren kann. Dies ermöglicht die Analyse der magnetischen Eigenschaften sowie der Messgenauigkeit unter realitätsnahen Betriebsbedingungen. Das methodische Vorgehen untergliedert sich dabei in zwei wesentliche Bereiche. Zunächst erfolgt in Abschnitt~\ref{sec:hochstrom_pruefstand} eine detaillierte technische Beschreibung des Prüfstandsaufbaus sowie der verwendeten Systemkomponenten. Darauf aufbauend stellt Abschnitt~\ref{sec:messtechnisches_konzept} das konkrete Versuchskonzept dar, welches die praktische Umsetzung der Vergleichsmessung sowie die Variation der Prüfparameter wie Stromstärke, Bürde und Leiterpositionierung definiert.
+Zur Charakterisierung der Messstromwandler wurde ein Hochstrom-Prüfstand eingesetzt, der primäre Wechselströme von bis zu \SI{6000}{A} generieren kann. Dies ermöglicht die Analyse der magnetischen Eigenschaften sowie der Messgenauigkeit unter realitätsnahen Betriebsbedingungen. Das methodische Vorgehen untergliedert sich in die technische Beschreibung der Basiskomponenten, die kritische Analyse des ursprünglichen Messkonzepts sowie die daraus resultierende Systemoptimierung für die finalen Messreihen.
 
 \subsection{Hochstrom-Prüfstand}
 \label{sec:hochstrom_pruefstand}
 
-Der Hochstrom-Prüfstand dient der Erzeugung und Regelung hoher Wechselströme für thermische und elektrodynamische Untersuchungen an elektrischen Betriebsmitteln. Als Prüflinge fungieren in der Regel Niederspannungsschaltanlagen oder deren Teilkomponenten, die unter realitätsnahen Lastbedingungen auf ihre thermische Belastbarkeit und Festigkeit geprüft werden. Die Anlage ermöglicht die Bereitstellung von Strömen bis \SI{6000}{A} bei einer geringen Sekundärspannung. Im Folgenden werden der elektrotechnische Aufbau sowie die Implementierung der Stromregelung detailliert beschrieben.
+Der Hochstrom-Prüfstand dient der Erzeugung und Regelung hoher Wechselströme für thermische und elektrodynamische Untersuchungen an elektrischen Betriebsmitteln. Als Prüflinge fungieren in der Regel Niederspannungsschaltanlagen oder deren Teilkomponenten, die unter Lastbedingungen auf ihre thermische Belastbarkeit geprüft werden. Die Anlage ermöglicht die Bereitstellung von Strömen bis \SI{6000}{A} bei einer geringen Sekundärspannung.
 
 \subsubsection{Aufbau und Funktionsweise}
 \label{sec:aufbau_funktionsweise}
 
-Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstelltransformator der Firma Ruhstrat, der mit einer Leistung von \SI{90}{kVA} als zentrales Stellglied fungiert. Dem Transformator sind Netzdrosseln nachgeschaltet, die zur Entkopplung von Stromspitzen dienen. Die Spannungsstellung erfolgt stufenlos über verstellbare Kohlerollbürsten, wodurch eine variable Ausgangsspannung zwischen \SI{0}{V} und \SI{380}{V} bereitgestellt wird. Diese Spannung speist den nachgeschalteten Hochstrom-Festtransformator von Rolf Janssen (Typ UI 260/420 M). Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf eine Kleinspannung von \SI{6}{V} herab, was sekundärseitig die Realisierung von Prüfströmen bis zu \SI{5000}{A} am dreiphasigen Abgang ermöglicht.
+Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstelltransformator der Firma Ruhstrat, der mit einer Leistung von \SI{90}{kVA} als zentrales Stellglied fungiert. Dem Transformator sind Netzdrosseln nachgeschaltet, die zur Entkopplung von Stromspitzen dienen. Die Spannungsstellung erfolgt stufenlos über verstellbare Kohlerollbürsten, wodurch eine variable Ausgangsspannung zwischen \SI{0}{V} und \SI{380}{V} bereitgestellt wird. Diese Spannung speist den nachgeschalteten Hochstrom-Festtransformator von Rolf Janssen (Typ UI 260/420 M). Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf eine Kleinspannung von \SI{6}{V} herab, was sekundärseitig die Realisierung von Prüfströmen bis zu \SI{6000}{A} am dreiphasigen Abgang ermöglicht.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Blockschaltbild des Hochstrom-Prüfstandes mit Leistungs- und Signalpfaden}{pic:aufbau_hochstrom_pruefstand}
 
-Zur Überwachung und Regelung des Systems ist eine umfangreiche Sensorik integriert. Die Erfassung der Ströme erfolgt über Celsa-Stromwandler der Klasse 0,2S, deren Signale durch Messumformer des Typs K-3 in analoge Normsignale von \SI{0}{mA} bis \SI{20}{mA} gewandelt werden. Diese Signale dienen der dezentralen Peripherie Siemens ET 200S als Istwerte für die Stromregelung. Zusätzlich können Rogowskispulen zur Erfassung von Stromverläufen sowie Temperatursensoren zur thermischen Überwachung des Prüflings angeschlossen werden. Die gesamte Steuerung, Parametrierung und das Datenlogging erfolgen über ein HMI-System auf Basis von Siemens WinCC. Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
+\subsubsection{Regelungskonzept}
+\label{sec:regelungskonzept}
+
+Die Stromregelung ist als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vor, welchen die SPS kontinuierlich mit dem rückgeführten Istwert vergleicht. Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators. Um mechanischen Verschleiß durch permanentes Nachregeln zu minimieren, ist eine Hysterese als Totband in den Regelalgorithmus integriert. Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe. Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
 
 \begin{table}[H]
     \centering
@@ -24,41 +27,74 @@ Zur Überwachung und Regelung des Systems ist eine umfangreiche Sensorik integri
     \small
     \begin{tabular}{@{}l l l l l@{}}
         \toprule
-        \textbf{Komponente}  & \textbf{Typ}    & \textbf{Leistung / Bürde}                                             & \textbf{Primär / Input} & \textbf{Sekundär / Output}          \\ \midrule
-        Säulenstelltrafo     & Ruhstrat        & \SI{90}{kVA}                                                          & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A}) \\
-        Festtransformator    & Janssen         & \SI{30}{kVA}                                                          & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})            \\
-        Stromwandler         & Celsa ICG       & \SI{5}{VA}                                                            & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                \\
-        Messumformer (K-3)   & 3-K Elektrik    & --                                                                    & \SI{0}{A}--\SI{5}{A} AC & \SI{0}{mA}--\SI{20}{mA} DC          \\ \midrule
-        \textbf{Leittechnik} & \textbf{Typ}    & \multicolumn{3}{l}{\textbf{Beschreibung}}                                                                                             \\ \cmidrule(r){1-2}
-        Steuerung            & Siemens ET 200S & \multicolumn{3}{l}{Profinet-Anbindung, Stromregelung, Analogeingänge}                                                                 \\
-        Visualisierung       & Siemens WinCC   & \multicolumn{3}{l}{HMI-System, Prozessüberwachung, Datenlogging}                                                                      \\ \bottomrule
+        \textbf{Komponente}  & \textbf{Typ}    & \textbf{Leistung / Bürde} & \textbf{Primär / Input} & \textbf{Sekundär / Output}          \\ \midrule
+        Säulenstelltrafo     & Ruhstrat        & \SI{90}{kVA}              & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A}) \\
+        Festtransformator    & Janssen         & \SI{30}{kVA}              & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})            \\
+        Stromwandler         & Celsa ICG       & \SI{5}{VA}                & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                \\
+        Messumformer (K-3)   & 3-K Elektrik    & --                        & \SI{0}{A}--\SI{5}{A} AC & \SI{0}{mA}--\SI{20}{mA} DC          \\ \midrule
+        \textbf{Leittechnik} & \textbf{Typ}    & \multicolumn{3}{l}{\textbf{Beschreibung}}                                              \\ \cmidrule(r){1-2}
+        Steuerung            & Siemens ET 200S & \multicolumn{3}{l}{Profinet-Anbindung, Stromregelung, Analogeingänge}                  \\
+        Visualisierung       & Siemens WinCC   & \multicolumn{3}{l}{HMI-System, Prozessüberwachung, Datenlogging}                       \\ \bottomrule
     \end{tabular}
 \end{table}
 
-\subsubsection{Regelungskonzept}
-\label{sec:regelungskonzept}
+\subsection{Initiales Messkonzept und Fehleranalyse}
+\label{sec:initiales_konzept}
 
-Die Stromregelung ist als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vorgibt, welchen die SPS kontinuierlich mit dem rückgeführten Istwert der K-3 Messumformer vergleicht. Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators. Um mechanischen Verschleiß durch permanentes Nachregeln zu minimieren, ist eine Hysterese als Totband in den Regelalgorithmus integriert. Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe.
+Der praktische Versuchsaufbau orientiert sich am Prinzip der Vergleichsmessung. Für die Untersuchung wird primär die Übersetzungsmessabweichung $\varepsilon$ betrachtet, da diese für die Genauigkeit in Niederspannungsschaltanlagen die kritische Kenngröße darstellt.
 
-\subsection{Messtechnisches Konzept und Durchführung}
-\label{sec:messtechnisches_konzept}
-
-Der praktische Versuchsaufbau orientiert sich an dem in Abschnitt 2.x beschriebenen Prinzip der Vergleichsmessung. Für die vorliegende Untersuchung wird dabei primär die Übersetzungsmessabweichung $\varepsilon$ betrachtet, da diese für die Genauigkeit in Niederspannungsschaltanlagen die kritische Kenngröße darstellt.
-
-\subsubsection{Versuchsaufbau zur Ermittlung der Messabweichung}
-\label{sec:versuchsaufbau_genauigkeit}
+\subsubsection{Ursprünglicher Aufbau und Inbetriebnahme}
+\label{sec:inbetriebnahme}
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
 
-Der Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) realisiert die Vergleichsmessung durch zwei parallele Erfassungspfade, um eine direkte Vergleichbarkeit zwischen Referenz und Prüfling zu gewährleisten. Zur Bestimmung des Referenzwertes der Einspeisung werden die bereits beschriebenen K-3-Messumformer genutzt, welche das Primärsignal umformen und an die SPS übermitteln. Die anschließende Auswertung erfolgt im Visualisierungssystem WinCC, wobei der Messwert als zeitlicher Mittelwert über einen stabilen Messzeitraum aus einem Prozessdiagramm abgelesen wird.
+Der erste Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) sah zwei parallele Erfassungspfade vor. Zur Bestimmung des Referenzwertes der Einspeisung wurden die K-3-Messumformer genutzt, welche das Signal an die SPS übermittelten. Parallel dazu wurde das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke im Modus „Acquire“ erfasst. Die Inbetriebnahme diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter Lastbedingungen zu verifizieren.
 
-Parallel dazu wird das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke erfasst. Um Messwertschwankungen auszugleichen und eine konsistente Datenbasis zur Referenzmessung zu schaffen, wird das Multimeter im Modus „Acquire“ betrieben. Dieser Modus ermöglicht ebenfalls eine Mittelwertbildung des Messsignals, sodass beide Pfade auf einer vergleichbaren statistischen Grundlage ausgewertet werden können.
+\subsubsection{Schwachstellen im Messkonzept}
+\label{sec:fehleranalyse}
 
-\subsubsection{Konstruktive Gestaltung der Primärleiterführung}
+Bei der Auswertung der ersten Messreihen wurde eine Abweichung festgestellt, die außerhalb der Toleranzen der Genauigkeitsklassen lag. Die Fehleranalyse ergab zwei wesentliche Schwachstellen:
+\begin{itemize}
+    \item \textbf{Nichtlinearität der Messumformer:} Die K-3 Messumformer wiesen Skalierungsfehler und Nichtlinearitäten auf, wodurch bereits verfälschte Istwerte für die Referenzbildung herangezogen wurden.
+    \item \textbf{Mangelnde Synchronisation:} Die Erfassung der Prüflingsdaten mittels Multimeter erfolgte nicht zeitgleich zur Referenzmessung in der SPS. Durch Lastschwankungen im Pfad konnte keine konsistente Datenbasis für die Berechnung von $\varepsilon$ geschaffen werden.
+\end{itemize}
+
+\subsection{Optimiertes Messsystem}
+\label{sec:optimierung}
+
+Um eine valide Datenbasis sicherzustellen, wurde eine Neuausrichtung der Messtechnik vorgenommen.
+
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}{Schematischer Aufbau der neuen Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
+
+
+Es wurden die K3-Messumformer und Fluke Messgeräte ausgtauscht durch zwei Energiemessgeräte von Siemens. Somit erhält man von der Einspeisung und dem Prüfling vergleichbare Ergbenins, die den selben Zeitstemple haben.
+
+\subsubsection{Systemumstellung auf Siemens SENTRON}
+\label{sec:sentron_system}
+
+Anstelle der analogen Signalpfade kommen nun Energiemessgeräte der Siemens SENTRON-Reihe zum Einsatz (PAC 4220 für die Einspeisung, PAC 3220 für den Prüfling). Diese Geräte werden über PROFINET direkt in die Systemstruktur eingebunden. Hierdurch entfallen elektromagnetische Störeinflüsse auf die Normsignale. Da beide Geräte ihre Daten über den Bus an die CPU liefern, ist eine präzise zeitliche Korrelation der Messwerte gewährleistet.
+
+
+
+\subsubsection{Automatisierung und Validierung} \label{sec:validierung}
+
+\einfuegenBildMittel{03_Ressourcen/zeichnungen/ablaufdiagramm_automationdrawio.drawio.pdf}{Ablaufdiagramm der automatisierten Kennlinienaufnahme}{pic:ablaufdiagramm_automationdrawio}
+
+Zur Validierung des optimierten Prüfstandes wurde ein automatisiertes Steuerungsprogramm entwickelt, welches die Aufnahme der Kennlinien vollständig selbstständig durchführt. Das Programm steuert dabei sequenziell die in der DIN EN 61869-2 definierten Prozentwerte des Nennstroms an, wobei die Faktoren 5\%, 20\%, 50\%, 80\%, 90\%, 100\% und 120\% als Prüfpegel hinterlegt sind.
+
+Wie in der Abbildung \ref{pic:ablaufdiagramm_automationdrawio} dargestellt, verbleibt das System nach der Aktivierung zunächst im Ruhezustand (Schritt 0), in dem eine kontinuierliche Prüfung erfolgt, ob die gemessenen Phasenströme innerhalb eines Toleranzbereichs um den Nullwert liegen, um einen lastfreien Start zu garantieren. Sobald die Startbedingung erfüllt ist, beginnt der Prüfablauf mit der Initialisierung der ersten Stufe, woraufhin der berechnete Sollwert an den PID-Regler ausgegeben wird. Während der aktiven Prüfstufe überwacht die Steuerung fortlaufend, ob die Istwerte stationär innerhalb eines zulässigen Toleranzfensters um den aktuellen Sollwert verbleiben. Um eine ausreichende thermische und elektrische Stabilität zu gewährleisten, wird an jedem dieser Messpunkte eine Haltezeit von fünf Minuten streng eingehalten. Innerhalb dieser Zeitspanne erfolgt eine automatisierte Mittelwertbildung der erfassten Messdaten. Die Ergebnisse werden unmittelbar in das WinCC-Datenlogging übernommen und für die anschließende Auswertung bereitgestellt.
+
+Durch diesen automatisierten Ablauf werden menschliche Fehlereinflüsse bei der Messwerterfassung minimiert und die Reproduzierbarkeit der Messergebnisse signifikant gesteigert. Nach dem erfolgreichen Durchlauf der letzten Prüfstufe wird der Strom über eine Rampe kontrolliert auf null zurückgefahren, bevor das Programm mit einer Fertigmeldung abschließt. Ein manueller Reset ermöglicht zudem jederzeit den sofortigen Abbruch des Vorgangs, wobei das System den Sollwert unmittelbar auf null setzt und in den sicheren Ruhezustand zurückkehrt
+
+\subsection{Konstruktive Gestaltung der Primärleiterführung}
 \label{sec:geometrie_kupferschienen}
 
-\subsubsubsection{Geometrische Anordnung: Parallel- vs. Dreieckskonfiguration}
+Zusätzlich zur messtechnischen Optimierung wird die geometrische Anordnung des Primärleiters variiert, um deren Einfluss auf die Fremdfeldbeeinflussung zu untersuchen.
+
+\subsubsection{Geometrische Anordnung: Parallel- vs. Dreieckskonfiguration}
+\label{sec:layout_geometrie}
 % Hier erfolgt die Erläuterung der Layouts bezüglich der elektromagnetischen Beeinflussung.
 
-\subsubsubsection{Spezifikation der Kupferschienen und Phasenmittenabstände}
+\subsubsection{Spezifikation der Kupferschienen und Phasenmittenabstände}
+\label{sec:schienen_specs}
 % Hier werden Details zu Schienenmaßen und Grenzwerten der Abstände aufgeführt.
