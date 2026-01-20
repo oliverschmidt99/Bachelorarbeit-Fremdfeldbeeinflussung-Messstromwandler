@@ -236,6 +236,9 @@ Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den bena
     \label{equ:stray_flux_mbs}
 \end{equation}
 
+
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}{}{pic:}
+
 Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_p$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns $A$ (in m$^2$) und Außenphasenabstand $D$ (in m).
 
 \einfuegenBildGross{03_Ressourcen/simulation/fremdfeld_ra_pfunder/Vergleich_Geometrie_und_Strom.pdf}{Einfluss von Kerngröße und Stromstärke auf den zusätzlichen Streufluss}{pic:sim_streufluss_abhaengigkeit}
@@ -282,5 +285,46 @@ Gemäß DIN EN 61869-2 müssen zwei zentrale Kenngrößen ermittelt werden. Die 
 
 Hierbei entspricht $k_n$ dem Bemessungsübersetzungsverhältnis. Der zweite Parameter ist der Fehlwinkel $\Delta\phi$, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert. Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
 
-\subsection{Aufbau Niederspannungsschaltanlagen}
-\label{sec:aufbau_niederspannungsschaltanlagen}
+\subsection{Niederspannungsschaltanlagen}
+\label{sec:niederspannungsschaltanlagen}
+
+Niederspannungsschaltanlagen dienen der Verteilung, Schaltung und Absicherung elektrischer Energie im Niederspannungsbereich bis 1000~V. Sie stellen die Verbindung zwischen der Einspeisung und den nachgelagerten Verbrauchern her und sind für hohe Dauerströme sowie mechanische und thermische Beanspruchungen infolge von Kurzschlüssen ausgelegt.
+
+\subsubsection{Aufbau einer Niederspannungsschaltanlagen}
+\label{sec:kupferschienensystem}
+
+Der konstruktive Aufbau einer Niederspannungsschaltanlage folgt einem modularen Prinzip, bei dem mehrere Felder über ein gemeinsames Hauptsammelschienensystem im Rücken der Anlage elektrisch miteinander verbunden sind. Diese Felder lassen sich funktional in drei wesentliche Kategorien unterteilen: Während Einspeisefelder die elektrische Energie beziehen und der Hauptsammelschiene zuführen, erfolgt über die Abgangsfelder die gezielte Verteilung an nachgelagerte Verbraucher. Kupplungsfelder ermöglichen zudem die galvanische Verbindung oder Trennung einzelner Sammelschienenabschnitte, um die Versorgungssicherheit und Flexibilität im Anlagenbetrieb zu erhöhen.
+
+Neben der reinen Energieverteilung ist die mechanische und thermische Festigkeit gegenüber hohen Kurzschlussströmen ein entscheidendes Sicherheitsmerkmal der Konstruktion. Die Anlagen müssen technisch so ausgelegt sein, dass sie selbst extremen Belastungen, wie einem Kurzschlussstrom von $I_k=100$ kA, standhalten. Ein wesentlicher Aspekt des Personenschutzes ist dabei das Störlichtbogen: Im Fehlerfall wird die entstehende Druckenergie kontrolliert über das Dach der Anlage abgeführt, um eine Gefährdung des Bedienpersonals zu verhindern und ein schnellstmögliches Erlöschen des Lichtbogens zu gewährleisten
+
+\subsubsection{Kupferschienensystem und Geometrie}
+\label{sec:kupferschienensystem}
+
+Das Kupferschienensystem bildet das zentrale Element für den Energietransport innerhalb der Schaltanlage. Es übernimmt die elektrische Verbindung zwischen der Einspeisung, den Leistungsschaltern und den einzelnen Abgängen. Bei der Dimensionierung muss die geforderte Strombelastbarkeit sichergestellt sein, wobei die spezifischen Schienenquerschnitte und Bemessungsströme in Tabelle~\ref{tab:schienenquerschnitte} aufgeführt sind.
+
+Die geometrische Anordnung des Schienensystems, insbesondere der Phasenmittenabstand, wird maßgeblich durch die Baugröße der eingesetzten Leistungsschalter bestimmt. Dieser Abstand definiert die minimale Breite eines Feldes und beeinflusst durch die räumliche Nähe der Leiter die magnetische Kopplung zwischen den Phasen.
+
+\einfuegenBildGross{03_Ressourcen/zeichnungen/kupferschienensystem_phasenmittelabstand.drawio.pdf}{Darstellung der Phasenmittenabstände in Abhängigkeit von der Schienenkonfiguration}{pic:kupferschienensystem}
+
+Abbildung~\ref{pic:kupferschienensystem} verdeutlicht diesen Zusammenhang für zwei gängige Konfigurationen:
+\begin{itemize}
+    \item Ein Phasenmittenabstand von $130$~mm wird für Ströme bis zu $4000$~A eingesetzt. Bei der in der Abbildung gezeigten Konfiguration für ein $2500$-A-Feld wird dies durch ein Kupferschienenpaket aus zwei Leitern der Dimension $100 \times 10$~mm realisiert.
+    \item Für höhere Anforderungen bis zu $6300$~A wird ein Phasenmittenabstand von $210$~mm gewählt. Dies ermöglicht die Montage von Paketen mit bis zu fünf parallelen Schienen pro Phase. In der Abbildung ist beispielhaft die Anordnung für ein $4000$-A-Feld mit vier Einzelschienen dargestellt.
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \caption{Geometrische Daten und Schienenpakete für Siemens 3WA Leistungsschalter }
+    \label{tab:schienenquerschnitte}
+    \begin{tabular}{rcl}
+        \toprule
+        \textbf{Bemessungsstrom} & \textbf{Phasenmittenabstand} & \textbf{Kupferschienenpaket} \\
+        \midrule
+        2000~A & 130~mm & $2 \times 80 \times 10$~mm \\
+        2500~A & 130~mm & $2 \times 100 \times 10$~mm \\
+        3200~A & 210~mm & $3 \times 100 \times 10$~mm \\
+        4000~A & 210~mm & $4 \times 100 \times 10$~mm \\
+        5000~A & 210~mm & $5 \times 120 \times 10$~mm \\
+        \bottomrule
+    \end{tabular}
+\end{table}
