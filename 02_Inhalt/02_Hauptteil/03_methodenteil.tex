@@ -18,7 +18,7 @@ Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstellt
 \subsubsection{Regelungskonzept}
 \label{sec:regelungskonzept}
 
-Die Stromregelung ist als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vor, welchen die SPS kontinuierlich mit dem rückgeführten Istwert vergleicht. Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators. Um mechanischen Verschleiß durch permanentes Nachregeln zu minimieren, ist eine Hysterese als Totband in den Regelalgorithmus integriert. Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe. Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
+Die Stromregelung ist als digitaler PID-Regelkreis innerhalb der Siemens ET 200S realisiert. Der Anwender gibt über die WinCC-Visualisierung den gewünschten Sollstrom vor, welchen die SPS kontinuierlich mit dem rückgeführten Istwert vergleicht. Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators. Um permanentes Nachregeln zu minimieren, die starke Stromspitzen erzeugen, ist eine Hysterese als Totband in den Regelalgorithmus integriert. Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe. Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
 
 \begin{table}[H]
     \centering
@@ -38,53 +38,72 @@ Die Stromregelung ist als digitaler PID-Regelkreis innerhalb der Siemens ET 200S
     \end{tabular}
 \end{table}
 
-\subsection{Initiales Messkonzept und Fehleranalyse}
-\label{sec:initiales_konzept}
 
-Der praktische Versuchsaufbau orientiert sich am Prinzip der Vergleichsmessung. Für die Untersuchung wird primär die Übersetzungsmessabweichung $\varepsilon$ betrachtet, da diese für die Genauigkeit in Niederspannungsschaltanlagen die kritische Kenngröße darstellt.
-
-\subsubsection{Ursprünglicher Aufbau und Inbetriebnahme}
-\label{sec:inbetriebnahme}
+\subsubsection{Ursprünglicher Aufbau der Messstrecke}
+\label{sec:aufbau_alter_messstrecke}
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
 
-Der erste Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) sah zwei parallele Erfassungspfade vor. Zur Bestimmung des Referenzwertes der Einspeisung wurden die K-3-Messumformer genutzt, welche das Signal an die SPS übermittelten. Parallel dazu wurde das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke im Modus „Acquire“ erfasst. Die Inbetriebnahme diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter Lastbedingungen zu verifizieren.
+Der erste Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) sah zwei parallele Erfassungspfade vor. Zur Bestimmung des Referenzwertes der Einspeisung wurden die K-3-Messumformer genutzt, welche das Signal an die SPS übermittelten. Parallel dazu wurde das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke im Modus „Acquire“ erfasst.
+%Die Inbetriebnahme diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter Lastbedingungen zu verifizieren.
 
 \subsubsection{Schwachstellen im Messkonzept}
 \label{sec:fehleranalyse}
 
-Bei der Auswertung der ersten Messreihen wurde eine Abweichung festgestellt, die außerhalb der Toleranzen der Genauigkeitsklassen lag. Die Fehleranalyse ergab zwei wesentliche Schwachstellen:
-\begin{itemize}
-    \item \textbf{Nichtlinearität der Messumformer:} Die K-3 Messumformer wiesen Skalierungsfehler und Nichtlinearitäten auf, wodurch bereits verfälschte Istwerte für die Referenzbildung herangezogen wurden.
-    \item \textbf{Mangelnde Synchronisation:} Die Erfassung der Prüflingsdaten mittels Multimeter erfolgte nicht zeitgleich zur Referenzmessung in der SPS. Durch Lastschwankungen im Pfad konnte keine konsistente Datenbasis für die Berechnung von $\varepsilon$ geschaffen werden.
-\end{itemize}
+Die Auswertung der ersten Messreihen zeigt Abweichungen, die über den gesamten Messbereich auftreten. In Abbildung \ref{pic:dia_messstrecke_alt} sind die Verläufe der Messumformer K-3 (blau) und der Rogowskispulen (orange) dargestellt. Die Rogowskispulen wurden parallel eingesetzt, um deren Eignung für die Prüfung der Wandler zu untersuchen. Beide Systeme erfassten die Messwerte zeitgleich an einem Messpunkt hinter dem Festtransformator. Als Referenz dient die Genauigkeitsklasse 0,2, da die primärseitigen Stromwandler der Klasse 0,2S entsprechen.
+
+Die grafische Darstellung verdeutlicht, dass beide Messsysteme die durch die Norm vorgegebenen Toleranzgrenzen (gestrichelte Linien) nicht einhalten. In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den positiven Grenzwert, während die Rogowskispulen eine negative Abweichung zwischen -1\,\% und -2,5\,\% aufweisen. In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa -2\,\%, wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen. Da die Verläufe der beiden Messsysteme voneinander abweichen, kann kein eindeutiger Referenzwert für den Primärstrom bestimmt werden.
+
+\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_alt.png}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
+
+Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt, dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen. Dies ist darauf zurückzuführen, dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt, woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung. Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal. Dabei weisen die K-3-Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen. Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend. Im folgenden Abschnitt \ref{sec:optimierung} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
+
+
 
 \subsection{Optimiertes Messsystem}
 \label{sec:optimierung}
 
-Um eine valide Datenbasis sicherzustellen, wurde eine Neuausrichtung der Messtechnik vorgenommen.
+Wie im vorangegangenen Abschnitt dargelegt, erfüllte die ursprüngliche Messstrecke nicht die Anforderungen an eine präzise Genauigkeitsprüfung von Messstromwandlern. Aus diesem Grund wurde eine Optimierung des Hochstrom-Prüfstandes durchgeführt. Das primäre Ziel dieser Maßnahmen war die Steigerung der Messgenauigkeit sowie die Automatisierung des Prüfablaufs, um reproduzierbare und direkt vergleichbare Ergebnisse sicherzustellen.
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}{Schematischer Aufbau der neuen Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
+Zur technischen Umsetzung wurden zwei digitale Energiemessgeräte der Siemens-Produktfamilie ausgewählt. Das Modell PAC3220, welches für die Erfassung des Prüflingsstroms eingesetzt wird \cite[S.~97]{siemens_pac3220_2019}, sowie das zur Überwachung der Einspeisung genutzte PAC4220 \cite[S.~94]{siemens_pac4220_2024} verfügen jeweils über die Genauigkeitsklasse 0,2 für die Strommessung. Diese Geräte ermöglichen durch optionale Erweiterungsmodule eine direkte Integration in die Systemumgebung der Siemens ET 200S via PROFINET-Protokoll. 
 
-
-Es wurden die K3-Messumformer und Fluke Messgeräte ausgtauscht durch zwei Energiemessgeräte von Siemens. Somit erhält man von der Einspeisung und dem Prüfling vergleichbare Ergbenins, die den selben Zeitstemple haben.
-
-\subsubsection{Systemumstellung auf Siemens SENTRON}
-\label{sec:sentron_system}
-
-Anstelle der analogen Signalpfade kommen nun Energiemessgeräte der Siemens SENTRON-Reihe zum Einsatz (PAC 4220 für die Einspeisung, PAC 3220 für den Prüfling). Diese Geräte werden über PROFINET direkt in die Systemstruktur eingebunden. Hierdurch entfallen elektromagnetische Störeinflüsse auf die Normsignale. Da beide Geräte ihre Daten über den Bus an die CPU liefern, ist eine präzise zeitliche Korrelation der Messwerte gewährleistet.
+Ein wesentlicher Vorteil dieser Konfiguration liegt in der dezentralen Messwerterfassung unmittelbar am Messpunkt. Dadurch lassen sich parasitäre Effekte über lange Messleitungen minimieren. Die Einbindung in die SPS erfolgt durch eine direkte zyklische Datenübertragung, wodurch die manuelle Abfrage von Registern entfällt und eine zeitsynchrone Datenbasis für beide Messpunkte geschaffen wird.
 
 
 
-\subsubsection{Automatisierung und Validierung} \label{sec:validierung}
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}{Schematischer Aufbau der optimierten Messstrecke mit Siemens SENTRON Messgeräten}{pic:aufbau_messstrecke_neu}
 
-\einfuegenBildMittel{03_Ressourcen/zeichnungen/ablaufdiagramm_automationdrawio.drawio.pdf}{Ablaufdiagramm der automatisierten Kennlinienaufnahme}{pic:ablaufdiagramm_automationdrawio}
+Die in Abbildung \ref{pic:aufbau_messstrecke_neu} dargestellte Systemarchitektur verdeutlicht die informationstechnische Vernetzung des optimierten Messaufbaus. Während der obere Teil des Schemas den bereits beschriebenen Leistungspfad darstellt, erfolgt die messtechnische Erfassung der Primärströme zyklisch durch die Geräte PAC 4220 (Einspeisung) und PAC 3220 (Prüfling). 
 
-Zur Validierung des optimierten Prüfstandes wurde ein automatisiertes Steuerungsprogramm entwickelt, welches die Aufnahme der Kennlinien vollständig selbstständig durchführt. Das Programm steuert dabei sequenziell die in der DIN EN 61869-2 definierten Prozentwerte des Nennstroms an, wobei die Faktoren 5\%, 20\%, 50\%, 80\%, 90\%, 100\% und 120\% als Prüfpegel hinterlegt sind.
+Die erfassten Stromwerte werden in WinCC archiviert und stehen dort für die Prozessüberwachung zur Verfügung. Über die Benutzeroberfläche (HMI) können diese Daten als CSV-Datei exportiert werden. Diese Datei dient als Grundlage für die anschließende Genauigkeitsmessung und die Auswertung der Versuchsreihen.
 
-Wie in der Abbildung \ref{pic:ablaufdiagramm_automationdrawio} dargestellt, verbleibt das System nach der Aktivierung zunächst im Ruhezustand (Schritt 0), in dem eine kontinuierliche Prüfung erfolgt, ob die gemessenen Phasenströme innerhalb eines Toleranzbereichs um den Nullwert liegen, um einen lastfreien Start zu garantieren. Sobald die Startbedingung erfüllt ist, beginnt der Prüfablauf mit der Initialisierung der ersten Stufe, woraufhin der berechnete Sollwert an den PID-Regler ausgegeben wird. Während der aktiven Prüfstufe überwacht die Steuerung fortlaufend, ob die Istwerte stationär innerhalb eines zulässigen Toleranzfensters um den aktuellen Sollwert verbleiben. Um eine ausreichende thermische und elektrische Stabilität zu gewährleisten, wird an jedem dieser Messpunkte eine Haltezeit von fünf Minuten streng eingehalten. Innerhalb dieser Zeitspanne erfolgt eine automatisierte Mittelwertbildung der erfassten Messdaten. Die Ergebnisse werden unmittelbar in das WinCC-Datenlogging übernommen und für die anschließende Auswertung bereitgestellt.
+\subsubsection{Systemintegration und Programmentwicklung}
+\label{sec:integration_programmierung}
 
-Durch diesen automatisierten Ablauf werden menschliche Fehlereinflüsse bei der Messwerterfassung minimiert und die Reproduzierbarkeit der Messergebnisse signifikant gesteigert. Nach dem erfolgreichen Durchlauf der letzten Prüfstufe wird der Strom über eine Rampe kontrolliert auf null zurückgefahren, bevor das Programm mit einer Fertigmeldung abschließt. Ein manueller Reset ermöglicht zudem jederzeit den sofortigen Abbruch des Vorgangs, wobei das System den Sollwert unmittelbar auf null setzt und in den sicheren Ruhezustand zurückkehrt
+Die Einbindung der Messgeräte in die bestehende Umgebung der SPS erfolgt über den Hardware-Konfigurator innerhalb des Simatic Managers. Da die Messgeräte der Reihe SENTRON als Teilnehmer am PROFINET-Netzwerk fungieren, müssen zunächst die entsprechenden GSDML-Dateien in den Hardware-Katalog importiert werden. Anschließend werden die Geräte in der Hardware-Konfiguration vernetzt, wobei jedem Messgerät ein eindeutiger Gerätename sowie eine IP-Adresse zugewiesen wird.
+
+Innerhalb des Hardware-Konfigurators werden die spezifischen Messwert der Geräte auf die Eingangsadressen der SPS abgebildet. Die so bereitgestellten Rohwerte werden im Anwenderprogramm der Steuerung aus dem Peripheriebereich ausgelesen und in DBs übertragen. Dieser Zwischenschritt über die DBs ist notwendig, um die Stromwerte strukturiert für die weitere Programmlogik und die Archivierung bereitzustellen.
+
+Für die Erfassung der Daten in WinCC wird im Variablenhaushalt des Visualisierungssystems eine Kommunikationsverbindung zur Steuerung projektiert. Die Variablen für die gemessenen Ströme werden direkt mit den entsprechenden Speicheradressen innerhalb der DBs verknüpft. Über diese Verbindung werden die Werte der Ströme in regelmäßigen Abständen vom System ausgelesen, auf dem HMI angezeigt und für den späteren Export als CSV-Datei in der Datenbank gespeichert.
+
+
+Die Automatisierung wird über die SPS realisiert. Hierfür wird der vorhandene PID Regeler verwendet. Für die Genauigkeitsmessung eines Wandlers sind die Messpunkte 5~\%, 20~\%, 100~\% und 120~\% des Primärstroms von bedeutung. Um die Messpunkte anzufahren wird eine Schrittkette entwickelt. Es soll jeden Messpunkte nach einander anfahren und eine Messreihe von 5 min durchführen, damit man ein Mittelwert berechnen kann und das der Kern des Wandler ausreichend belaste wird.
+
+D
+
+\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_neu.png}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im neuem Versuchsaufbau}{pic:dia_messstrecke_neu}
+
+\subsubsection{Auswertung der neuen Messstrecke}
+\label{sec:auswertung_messstrecke}
+
+
+\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_neu.png}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im neuem Versuchsaufbau}{pic:dia_messstrecke_neu}
+
+
+
+
+
+
 
 \subsection{Konstruktive Gestaltung der Primärleiterführung}
 \label{sec:geometrie_kupferschienen}
