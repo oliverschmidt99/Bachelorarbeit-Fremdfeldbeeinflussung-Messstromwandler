@@ -131,8 +131,27 @@ Zusätzlich zur messtechnischen Optimierung wird die geometrische Anordnung des 
 
 \subsubsection{Geometrische Anordnung: Parallel- vs. Dreieckskonfiguration}
 \label{sec:layout_geometrie}
-% Hier erfolgt die Erläuterung der Layouts bezüglich der elektromagnetischen Beeinflussung.
 
-\subsubsection{Spezifikation der Kupferschienen und Phasenmittenabstände}
-\label{sec:schienen_specs}
-% Hier werden Details zu Schienenmaßen und Grenzwerten der Abstände aufgeführt.
+In Niederspannungsschaltanlagen werden Kupferschienen überwiegend in paralleler Anordnung montiert. Diese Installationsweise wird bevorzugt, da sie platzsparend ist und sich durch eine geringe Montagekomplexität auszeichnet. Die Führung der Schienen ist dabei konstruktiv maßgeblich durch die Anschlüsse des Leistungsschalters vorbestimmt, weshalb Variationen der Geometrie im realen Anlagenbau nur eingeschränkt möglich sind.
+
+Die Messstromwandler werden üblicherweise dem Hauptschalter nachgelagert im Anschlussraum installiert. Da der verfügbare Bauraum in diesem Bereich begrenzt ist, stellt die Realisierung abweichender Leiteranordnungen – wie etwa einer Dreieckskonfiguration zur Reduktion von Fremdfeldern – eine konstruktive Herausforderung dar.
+
+Um den Einfluss der Leitergeometrie experimentell zu untersuchen, wurde das Kupferschienensystem des Hochstromprüfstandes flexibel gestaltet. Dies ermöglicht den direkten Vergleich zwischen der konventionellen Parallelanordnung und einer optimierten Dreiecksanordnung bei identischen elektrischen Parametern.
+
+\textbf{Parallelanordnung}
+
+Die Ausgangssituation bildet die planare Anordnung der drei Phasenleiter L1, L2 und L3 in einer Ebene. Abbildung~\ref{pic:kupferschienen_parallel} zeigt diesen Aufbau im Prüfstand. Der Phasenmittenabstand wurde dabei analog zu den realen Bedingungen in Siemens SIVACON S8 Schaltfeldern gewählt (siehe Tabelle~\ref{tab:schienenquerschnitte}). In dieser Konfiguration ist der Prüfling, hier beispielhaft der Messstromwandler Redur 20A1456.5vffp (\SI{5000}{A}), den maximalen magnetischen Fremdfeldern der benachbarten Leiter ausgesetzt.
+
+\einfuegenBildGross{03_Ressourcen/Bilder/kupferschienen_parallel.jpg}{Versuchsaufbau in paralleler Schienenanordnung mit montiertem Messstromwandler (Typ: Redur 20A1456.5vffp)}{pic:kupferschienen_parallel}
+
+\textbf{Dreieckskonfiguration}
+
+Zur Realisierung der Dreiecksanordnung wurde ein modifizierter Aufbau entwickelt, der in Abbildung~\ref{pic:kupferschienen_dreieck} dargestellt ist. Hierbei wird die mittlere Phase (L2) mithilfe eines speziell gefertigten Kupferadapters geometrisch aus der Ebene der Außenleiter herausgeführt. Der Adapter versetzt die Schiene L2 um \SI{0,1}{mm} nach vorne.
+
+\begin{aufgabenbox}
+    Ich muss den Realenabstand noch ermitteltn, wie weit L2 nach vorne verschoben ist.
+\end{aufgabenbox}
+
+Durch diesen Versatz spannen die Mittelpunkte der drei Leiter im Querschnitt ein Dreieck auf. Ziel dieser Anordnung ist es, die magnetische Kopplung zwischen den Phasen symmetrischer zu gestalten und die vektoriellen Anteile der Fremdfelder im Bereich des Wandlerkerns teilweise zu kompensieren. Auch in dieser Konfiguration wurde der \SI{5000}{A}-Wandler von Redur vermessen.
+
+\einfuegenBildGross{03_Ressourcen/Bilder/kupferschienen_dreieck.jpg}{Modifizierter Versuchsaufbau in Dreieckskonfiguration durch räumlichen Versatz der Phase L2 mittels Kupferadapter}{pic:kupferschienen_dreieck}

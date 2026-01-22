@@ -398,7 +398,7 @@ sync_axes = st.sidebar.checkbox(
     "🔗 Phasen synchronisieren", value=True, on_change=clear_cache
 )
 y_limit = st.sidebar.slider(
-    "Y-Achse Zoom (+/- %)", 0.2, 5.0, 1.5, 0.1, on_change=clear_cache
+    "Y-Achse Zoom (+/- %)", 0.2, 10.0, 1.5, 0.1, on_change=clear_cache
 )
 acc_class = st.sidebar.selectbox(
     "Norm-Klasse", [0.2, 0.5, 1.0, 3.0], index=1, on_change=clear_cache
