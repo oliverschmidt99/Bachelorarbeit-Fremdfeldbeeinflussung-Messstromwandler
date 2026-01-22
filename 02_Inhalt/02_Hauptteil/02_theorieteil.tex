@@ -13,7 +13,7 @@ Der betrachtete Messstromwandler setzt sich konstruktiv im Wesentlichen aus sech
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler.drawio.pdf}{Schematischer Aufbau eines Aufsteckstromwandlers}{pic:aufbau_wandler}
 
-Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:geometrie_kupferschienen}. Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung wird als Durchsteck- oder Aufsteckstromwandler bezeichnet. Sie entspricht physikalisch einer Windungszahl von Eins ($N_1 = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Zur Gewährleistung einer zentrierten Leiterführung bieten einige Hersteller spezielle Vorrichtungen zur Fixierung unterschiedlicher Schienengeometrien im Fensterausschnitt an.
+Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:geometrie_kupferschienen}. Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung wird als Durchsteck- oder Aufsteckstromwandler bezeichnet. Sie entspricht physikalisch einer Windungszahl von Eins ($N_{pri} = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Zur Gewährleistung einer zentrierten Leiterführung bieten einige Hersteller spezielle Vorrichtungen zur Fixierung unterschiedlicher Schienengeometrien im Fensterausschnitt an.
 
 Das zentrale Element der Übertragung bildet der Magnetkern. Ist dieser als geschlossener Toroid ohne Luftspalt ausgeführt, wird er als Ringkern bezeichnet. Der Kern besteht zur Minimierung der Übertragungsverluste aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$). Die magnetischen Eigenschaften des Kernmaterials bestimmen maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
 
@@ -29,7 +29,7 @@ Im Gegensatz dazu dient der Schutzstromwandler der Ansteuerung von Schutzeinrich
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
 
-Kompensationswicklungen dienen primär der Minimierung zwei signifikanter Störeinflüsse bei Messstromwandlern. Dabei handelt es sich um den durch eine exzentrische Positionierung des Primärleiters verursachten Lagefehler (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) sowie die Einwirkung externer Fremdfelder. Die physikalischen Grundlagen zu letzterem Aspekt werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} erläutert. Eine exzentrische Leiteranordnung tritt in der Praxis häufig auf, wenn die Fensteröffnung des Wandlers deutlich größer als der Querschnitt der verwendeten Stromschiene dimensioniert ist. Aufgrund des geometrischen Spielraums ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
+Kompensationswicklungen dienen primär der Minimierung zwei deutlicher Störeinflüsse bei Messstromwandlern. Dabei handelt es sich um den durch eine exzentrische Positionierung des Primärleiters verursachten Lagefehler (siehe Abbildung~\ref{pic:schema_kupferschiene_pos}) sowie die Einwirkung externer Fremdfelder. Die physikalischen Grundlagen zu letzterem Aspekt werden in Kapitel~\ref{sec:stoerfelder_schaltanlagen} erläutert. Eine exzentrische Leiteranordnung tritt in der Praxis häufig auf, wenn die Fensteröffnung des Wandlers deutlich größer als der Querschnitt der verwendeten Stromschiene dimensioniert ist. Aufgrund des geometrischen Spielraums ist eine exakte Zentrierung bei der Montage oft nicht gewährleistet.
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler_kompensiert.drawio.pdf}{Schematischer Aufbau eines Wandlers mit zusätzlichen Kompensationswicklungen}{pic:aufbau_wandler_kompensationswicklungen}
 
@@ -114,7 +114,7 @@ Bei einem Aufsteckstromwandler bildet der durch die Fensteröffnung geführte Le
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/esb_wandler_vereinfacht.drawio.pdf}{Vereinfachtes Ersatzschaltbild eines Messstromwandlers}{esb:wandler_vereinfacht}
 
-Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ bei zentrierter Lage des Primärleiters und gleichmäßiger Verteilung der Sekundärwicklung über den Umfang vernachlässigen~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis weder eine ideale Zentrierung des Leiters noch eine perfekte Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der vorliegenden Betrachtung berücksichtigt.
+Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ bei zentrierter Lage des Primärleiters und gleichmäßiger Verteilung der Sekundärwicklung über den Umfang vernachlässigen~\cite[S.~65]{minkner2020messwandler}. Da in der Praxis weder eine ideale Zentrierung des Leiters noch eine ideale Wicklungsverteilung durch den Hersteller garantiert werden kann, wird $L_{s}$ in der vorliegenden Betrachtung berücksichtigt.
 
 \subsection{Physikalische Grundlagen}
 \label{sec:physikalisches_prinzip}
@@ -237,7 +237,7 @@ Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf
     \end{tabular}
 \end{table}
 
-Stoffe mit einer Permeabilität von $\mu_r < 1$ werden als diamagnetisch bezeichnet (z.\,B. Kupfer oder Wasser). In der Elektrotechnik werden Diamagnetika und Paramagnetika meist näherungsweise wie das Vakuum ($\mu_r \approx 1$) behandelt. Für die Funktion von Messstromwandlern sind ferromagnetische Stoffe aufgrund ihrer extrem hohen Permeabilität von entscheidender Bedeutung, da sie den magnetischen Fluss im Kern führen. Da $\mu_r$ bei Ferromagnetika jedoch feldstärkeabhängig ist, führen starke Felder zu Sättigungseffekten und somit zu einer massiven Beeinträchtigung der Genauigkeit bei Fremdfeldeinfluss.
+Stoffe mit einer Permeabilität von $\mu_r < 1$ werden als diamagnetisch bezeichnet (z.\,B. Kupfer oder Wasser). In der Elektrotechnik werden Diamagnetika und Paramagnetika meist näherungsweise wie das Vakuum ($\mu_r \approx 1$) behandelt. Für die Funktion von Messstromwandlern sind ferromagnetische Stoffe aufgrund ihrer extrem hohen Permeabilität von entscheidender Bedeutung, da sie den magnetischen Fluss im Kern führen. Da $\mu_r$ bei Ferromagnetika jedoch feldstärkeabhängig ist, führen starke Felder zu Sättigungseffekten und somit zu einer deutliche Beeinträchtigung der Genauigkeit bei Fremdfeldeinfluss.
 
 \subsubsection{Hysterese und reales Verhalten}
 \label{sec:hysterese}
@@ -258,7 +258,7 @@ Die Impedanz der Bürde bestimmt das Betriebsverhalten des Stromwandlers. Ein er
 Der Einfluss des Kompensationswiderstandes auf die Sättigung lässt sich über die induzierte Spannung $U_i$ herleiten. Diese entspricht der Summe der Spannungsabfälle über der gesamten Sekundärbürde
 
 \begin{equation}
-    U_i = I_s \cdot (R_{\text{Wicklung}} + R_{\text{Leitung}} + R_{\text{Mess}} + R_{\text{Komp}})
+    U_i = I_{sec} \cdot (R_{\text{Wicklung}} + R_{\text{Leitung}} + R_{\text{Mess}} + R_{\text{Komp}})
     \label{equ:spannung_widerstand}
 \end{equation}
 
@@ -279,11 +279,11 @@ Nach dem Induktionsgesetz (Transformator-Hauptgleichung) besteht ein proportiona
 Durch Gleichsetzen von (\ref{equ:spannung_widerstand}) und (\ref{equ:trafo_hauptgleichung}) sowie anschließendes Auflösen nach $\Phi$ ergibt sich
 
 \begin{equation}
-    \Phi = \frac{I_s \cdot (R_{\text{Rest}} + R_{\text{Komp}})}{4,44 \cdot f \cdot N_s}
+    \Phi = \frac{I_{sec} \cdot (R_{\text{Rest}} + R_{\text{Komp}})}{4,44 \cdot f \cdot N_s}
     \label{eq:fluss_buerde}
 \end{equation}
 
-Aus dieser Beziehung geht hervor, dass ein Anstieg von $R_{\text{Komp}}$ bei eingeprägtem Strom $I_s$ zu einer linearen Erhöhung des magnetischen Flusses $\Phi$ führt. Bei Überschreitung des Sättigungsflusses $\Phi_{\text{sat}}$ verlässt der Wandler den linearen Arbeitsbereich.
+Aus dieser Beziehung geht hervor, dass ein Anstieg von $R_{\text{Komp}}$ bei eingeprägtem Strom $I_{sec}$ zu einer linearen Erhöhung des magnetischen Flusses $\Phi$ führt. Bei Überschreitung des Sättigungsflusses $\Phi_{\text{sat}}$ verlässt der Wandler den linearen Arbeitsbereich.
 
 \textbf{Magnetische Fremdfelder}
 
@@ -301,14 +301,14 @@ Ein Stromwandler ist idealerweise so konstruiert, dass sein Kern nur den magneti
 Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den benachbarten Kernsegmenten zu einer lokalen Sättigung führen. Zur Quantifizierung dieses Effekts wird eine Näherungsgleichung der MBS AG herangezogen. Diese berechnet explizit den zusätzlichen Anteil der Flussdichte $B_{\text{Fremd}}$, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}
 
 \begin{equation}
-    B_{\text{Fremd}} \approx 10^{-6} \cdot I_p \cdot \frac{R + 0,5 \cdot W}{A} \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
+    B_{\text{Fremd}} \approx 10^{-6} \cdot I_{pri} \cdot \frac{R + 0,5 \cdot W}{A} \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
     \label{equ:stray_flux_mbs}
 \end{equation}
 
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}{}{pic:aufbau_abschaetzung_fremdfeld}
 
-Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_p$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns $A$ (in m$^2$) und Außenphasenabstand $D$ (in m).
+Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_{pri}$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns $A$ (in m$^2$) und Außenphasenabstand $D$ (in m).
 
 \begin{aufgabenbox}
   Diagramm vorläufig – Anpassung möglich.
@@ -328,12 +328,12 @@ Dass ein größerer Wandler in der Praxis dennoch meist unkritischer gegenüber 
     \label{eq:b_phi_relation}
 \end{equation}
 
-Ein größerer Kern verfügt in der Regel über einen signifikant größeren Eisenquerschnitt $A$. Während der kleine Kern zwar weniger Störfluss einfängt (siehe Diagramm, blau), verteilt sich dieser auf eine sehr kleine Fläche $A$. Dies führt zu einer starken Erhöhung der Flussdichte $B_{\text{Fremd}}$ und zum schnellen Erreichen der Sättigungsgrenze. Der große Kern kompensiert die höhere Flussaufnahme (Diagramm, rot) durch seinen massiven Querschnitt, wodurch der Anstieg der Flussdichte $\Delta B$ gering bleibt.
+Ein größerer Kern verfügt in der Regel über einen deutlich größeren Eisenquerschnitt $A$. Während der kleine Kern zwar weniger Störfluss einfängt (siehe Diagramm, blau), verteilt sich dieser auf eine sehr kleine Fläche $A$. Dies führt zu einer starken Erhöhung der Flussdichte $B_{\text{Fremd}}$ und zum schnellen Erreichen der Sättigungsgrenze. Der große Kern kompensiert die höhere Flussaufnahme (Diagramm, rot) durch seinen großen Querschnitt, wodurch der Anstieg der Flussdichte $\Delta B$ gering bleibt.
 
 Die Unabhängigkeit des im Diagramm gezeigten absoluten Störflusses vom Kernquerschnitt lässt sich durch Einsetzen von Gleichung (\ref{equ:stray_flux_mbs}) in die Flussdefinition herleiten. Dabei kürzt sich der Querschnitt $A$ heraus
 
 \begin{equation}
-    \Phi_{\text{Fremd}} \approx 10^{-6} \cdot I_p \cdot (R + 0{,}5 \cdot W) \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
+    \Phi_{\text{Fremd}} \approx 10^{-6} \cdot I_{pri} \cdot (R + 0{,}5 \cdot W) \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
     \label{eq:phi_fremd_herleitung}
 \end{equation}
 
@@ -345,7 +345,7 @@ Wie bereits in Abschnitt \ref{sec:kompensationswicklungen} dargelegt, ist eine i
 
 \einfuegenBildGross{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}{Einfluss der Leiterpositionierung auf die Flussverteilung im Kern}{pic:sim_exzentrische_moniert}
 
-Auf der Abszisse (X-Achse) ist der Weg entlang des mittleren Kernumfangs aufgetragen. Der blaue Graph zeigt den Referenzverlauf bei zentrierter Leiteranordnung mit einer homogenen und symmetrischen Verteilung des magnetischen Flusses über den gesamten Kernumfang. Im Gegensatz dazu weist der orangefarbene Verlauf für die exzentrische Positionierung eine starke Asymmetrie auf. In den Bereichen, in denen der Leiter dem Kern näher liegt, steigt die magnetische Belastung signifikant an, während sie auf der gegenüberliegenden Seite abfällt.
+Auf der Abszisse (X-Achse) ist der Weg entlang des mittleren Kernumfangs aufgetragen. Der blaue Graph zeigt den Referenzverlauf bei zentrierter Leiteranordnung mit einer homogenen und symmetrischen Verteilung des magnetischen Flusses über den gesamten Kernumfang. Im Gegensatz dazu weist der orangefarbene Verlauf für die exzentrische Positionierung eine starke Asymmetrie auf. In den Bereichen, in denen der Leiter dem Kern näher liegt, steigt die magnetische Belastung deutlich an, während sie auf der gegenüberliegenden Seite abfällt.
 
 \subsection{Messabweichung und Fehlerfortpflanzung}
 \label{sec:messabweichung_fehlerfortpflanzung}
@@ -355,7 +355,7 @@ Zur Sicherstellung der normativ geforderten Genauigkeitsklassen wird in der Prü
 Gemäß DIN EN 61869-2 müssen zwei zentrale Kenngrößen ermittelt werden. Die Übersetzungsmessabweichung $\varepsilon$ beschreibt die prozentuale Differenz der Stromamplituden und wird nach folgender Gleichung berechnet
 
 \begin{equation}
-    \varepsilon = \frac{k_n \cdot I_s - I_p}{I_p} \cdot 100\,\%
+    \varepsilon = \frac{k_n \cdot I_{sec} - I_{pri}}{I_{pri}} \cdot 100\,\%
     \label{eq:messabweichung_epsilon}
 \end{equation}
 
@@ -371,7 +371,7 @@ Niederspannungsschaltanlagen dienen der Verteilung, Schaltung und Absicherung el
 
 Der konstruktive Aufbau einer Niederspannungsschaltanlage folgt einem modularen Prinzip, bei dem mehrere Felder über ein gemeinsames Hauptsammelschienensystem im Rücken der Anlage elektrisch miteinander verbunden sind. Diese Felder lassen sich funktional in drei wesentliche Kategorien unterteilen: Während Einspeisefelder die elektrische Energie beziehen und der Hauptsammelschiene zuführen, erfolgt über die Abgangsfelder die gezielte Verteilung an nachgelagerte Verbraucher. Kupplungsfelder ermöglichen zudem die galvanische Verbindung oder Trennung einzelner Sammelschienenabschnitte, um die Versorgungssicherheit und Flexibilität im Anlagenbetrieb zu erhöhen.
 
-Neben der reinen Energieverteilung ist die mechanische und thermische Festigkeit gegenüber hohen Kurzschlussströmen ein entscheidendes Sicherheitsmerkmal der Konstruktion. Die Anlagen müssen technisch so ausgelegt sein, dass sie selbst extremen Belastungen, wie einem Kurzschlussstrom von $I_k=100$ kA, standhalten. Ein wesentlicher Aspekt des Personenschutzes ist dabei das Störlichtbogen: Im Fehlerfall wird die entstehende Druckenergie kontrolliert über das Dach der Anlage abgeführt, um eine Gefährdung des Bedienpersonals zu verhindern und ein schnellstmögliches Erlöschen des Lichtbogens zu gewährleisten
+Neben der reinen Energieverteilung ist die mechanische und thermische Festigkeit gegenüber hohen Kurzschlussströmen ein entscheidendes Sicherheitsmerkmal der Konstruktion. Die Anlagen müssen technisch so ausgelegt sein, dass sie selbst hohen Belastungen, wie einem Kurzschlussstrom von $I_k=100$ kA, standhalten. Ein wesentlicher Aspekt des Personenschutzes ist dabei das Störlichtbogen: Im Fehlerfall wird die entstehende Druckenergie kontrolliert über das Dach der Anlage abgeführt, um eine Gefährdung des Bedienpersonals zu verhindern und ein schnellstmögliches Erlöschen des Lichtbogens zu gewährleisten
 
 \subsubsection{Kupferschienensystem und Geometrie}
 \label{sec:kupferschienensystem}
