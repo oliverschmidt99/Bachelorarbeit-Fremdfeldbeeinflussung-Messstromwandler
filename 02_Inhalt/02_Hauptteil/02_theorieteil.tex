@@ -50,8 +50,8 @@ Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend.
     \label{tab:schutzwandler_fehler}
     \begin{tabular}{lcccc}
         \toprule
-        Genauigkeits- & Übersetzung-           & \multicolumn{2}{c}{Fehlwinkel}  & Gesamtmess-                                  \\
-        klasse        & messabweichung         & \multicolumn{2}{c}{bei $I_{n}$} & abweichung                                   \\
+        Genauigkeits- & Übersetzung-           & \multicolumn{2}{c}{Fehlwinkel}  & Gesamtmess-                                    \\
+        klasse        & messabweichung         & \multicolumn{2}{c}{bei $I_{n}$} & abweichung                                     \\
                       & bei $I_{n}$ ($\pm$ \%) & ($\pm$ min)                     & ($\pm$ centigrad) & bei $ALF \cdot I_{n}$ (\%) \\
         \midrule
         5P und 5PR    & 1                      & 60                              & 1,8               & 5                          \\
@@ -89,16 +89,16 @@ Neben dem Stromfehler ist der Fehlwinkel als Maß für die Phasenverschiebung en
     \label{tab:fehlwinkel}
     \begin{tabular}{lcccccccc}
         \toprule
-        Genauigkeits- & \multicolumn{8}{c}{Fehlwinkel}                                                                                                                                                              \\
+        Genauigkeits- & \multicolumn{8}{c}{Fehlwinkel}                                                                                                          \\
         klasse        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                 \\
         \cmidrule(lr){2-5} \cmidrule(lr){6-9}
                       & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                         \\
-                      & 5                                              & 20                                              & 100 & 120 & 5    & 20   & 100  & 120  \\
+                      & 5                                              & 20                                             & 100 & 120 & 5    & 20   & 100  & 120  \\
         \midrule
-        0,1           & 15                                             & 8                                               & 5   & 5   & 0,45 & 0,24 & 0,15 & 0,15 \\
-        0,2           & 30                                             & 15                                              & 10  & 10  & 0,90 & 0,45 & 0,30 & 0,30 \\
-        0,5           & 90                                             & 45                                              & 30  & 30  & 2,70 & 1,35 & 0,90 & 0,90 \\
-        1             & 180                                            & 90                                              & 60  & 60  & 5,40 & 2,70 & 1,80 & 1,80 \\
+        0,1           & 15                                             & 8                                              & 5   & 5   & 0,45 & 0,24 & 0,15 & 0,15 \\
+        0,2           & 30                                             & 15                                             & 10  & 10  & 0,90 & 0,45 & 0,30 & 0,30 \\
+        0,5           & 90                                             & 45                                             & 30  & 30  & 2,70 & 1,35 & 0,90 & 0,90 \\
+        1             & 180                                            & 90                                             & 60  & 60  & 5,40 & 2,70 & 1,80 & 1,80 \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -122,7 +122,6 @@ Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ bei zentr
 Physikalisch betrachtet arbeitet der Messstromwandler nach dem Prinzip eines kurzgeschlossenen Transformators. Die Wandlung basiert auf der elektromagnetischen Kopplung zwischen dem Primärleiter und der Sekundärwicklung über einen Magnetkern.
 
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/phy_wandler.drawio.pdf}{Schematische Darstellung der magnetischen Kopplung im Wandler}{pic:phy_wandler}
 
 
 
@@ -131,70 +130,101 @@ Physikalisch betrachtet arbeitet der Messstromwandler nach dem Prinzip eines kur
 \subsubsection{Magnetfelder und Induktion}
 \label{sec:physik_grundlagen_induktion}
 
-Die physikalische Funktionsweise eines Messstromwandlers basiert auf der elektromagnetischen Kopplung zwischen Primär- und Sekundärseite. Dieser Prozess lässt sich mathematisch durch die Maxwell-Gleichungen beschreiben und über das Modell des magnetischen Kreises veranschaulichen.
+Die physikalische Grundlage eines Stromwandlers bildet die elektromagnetische Kopplung zwischen dem Primärleiter und dem Sekundärkreis über einen magnetischen Kern. Dieser Zusammenhang wird durch die Maxwell-Gleichungen beschrieben und lässt sich idealisiert am Modell des magnetischen Kreises herleiten, wie in Abbildung \ref{pic:phy_wandler} schematisch dargestellt ist.
 
-Magnetische Durchflutung und Feldbündelung \\
-Ein durch den Primärleiter fließender Wechselstrom $i_p(t)$ erzeugt nach dem Ampèreschen Gesetz ein magnetisches Feld. In der allgemeinen Integralform lautet dieser Zusammenhang:
+\einfuegenBildGross{03_Ressourcen/zeichnungen/phy_wandler.drawio.pdf}{Schematische Darstellung der magnetischen Kopplung im Wandler}{pic:phy_wandler}
+
+Ein durch den Ringkern geführter Primärstrom $I_{pri}$ erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld. Das Linienintegral der magnetischen Feldstärke $\vec{H}$ entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung $\Theta$:
 
 \begin{equation}
-    \oint_{C} \vec{H} \cdot d\vec{s} = \iint_{A} \vec{J} \cdot d\vec{A} = \Theta
-    \label{equ:durchflutungsgesetz}
+    \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} = I_{pri} = \Theta
+    \label{eq:ampere_integral}
 \end{equation}
 
-Hierbei beschreibt $\vec{H}$ die magnetische Feldstärke entlang eines geschlossenen Weges $C$ und $\vec{J}$ die elektrische Stromdichte durch die vom Weg umschlossene Fläche $A$. Für einen Aufsteckstromwandler mit einer Windung ($N_p = 1$) entspricht die magnetische Durchflutung $\Theta$ direkt dem Primärstrom $i_p$. 
+Der Stromwandler nutzt einen Ringkern aus ferromagnetischem Material mit einer hohen relativen Permeabilität $\mu_r \gg 1$. Unter der Annahme eines torusförmigen Kerns mit dem mittleren Radius $r$ verläuft der Integrationsweg kreisförmig entlang der mittleren Feldlinie. Aufgrund der Rotationssymmetrie ist der Betrag der Feldstärke $H$ konstant. Das Wegintegral entspricht somit dem Produkt aus $H$ und dem Kreisumfang $2\pi r$:
 
-In einem Stromwandler umschließt ein hochpermeabler Eisenkern diesen Leiter. Da die relative Permeabilität des Kernmaterials ($\mu_r \gg 1$) um Größenordnungen höher ist als die der Umgebungsluft, wird der magnetische Fluss $\Phi$ nahezu vollständig im Kern geführt. Dieser Effekt der Feldbündelung erlaubt die Anwendung des Modells des magnetischen Kreises.
+\begin{align}
+    \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} &= H \cdot \oint_{\mathcal{S}} \mathrm{d}s = H \cdot 2\pi r = I_{pri} \nonumber \\[6pt]
+    \Rightarrow \quad H &= \frac{I_{pri}}{2\pi r}
+    \label{eq:feldstaerke_h}
+\end{align}
 
-Der magnetische Kreis \\
-In Analogie zum Ohmschen Gesetz der Elektrotechnik besteht im magnetischen Kreis ein Zusammenhang zwischen der Durchflutung $\Theta$, dem magnetischen Fluss $\Phi$ und dem magnetischen Widerstand $R_m$ (Reluktanz):
+Die magnetische Flussdichte $\vec{B}$ im Kernmaterial ergibt sich aus der Feldstärke und den Materialeigenschaften. Mit der magnetischen Feldkonstante $\mu_0$ und der relativen Permeabilität $\mu_r$ folgt:
+
+\begin{equation}
+    B = \mu_0 \mu_r \cdot H = \mu_0 \mu_r \cdot \frac{I_{pri}}{2\pi r}
+    \label{eq:flussdichte_b}
+\end{equation}
+
+Für die Funktion des Stromwandlers ist entscheidend, welcher magnetische Fluss $\Phi$ den Eisenquerschnitt $A$ durchsetzt, da dieser in der Sekundärwicklung die Spannung induziert. Der Fluss berechnet sich durch Integration der Flussdichte über die Querschnittsfläche:
+
+\begin{equation}
+    \Phi = \iint_A \vec{B} \cdot \mathrm{d}\vec{A}
+    \label{eq:fluss_integral}
+\end{equation}
+
+Geht man vereinfacht von einer über den Querschnitt konstanten Flussdichte aus ($\vec{B} \parallel \mathrm{d}\vec{A}$), ergibt sich der direkte Zusammenhang zwischen dem verursachenden Primärstrom und dem resultierenden magnetischen Fluss im Kern:
+
+\begin{equation}
+    \Phi = B \cdot A = \mu_0 \mu_r \frac{A}{2\pi r} \cdot I_{pri}
+    \label{eq:fluss_final}
+\end{equation}
+
+Dieser Ausdruck zeigt, dass der magnetische Fluss im Wandlerkern – solange keine Sättigung eintritt – proportional zum Primärstrom $I_{pri}$ ist. Der Faktor $\mu_0 \mu_r \frac{A}{2\pi r}$ fasst dabei die Geometrie (Querschnitt $A$ und Umfang $2\pi r$) sowie die magnetischen Eigenschaften des Kerns zusammen.
+
+
+\textmd{---}
+
+Der in Gleichung \eqref{eq:fluss_final} hergeleitete Zusammenhang zwischen Fluss und Strom lässt sich in Analogie zum elektrischen Stromkreis (Ohmsches Gesetz) betrachten. Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, stellt den magnetischen Widerstand $R_m$ dar:
+
+\begin{equation}
+    R_m = \frac{2\pi r}{\mu_0 \mu_r A}
+    \label{eq:magnetischer_widerstand}
+\end{equation}
+
+Damit lässt sich der magnetische Fluss $\Phi$ vereinfacht über das Hopkinsonsche Gesetz ausdrücken, welches das magnetische Äquivalent zum Ohmschen Gesetz bildet. Die magnetische Durchflutung $\Theta$ entspricht dabei der elektrischen Spannung und der magnetische Fluss dem elektrischen Strom:
 
 \begin{equation}
     \Phi = \frac{\Theta}{R_m}
+    \label{eq:hopkinson}
 \end{equation}
 
-Der magnetische Widerstand des Kerns wird durch seine Geometrie (mittlere Feldlinienlänge $l_{Fe}$ und Querschnittsfläche $A_{Fe}$) sowie die Materialeigenschaften bestimmt:
+Im Betrieb des Stromwandlers wirkt nicht nur der Primärstrom auf den magnetischen Kreis. Auf der Sekundärseite befindet sich eine Wicklung mit der Windungszahl $N_{sec}$. Der magnetische Fluss induziert in dieser Wicklung eine Spannung, die bei geschlossenem Sekundärkreis einen Strom $I_{sec}$ treibt.
+
+Nach der Lenzschen Regel ist dieser Sekundärstrom seiner Ursache entgegengerichtet. Er erzeugt eine magnetische Gegendurchflutung $\Theta_{sec}$, die den Fluss im Kern schwächt. Die resultierende magnetische Durchflutung $\Theta_{res}$, die effektiv den Fluss im Kern treibt, ist somit die Differenz aus Primär- und Sekundärdurchflutung:
 
 \begin{equation}
-    R_m = \frac{l_{Fe}}{\mu_0 \cdot \mu_r \cdot A_{Fe}}
+    \Theta_{res} = \Theta_{pri} - \Theta_{sec} = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec}
+    \label{eq:durchflutungsbilanz}
 \end{equation}
 
-Induktionsvorgang \\
-Der zeitlich veränderliche magnetische Fluss $\Phi(t)$ induziert in der Sekundärwicklung eine Spannung $u_s$. Die Grundlage hierfür bildet das Faradaysche Induktionsgesetz in der Integralform:
+Dabei ist $N_{pri}$ die Windungszahl der Primärseite (bei Durchsteckwandlern ist $N_{pri} = 1$). Setzt man die resultierende Durchflutung in das Hopkinsonsche Gesetz ein, erhält man:
 
 \begin{equation}
-    \oint_{\partial A} \vec{E} \cdot d\vec{s} = - \frac{d}{dt} \iint_{A} \vec{B} \cdot d\vec{A}
-    \label{equ:faraday_integral_abschnitt}
+    \Phi \cdot R_m = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec}
+    \label{eq:bilanz_rm}
 \end{equation}
 
-Das Linienintegral der elektrischen Feldstärke $\vec{E}$ entlang der Windungen $\partial A$ entspricht der induzierten Spannung. Da die Sekundärwicklung aus $N_s$ Windungen besteht, die denselben Kern umschließen, addieren sich die Teilspannungen zur gesamten Sekundärspannung $u_s$:
+Für die ideale Betrachtung eines Stromwandlers wird ein Kernmaterial mit sehr hoher Permeabilität ($\mu_r \to \infty$) angenommen. Daraus folgt gemäß Gleichung \eqref{eq:magnetischer_widerstand}, dass der magnetische Widerstand gegen Null geht ($R_m \to 0$). Damit der magnetische Fluss $\Phi$ einen endlichen Wert annimmt, muss die resultierende Durchflutung $\Theta_{res}$ ebenfalls gegen Null gehen. Es stellt sich ein fast ideales Durchflutungsgleichgewicht ein:
+
+\begin{align}
+    0 &= N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec} \nonumber \\[6pt]
+    N_{sec} \cdot I_{sec} &= N_{pri} \cdot I_{pri}
+    \label{eq:ideales_gleichgewicht}
+\end{align}
+
+Durch Umstellen dieser Gleichung ergibt sich der Sekundärstrom in Abhängigkeit vom Primärstrom und dem Übersetzungsverhältnis der Windungszahlen:
 
 \begin{equation}
-    u_s = -N_s \cdot \frac{d\Phi}{dt}
+    I_{sec} = I_{pri} \cdot \frac{N_{pri}}{N_{sec}}
+    \label{eq:sekundaerstrom}
 \end{equation}
 
-Das negative Vorzeichen nach der Lenzschen Regel besagt, dass die induzierte Spannung so gerichtet ist, dass ein durch sie getriebener Strom seiner Ursache (der Flussänderung) entgegenwirkt.
-
-Transformation des Stroms \\
-Im Betrieb treibt die induzierte Spannung einen Sekundärstrom $i_s$, welcher eine Gegendurchflutung $\Theta_s = N_s \cdot i_s$ erzeugt. In einem idealen Wandler ist die resultierende Gesamtdurchflutung im Kern nahezu Null, da der zur Magnetisierung benötigte Strom vernachlässigbar klein ist:
-
-\begin{equation}
-    \sum \Theta = i_p \cdot N_p - i_s \cdot N_s \approx 0
-\end{equation}
-
-Daraus leitet sich das fundamentale Übersetzungsverhältnis für den Stromwandler ab:
-
-\begin{equation}
-    \frac{i_p}{i_s} = \frac{N_s}{N_p}
-\end{equation}
-
-Da bei einem Aufsteckstromwandler $N_p = 1$ gilt, ergibt sich der Sekundärstrom zu $i_s = i_p / N_s$. Abweichungen von diesem idealen Verhältnis führen zur Übersetzungsmessabweichung, die maßgeblich durch den Magnetisierungsbedarf des Kernmaterials bestimmt wird.
-
-
-
-
+Diese Beziehung beschreibt das ideale Übertragungsverhalten des Stromwandlers, bei dem der Sekundärstrom proportional zum Primärstrom ist und lediglich durch das Windungszahlverhältnis skaliert wird.
 
 
 \subsubsection{Magnetische Stoffeigenschaften}
+\label{sec:magnetische_stoffeigenschaften}
 
 Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf ein äußeres Magnetfeld charakterisieren. Maßgeblich hierfür ist die relative Permeabilität $\mu_r$ als Verhältnis der Flussdichte im Medium zur Flussdichte im Vakuum. In Tabelle \ref{tab:magnetische_stoffe} sind die verschiedenen Stoffeigenschaften nach Kuchling zusammengefasst.
 
@@ -292,8 +322,8 @@ Aus den Verläufen wird deutlich, dass ein geometrisch größerer Kern (rote Kur
 Dass ein größerer Wandler in der Praxis dennoch meist unkritischer gegenüber Fremdfeldern ist, liegt an der Relation zur Sättigungsgrenze. Die Sättigung wird nicht durch den absoluten Fluss $\Phi$, sondern durch die resultierende Flussdichte $B$ bestimmt
 
 \begin{equation}
-      B_{\text{res}} = B_{\text{Nutz}} + \underbrace{\frac{\Phi_{\text{Fremd}}}{A}}_{B_{\text{Fremd}}}
-      \label{eq:b_phi_relation}
+    B_{\text{res}} = B_{\text{Nutz}} + \underbrace{\frac{\Phi_{\text{Fremd}}}{A}}_{B_{\text{Fremd}}}
+    \label{eq:b_phi_relation}
 \end{equation}
 
 Ein größerer Kern verfügt in der Regel über einen signifikant größeren Eisenquerschnitt $A$. Während der kleine Kern zwar weniger Störfluss einfängt (siehe Diagramm, blau), verteilt sich dieser auf eine sehr kleine Fläche $A$. Dies führt zu einer starken Erhöhung der Flussdichte $B_{\text{Fremd}}$ und zum schnellen Erreichen der Sättigungsgrenze. Der große Kern kompensiert die höhere Flussaufnahme (Diagramm, rot) durch seinen massiven Querschnitt, wodurch der Anstieg der Flussdichte $\Delta B$ gering bleibt.
@@ -358,11 +388,11 @@ Abbildung~\ref{pic:kupferschienensystem} verdeutlicht diesen Zusammenhang für z
         \toprule
         \textbf{Bemessungsstrom} & \textbf{Phasenmittenabstand} & \textbf{Kupferschienenpaket} \\
         \midrule
-        2000~A & 130~mm & $2 \times 80 \times 10$~mm \\
-        2500~A & 130~mm & $2 \times 100 \times 10$~mm \\
-        3200~A & 210~mm & $3 \times 100 \times 10$~mm \\
-        4000~A & 210~mm & $4 \times 100 \times 10$~mm \\
-        5000~A & 210~mm & $5 \times 120 \times 10$~mm \\
+        2000~A                   & 130~mm                       & $2 \times 80 \times 10$~mm   \\
+        2500~A                   & 130~mm                       & $2 \times 100 \times 10$~mm  \\
+        3200~A                   & 210~mm                       & $3 \times 100 \times 10$~mm  \\
+        4000~A                   & 210~mm                       & $4 \times 100 \times 10$~mm  \\
+        5000~A                   & 210~mm                       & $5 \times 120 \times 10$~mm  \\
         \bottomrule
     \end{tabular}
 \end{table}
