@@ -12,6 +12,9 @@
 \input{01_Einstellungen/befehle.tex}
 \input{01_Einstellungen/layout.tex}
 
+% --- GLOSSAR-EINTRÄGE LADEN ---
+\loadglsentries{01_Einstellungen/glossar.tex}
+
 % --- LITERATURQUELLE ANGEBEN ---
 \addbibresource{bibliographie.bib}
 
@@ -25,19 +28,14 @@
 \pagenumbering{gobble}
 \input{02_Inhalt/01_Vorspann/00_deckblatt.tex}
 \newpage
-% ---------- VORSPANN (römische Zählung) ----------
 
+% ---------- VORSPANN (römische Zählung) ----------
 \clearpage
 \pagenumbering{Roman}
 
-% In 02_Inhalt/01_Vorspann/02_verzeichnisse.tex
-
-% Abkürzungsverzeichnis ausgeben
-\printglossary[type=\acronymtype, title=Abkürzungsverzeichnis]
-
-% (Optional) Normales Glossar ausgeben, falls du eines hast:
-% \printglossary[title=Glossar]
-\newpage
+% --- VERZEICHNISSE ---
+% Hier wird nur die Datei geladen. Die Befehle \printglossary stehen 
+% IN der Datei '02_verzeichnisse.tex', damit alles an einem Ort ist.
 \input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
 \newpage
 
@@ -60,8 +58,8 @@
 \section{Anhang}
 \label{chap:anhang}
 
-% (falls du Unterkapitel hast → A.1, A.2 etc.)
 \renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+\input{02_Inhalt/03_Nachspann/anhang.tex}
 
 % ---------- NACHSPANN ----------
 \printbibliography[title={Literaturverzeichnis}]

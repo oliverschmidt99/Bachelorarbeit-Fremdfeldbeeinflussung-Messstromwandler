@@ -7,5 +7,44 @@
     "**/Thumbs.db": true
   },
   "hide-files.files": [],
-  "cloudlatex.enabled": true
+  "cloudlatex.enabled": true,
+
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "💡PDFLaTeX ➞ Glossaries ➞ Biber ➞ PDFLaTeX x2",
+      "tools": [
+        "pdflatex",
+        "makeglossaries",
+        "biber",
+        "pdflatex",
+        "pdflatex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "makeglossaries",
+      "command": "makeglossaries",
+      "args": [
+        "%DOCFILE%"
+      ]
+    },
+    {
+      "name": "biber",
+      "command": "biber",
+      "args": [
+        "%DOCFILE%"
+      ]
+    }
+  ]
 }

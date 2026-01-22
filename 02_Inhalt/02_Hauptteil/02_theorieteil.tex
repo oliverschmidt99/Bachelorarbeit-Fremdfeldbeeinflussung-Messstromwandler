@@ -17,9 +17,9 @@ Der betrachtete Messstromwandler setzt sich konstruktiv im Wesentlichen aus sech
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_wandler.drawio.pdf}{Schematischer Aufbau eines Aufsteckstromwandlers}{pic:aufbau_wandler}
 
-Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:geometrie_kupferschienen}. Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung wird als Durchsteck- oder Aufsteckstromwandler bezeichnet. Sie entspricht physikalisch einer Windungszahl von Eins ($N_{pri} = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Zur Gewährleistung einer zentrierten Leiterführung bieten einige Hersteller spezielle Vorrichtungen zur Fixierung unterschiedlicher Schienengeometrien im Fensterausschnitt an.
+Im Niederspannungsbereich fungiert meist eine Kupferschienenanordnung als Primärleiter. Diese weist in der Regel ein Rechteckprofil auf und kann aus mehreren Einzelschienen bestehen. Eine detaillierte Betrachtung der Schienenanordnung erfolgt in Abschnitt~\ref{sec:geometrie_kupferschienen}. Dieser Primärleiter wird durch die Fensteröffnung des Wandlers geführt. Diese Bauform ohne integrierte Primärwicklung wird als Durchsteck- oder Aufsteckstromwandler bezeichnet. Sie entspricht physikalisch einer Windungszahl von Eins (\gls{sym:N}$_{pri} = 1$) und dominiert aufgrund der einfachen Montage im Bereich mittlerer bis hoher Ströme. Zur Gewährleistung einer zentrierten Leiterführung bieten einige Hersteller spezielle Vorrichtungen zur Fixierung unterschiedlicher Schienengeometrien im Fensterausschnitt an.
 
-Das zentrale Element der Übertragung bildet der Magnetkern. Ist dieser als geschlossener Toroid ohne Luftspalt ausgeführt, wird er als Ringkern bezeichnet. Der Kern besteht zur Minimierung der Übertragungsverluste aus einem ferromagnetischen Werkstoff mit hoher Permeabilität ($\mu_r$). Die magnetischen Eigenschaften des Kernmaterials bestimmen maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
+Das zentrale Element der Übertragung bildet der Magnetkern. Ist dieser als geschlossener Toroid ohne Luftspalt ausgeführt, wird er als Ringkern bezeichnet. Der Kern besteht zur Minimierung der Übertragungsverluste aus einem ferromagnetischen Werkstoff mit hoher Permeabilität (\gls{sym:mur}). Die magnetischen Eigenschaften des Kernmaterials bestimmen maßgeblich die Genauigkeit und das Sättigungsverhalten des Wandlers. Als Werkstoffe kommen üblicherweise Siliziumeisen, Nickeleisen oder nanokristalline Legierungen zum Einsatz~\cite[S.~63]{minkner2020messwandler}.
 
 Die Sekundärwicklung ist direkt auf diesen Ringkern aufgebracht, transformiert den magnetischen Fluss zurück in einen elektrischen Strom und ist mit den externen Anschlussklemmen verbunden. Das Gehäuse umschließt den gesamten Eisenkern samt Sekundärwicklung und gewährleistet die notwendige elektrische Isolation sowie den mechanischen Schutz.
 
@@ -44,9 +44,9 @@ Abbildung~\ref{pic:aufbau_wandler_kompensationswicklungen} veranschaulicht das g
 \subsubsection{Normative Anforderungen und Genauigkeitsklassen}
 \label{sec:normen_klassen}
 
-Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt. Die Anforderungen hierfür sind in der DIN EN 61869-2~\cite[S.~22]{din_en_61869_2_2013} festgelegt. Diese Klassen definieren die maximal zulässigen Messabweichungen und bilden die Entscheidungsgrundlage für die Auswahl eines Wandlers. Wie bereits erläutert unterscheiden sich die Anforderungen an Mess- und Schutzwandler grundlegend.
+Messstromwandler werden in unterschiedlichen Genauigkeitsklassen gefertigt. Die Anforderungen hierfür sind in der \gls{din} \gls{en} 61869-2~\cite[S.~22]{din_en_61869_2_2013} festgelegt. Diese Klassen definieren die maximal zulässigen Messabweichungen und bilden die Entscheidungsgrundlage für die Auswahl eines Wandlers. Wie bereits erläutert unterscheiden sich die Anforderungen an Mess- und Schutzwandler grundlegend.
 
-Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend. Sie werden in die Klassen P (Protection) und PR (Protection, niedrige Remanenz) eingeteilt. Die Bezeichnung der Genauigkeitsklasse setzt sich aus der höchstzulässigen prozentualen Gesamtmessabweichung sowie dem Kennbuchstaben und dem Genauigkeitsgrenzfaktor (ALF) zusammen~\cite[S.~23--24]{din_en_61869_2_2013}. Die Klasse P beschreibt Standard-Schutzwandler ohne definierten Grenzwert für den Remanenzfluss. Im Gegensatz dazu kennzeichnet die Klasse PR Schutzwandler mit begrenztem Remanenzfluss. Diese müssen nach dem Abschalten von Fehlerströmen eine geringe Remanenz aufweisen. Dies wird in der Praxis häufig durch konstruktive Maßnahmen wie Luftspalte im Kern erreicht~\cite[S. 82]{minkner2020messwandler}. Der Genauigkeitsgrenzfaktor gibt an, bis zum Wievielfachen des Nennstroms die Fehlergrenzen eingehalten werden. Eine Bezeichnung wie „5P20“ bedeutet demnach eine Gesamtmessabweichung von 5\,\% bei 20-fachem Nennstrom. Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen Schutzklassen.
+Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend. Sie werden in die Klassen P (Protection) und PR (Protection, niedrige Remanenz) eingeteilt. Die Bezeichnung der Genauigkeitsklasse setzt sich aus der höchstzulässigen prozentualen Gesamtmessabweichung sowie dem Kennbuchstaben und dem Genauigkeitsgrenzfaktor (\gls{alf}) zusammen~\cite[S.~23--24]{din_en_61869_2_2013}. Die Klasse P beschreibt Standard-Schutzwandler ohne definierten Grenzwert für den Remanenzfluss. Im Gegensatz dazu kennzeichnet die Klasse PR Schutzwandler mit begrenztem Remanenzfluss. Diese müssen nach dem Abschalten von Fehlerströmen eine geringe Remanenz aufweisen. Dies wird in der Praxis häufig durch konstruktive Maßnahmen wie Luftspalte im Kern erreicht~\cite[S. 82]{minkner2020messwandler}. Der Genauigkeitsgrenzfaktor gibt an, bis zum Wievielfachen des Nennstroms die Fehlergrenzen eingehalten werden. Eine Bezeichnung wie „5P20“ bedeutet demnach eine Gesamtmessabweichung von 5\,\% bei 20-fachem Nennstrom. Tabelle~\ref{tab:schutzwandler_fehler} zeigt die Grenzwerte für die gängigen Schutzklassen.
 
 \begin{table}[H]
     \centering
@@ -55,8 +55,8 @@ Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend.
     \begin{tabular}{lcccc}
         \toprule
         Genauigkeits- & Übersetzung-           & \multicolumn{2}{c}{Fehlwinkel}  & Gesamtmess-                                    \\
-        klasse        & messabweichung         & \multicolumn{2}{c}{bei $I_{n}$} & abweichung                                     \\
-                      & bei $I_{n}$ ($\pm$ \%) & ($\pm$ min)                     & ($\pm$ centigrad) & bei $ALF \cdot I_{n}$ (\%) \\
+        klasse        & messabweichung         & \multicolumn{2}{c}{bei \gls{sym:I_n}} & abweichung                                     \\
+                      & bei \gls{sym:I_n} ($\pm$ \%) & ($\pm$ min)                     & ($\pm$ centigrad) & bei \gls{alf} $\cdot$ \gls{sym:I_n} (\%) \\
         \midrule
         5P und 5PR    & 1                      & 60                              & 1,8               & 5                          \\
         10P und 10PR  & 3                      & --                              & --                & 10                         \\
@@ -64,7 +64,7 @@ Für Schutzwandler ist das Verhalten bei hohen Kurzschlussströmen entscheidend.
     \end{tabular}
 \end{table}
 
-Messwandler untergliedern sich in die Standardklassen 0,1 bis 1, die Sonderklassen 0,2S und 0,5S für präzise Messungen weit unter Nennstrom sowie die Klassen 3 und 5 für weniger genaue Betriebsmessungen. Die Einhaltung der Fehlergrenzen ist an die angeschlossene Bürde gekoppelt. Für die Standard- sowie die Sonderklassen dürfen die Grenzwerte im Bürdenbereich von 25\,\% bis 100\,\% der Bemessungsleistung nicht überschritten werden. Für die Klassen 3 und 5 gilt hingegen ein Bereich von 50\,\% bis 100\,\%~\cite[S.~21]{din_en_61869_2_2013}. Ein wesentliches Kriterium ist die Übersetzungsmessabweichung $\varepsilon$ als prozentuale Abweichung des Sekundärstroms vom idealen Wert (siehe Tabelle~\ref{tab:stromfehler}).
+Messwandler untergliedern sich in die Standardklassen 0,1 bis 1, die Sonderklassen 0,2S und 0,5S für präzise Messungen weit unter Nennstrom sowie die Klassen 3 und 5 für weniger genaue Betriebsmessungen. Die Einhaltung der Fehlergrenzen ist an die angeschlossene Bürde gekoppelt. Für die Standard- sowie die Sonderklassen dürfen die Grenzwerte im Bürdenbereich von 25\,\% bis 100\,\% der Bemessungsleistung nicht überschritten werden. Für die Klassen 3 und 5 gilt hingegen ein Bereich von 50\,\% bis 100\,\%~\cite[S.~21]{din_en_61869_2_2013}. Ein wesentliches Kriterium ist die Übersetzungsmessabweichung \gls{sym:epsilon} als prozentuale Abweichung des Sekundärstroms vom idealen Wert (siehe Tabelle~\ref{tab:stromfehler}).
 
 \begin{table}[H]
     \centering
@@ -73,7 +73,7 @@ Messwandler untergliedern sich in die Standardklassen 0,1 bis 1, die Sonderklass
     \begin{tabular}{lcccc}
         \toprule
         Genauigkeits- & \multicolumn{4}{c}{Übersetzungsmessabweichung $\pm$ \%}                    \\
-        klasse        & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                             \\
+        klasse        & \multicolumn{4}{c}{bei Strom (\% von \gls{sym:I_n})}                             \\
         \cmidrule(lr){2-5}
                       & 5                                                       & 20   & 100 & 120 \\
         \midrule
@@ -96,7 +96,7 @@ Neben dem Stromfehler ist der Fehlwinkel als Maß für die Phasenverschiebung en
         Genauigkeits- & \multicolumn{8}{c}{Fehlwinkel}                                                                                                          \\
         klasse        & \multicolumn{4}{c}{$\pm$ Minuten}              & \multicolumn{4}{c}{$\pm$ Zentiradiant}                                                 \\
         \cmidrule(lr){2-5} \cmidrule(lr){6-9}
-                      & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)} & \multicolumn{4}{c}{bei Strom (\% von $I_{n}$)}                                         \\
+                      & \multicolumn{4}{c}{bei Strom (\% von \gls{sym:I_n})} & \multicolumn{4}{c}{bei Strom (\% von \gls{sym:I_n})}                                         \\
                       & 5                                              & 20                                             & 100 & 120 & 5    & 20   & 100  & 120  \\
         \midrule
         0,1           & 15                                             & 8                                              & 5   & 5   & 0,45 & 0,24 & 0,15 & 0,15 \\
@@ -132,7 +132,7 @@ Die physikalische Grundlage eines Stromwandlers bildet die elektromagnetische Ko
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/phy_wandler.drawio.pdf}{Schematische Darstellung der magnetischen Kopplung im Wandler}{pic:phy_wandler}
 
-Ein durch den Ringkern geführter Primärstrom $I_{pri}$ erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld. Das Linienintegral der magnetischen Feldstärke $\vec{H}$ entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung $\Theta$:
+Ein durch den Ringkern geführter Primärstrom \gls{sym:I_pri} erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld. Das Linienintegral der magnetischen Feldstärke \gls{sym:H} entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung \gls{sym:Theta}:
 
 \begin{equation}
     \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} = I_{pri} = \Theta
@@ -147,14 +147,14 @@ Der Stromwandler nutzt einen Ringkern aus ferromagnetischem Material mit einer h
     \label{eq:feldstaerke_h}
 \end{align}
 
-Die magnetische Flussdichte $\vec{B}$ im Kernmaterial ergibt sich aus der Feldstärke und den Materialeigenschaften. Mit der magnetischen Feldkonstante $\mu_0$ und der relativen Permeabilität $\mu_r$ folgt:
+Die magnetische Flussdichte \gls{sym:B} im Kernmaterial ergibt sich aus der Feldstärke und den Materialeigenschaften. Mit der magnetischen Feldkonstante \gls{sym:mu0} und der relativen Permeabilität \gls{sym:mur} folgt:
 
 \begin{equation}
     B = \mu_0 \mu_r \cdot H = \mu_0 \mu_r \cdot \frac{I_{pri}}{2\pi r}
     \label{eq:flussdichte_b}
 \end{equation}
 
-Für die Funktion des Stromwandlers ist entscheidend, welcher magnetische Fluss $\Phi$ den Eisenquerschnitt $A$ durchsetzt, da dieser in der Sekundärwicklung die Spannung induziert. Der Fluss berechnet sich durch Integration der Flussdichte über die Querschnittsfläche:
+Für die Funktion des Stromwandlers ist entscheidend, welcher magnetische Fluss \gls{sym:Phi} den Eisenquerschnitt \gls{sym:A} durchsetzt, da dieser in der Sekundärwicklung die Spannung induziert. Der Fluss berechnet sich durch Integration der Flussdichte über die Querschnittsfläche:
 
 \begin{equation}
     \Phi = \iint_A \vec{B} \cdot \mathrm{d}\vec{A}
@@ -168,12 +168,12 @@ Geht man vereinfacht von einer über den Querschnitt konstanten Flussdichte aus 
     \label{eq:fluss_final}
 \end{equation}
 
-Dieser Ausdruck zeigt, dass der magnetische Fluss im Wandlerkern – solange keine Sättigung eintritt – proportional zum Primärstrom $I_{pri}$ ist. Der Faktor $\mu_0 \mu_r \frac{A}{2\pi r}$ fasst dabei die Geometrie (Querschnitt $A$ und Umfang $2\pi r$) sowie die magnetischen Eigenschaften des Kerns zusammen.
+Dieser Ausdruck zeigt, dass der magnetische Fluss im Wandlerkern – solange keine Sättigung eintritt – proportional zum Primärstrom \gls{sym:I_pri} ist. Der Faktor $\mu_0 \mu_r \frac{A}{2\pi r}$ fasst dabei die Geometrie (Querschnitt $A$ und Umfang $2\pi r$) sowie die magnetischen Eigenschaften des Kerns zusammen.
 
 
 \textmd{---}
 
-Der in Gleichung \eqref{eq:fluss_final} hergeleitete Zusammenhang zwischen Fluss und Strom lässt sich in Analogie zum elektrischen Stromkreis (Ohmsches Gesetz) betrachten. Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, stellt den magnetischen Widerstand $R_m$ dar:
+Der in Gleichung \eqref{eq:fluss_final} hergeleitete Zusammenhang zwischen Fluss und Strom lässt sich in Analogie zum elektrischen Stromkreis (Ohmsches Gesetz) betrachten. Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, stellt den magnetischen Widerstand \gls{sym:Rm} dar:
 
 \begin{equation}
     R_m = \frac{2\pi r}{\mu_0 \mu_r A}
@@ -187,7 +187,7 @@ Damit lässt sich der magnetische Fluss $\Phi$ vereinfacht über das Hopkinsonsc
     \label{eq:hopkinson}
 \end{equation}
 
-Im Betrieb des Stromwandlers wirkt nicht nur der Primärstrom auf den magnetischen Kreis. Auf der Sekundärseite befindet sich eine Wicklung mit der Windungszahl $N_{sec}$. Der magnetische Fluss induziert in dieser Wicklung eine Spannung, die bei geschlossenem Sekundärkreis einen Strom $I_{sec}$ treibt.
+Im Betrieb des Stromwandlers wirkt nicht nur der Primärstrom auf den magnetischen Kreis. Auf der Sekundärseite befindet sich eine Wicklung mit der Windungszahl \gls{sym:N}$_{sec}$. Der magnetische Fluss induziert in dieser Wicklung eine Spannung, die bei geschlossenem Sekundärkreis einen Strom \gls{sym:I_sec} treibt.
 
 Nach der Lenzschen Regel ist dieser Sekundärstrom seiner Ursache entgegengerichtet. Er erzeugt eine magnetische Gegendurchflutung $\Theta_{sec}$, die den Fluss im Kern schwächt. Die resultierende magnetische Durchflutung $\Theta_{res}$, die effektiv den Fluss im Kern treibt, ist somit die Differenz aus Primär- und Sekundärdurchflutung:
 
@@ -224,7 +224,7 @@ Diese Beziehung beschreibt das ideale Übertragungsverhalten des Stromwandlers, 
 \subsubsection{Magnetische Stoffeigenschaften}
 \label{sec:magnetische_stoffeigenschaften}
 
-Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf ein äußeres Magnetfeld charakterisieren. Maßgeblich hierfür ist die relative Permeabilität $\mu_r$ als Verhältnis der Flussdichte im Medium zur Flussdichte im Vakuum. In Tabelle \ref{tab:magnetische_stoffe} sind die verschiedenen Stoffeigenschaften nach Kuchling zusammengefasst.
+Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf ein äußeres Magnetfeld charakterisieren. Maßgeblich hierfür ist die relative Permeabilität \gls{sym:mur} als Verhältnis der Flussdichte im Medium zur Flussdichte im Vakuum. In Tabelle \ref{tab:magnetische_stoffe} sind die verschiedenen Stoffeigenschaften nach Kuchling zusammengefasst.
 
 \begin{table}[H]
     \centering
@@ -232,7 +232,7 @@ Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf
     \label{tab:magnetische_stoffe}
     \begin{tabular}{@{}lcll@{}}
         \toprule
-        \textbf{Eigenschaft} & \textbf{Permeabilität $\mu_r$} & \textbf{Verhalten}        & \textbf{Materialien}   \\ \midrule
+        \textbf{Eigenschaft} & \textbf{Permeabilität \gls{sym:mur}} & \textbf{Verhalten}        & \textbf{Materialien}   \\ \midrule
         Diamagnetismus       & $\mu_r < 1$                    & Feldschwächung            & Bi, Cu, Ag, Au, $H_2O$ \\
         Paramagnetismus      & $\mu_r > 1$                    & Schwache Verstärkung      & Al, Pt, Mg, Luft       \\
         Ferromagnetismus     & $\mu_r \gg 1$                  & Starke Verstärkung        & Fe, Co, Ni, Mu-Metall  \\
@@ -257,9 +257,9 @@ Die Genauigkeit von Messstromwandlern im Betrieb wird maßgeblich von externen u
 
 \textbf{Einfluss der Bürde}
 
-Die Impedanz der Bürde bestimmt das Betriebsverhalten des Stromwandlers. Ein erhöhter Widerstand im Sekundärkreis durch Leitungswiderstände oder Messgeräte erfordert eine höhere induzierte Sekundärspannung zur Aufrechterhaltung des Stromflusses. Dies resultiert gemäß dem Induktionsgesetz in einer Zunahme der magnetischen Flussdichte im Kern. Bei einer Überschreitung der Bemessungsbürde erreicht der Eisenkern die Sättigung und die Messabweichung $\varepsilon$ steigt an.
+Die Impedanz der Bürde bestimmt das Betriebsverhalten des Stromwandlers. Ein erhöhter Widerstand im Sekundärkreis durch Leitungswiderstände oder Messgeräte erfordert eine höhere induzierte Sekundärspannung zur Aufrechterhaltung des Stromflusses. Dies resultiert gemäß dem Induktionsgesetz in einer Zunahme der magnetischen Flussdichte im Kern. Bei einer Überschreitung der Bemessungsbürde erreicht der Eisenkern die Sättigung und die Messabweichung \gls{sym:epsilon} steigt an.
 
-Der Einfluss des Kompensationswiderstandes auf die Sättigung lässt sich über die induzierte Spannung $U_i$ herleiten. Diese entspricht der Summe der Spannungsabfälle über der gesamten Sekundärbürde
+Der Einfluss des Kompensationswiderstandes auf die Sättigung lässt sich über die induzierte Spannung \gls{sym:Ui} herleiten. Diese entspricht der Summe der Spannungsabfälle über der gesamten Sekundärbürde
 
 \begin{equation}
     U_i = I_{sec} \cdot (R_{\text{Wicklung}} + R_{\text{Leitung}} + R_{\text{Mess}} + R_{\text{Komp}})
@@ -273,7 +273,7 @@ wobei der Restwiderstand definiert ist als
     \label{equ:widerstand_rest}
 \end{equation}
 
-Nach dem Induktionsgesetz (Transformator-Hauptgleichung) besteht ein proportionaler Zusammenhang zwischen der induzierten Spannung und dem magnetischen Fluss $\Phi$
+Nach dem Induktionsgesetz (Transformator-Hauptgleichung) besteht ein proportionaler Zusammenhang zwischen der induzierten Spannung und dem magnetischen Fluss \gls{sym:Phi}
 
 \begin{equation}
     U_i = 4,44 \cdot f \cdot N_s \cdot \Phi
@@ -298,11 +298,11 @@ Jeder stromdurchflossene Leiter ist von einem konzentrischen Magnetfeld umgeben.
     \label{equ:biot_savart}
 \end{equation}
 
-Hierbei beschreibt $\mu_0$ die magnetische Feldkonstante und $I$ die Stromstärke im Leiter.
+Hierbei beschreibt \gls{sym:mu0} die magnetische Feldkonstante und $I$ die Stromstärke im Leiter.
 
 Ein Stromwandler ist idealerweise so konstruiert, dass sein Kern nur den magnetischen Fluss des umschlossenen Primärleiters führt. In der Praxis verlaufen die Sammelschienen der drei Phasen in Hochstrom-Schaltanlagen jedoch oft parallel und mit geringem Abstand zueinander \cite{Pfuntner1951}. Die von den Nachbarleitern erzeugten starken Magnetfelder können als Streufluss in den Eisenkern des betrachteten Wandlers eindringen und sich dem Nutzfluss überlagern.
 
-Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den benachbarten Kernsegmenten zu einer lokalen Sättigung führen. Zur Quantifizierung dieses Effekts wird eine Näherungsgleichung der MBS AG herangezogen. Diese berechnet explizit den zusätzlichen Anteil der Flussdichte $B_{\text{Fremd}}$, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}
+Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den benachbarten Kernsegmenten zu einer lokalen Sättigung führen. Zur Quantifizierung dieses Effekts wird eine Näherungsgleichung der MBS AG herangezogen. Diese berechnet explizit den zusätzlichen Anteil der Flussdichte \gls{sym:B_fremd}, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}
 
 \begin{equation}
     B_{\text{Fremd}} \approx 10^{-6} \cdot I_{pri} \cdot \frac{R + 0,5 \cdot W}{A} \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
@@ -312,7 +312,7 @@ Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den bena
 
 \einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}{}{pic:aufbau_abschaetzung_fremdfeld}
 
-Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_{pri}$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns $A$ (in m$^2$) und Außenphasenabstand $D$ (in m).
+Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_{pri}$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns \gls{sym:A} (in m$^2$) und Außenphasenabstand \gls{sym:D} (in m).
 
 \begin{aufgabenbox}
   Diagramm vorläufig – Anpassung möglich.
@@ -356,14 +356,14 @@ Auf der Abszisse (X-Achse) ist der Weg entlang des mittleren Kernumfangs aufgetr
 
 Zur Sicherstellung der normativ geforderten Genauigkeitsklassen wird in der Prüftechnik das Prinzip der Vergleichsmessung angewendet. Hierbei werden der zu prüfende Wandler und ein hochgenaues Referenznormal primärseitig vom identischen Strom durchflossen. Da die Fehlercharakteristik des Normals bekannt und dessen Eigenabweichung vernachlässigbar klein ist, lässt sich die Messabweichung des Prüflings direkt aus der Differenz der sekundärseitigen Ausgangssignale ableiten.
 
-Gemäß DIN EN 61869-2 müssen zwei zentrale Kenngrößen ermittelt werden. Die Übersetzungsmessabweichung $\varepsilon$ beschreibt die prozentuale Differenz der Stromamplituden und wird nach folgender Gleichung berechnet
+Gemäß DIN EN 61869-2 müssen zwei zentrale Kenngrößen ermittelt werden. Die Übersetzungsmessabweichung \gls{sym:epsilon} beschreibt die prozentuale Differenz der Stromamplituden und wird nach folgender Gleichung berechnet
 
 \begin{equation}
     \varepsilon = \frac{k_n \cdot I_{sec} - I_{pri}}{I_{pri}} \cdot 100\,\%
     \label{eq:messabweichung_epsilon}
 \end{equation}
 
-Hierbei entspricht $k_n$ dem Bemessungsübersetzungsverhältnis. Der zweite Parameter ist der Fehlwinkel $\Delta\phi$, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert. Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
+Hierbei entspricht \gls{sym:kn} dem Bemessungsübersetzungsverhältnis. Der zweite Parameter ist der Fehlwinkel \gls{sym:deltaphi}, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert. Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
 
 \subsection{Niederspannungsschaltanlagen}
 \label{sec:niederspannungsschaltanlagen}
