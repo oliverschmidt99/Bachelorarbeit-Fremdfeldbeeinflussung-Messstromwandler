@@ -24,7 +24,7 @@ Die Sekundärwicklung ist direkt auf diesen Ringkern aufgebracht, transformiert 
 
 Stromwandler lassen sich je nach Anwendungszweck in die zwei Hauptkategorien Messstromwandler und Schutzstromwandler unterteilen. Obwohl beide auf demselben physikalischen Prinzip basieren, unterscheiden sie sich maßgeblich durch ihr Sättigungsverhalten. Der Messstromwandler dient primär der Erfassung von Strömen innerhalb des Nennstrombereichs zur Speisung von beispielsweise Energiezählern. Ein entscheidendes Kriterium ist hierbei der schnelle Übergang des Kerns in die Sättigung bei hohen Überströmen. Dies begrenzt den Sekundärstrom und schützt die angeschlossene empfindliche Messtechnik vor Zerstörung~\cite[Kap.~2.2]{redur_einmaleins}.
 
-Im Gegensatz dazu dient der Schutzstromwandler der Ansteuerung von Schutzeinrichtungen wie Relais. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus proportional zum Primärstrom bleibt. Der Kern darf folglich nicht frühzeitig sättigen, um eine zuverlässige Schutzauslösung sicherzustellen~\cite[Kap.~2.2]{redur_einmaleins}. Eine weitere spezielle Wandlerart stellen die im folgenden Abschnitt behandelten Kompensationswicklungen dar.
+Im Gegensatz dazu dient der Schutzstromwandler der Ansteuerung von Schutzeinrichtungen wie Relais. Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereich hinaus proportional zum Primärstrom bleibt. Der Kern darf folglich nicht frühzeitig sättigen, um eine zuverlässige Schutzauslösung sicherzustellen~\cite[Kap.~2.2]{redur_einmaleins}. Eine weitere spezielle Wandlerart stellen die im folgenden Abschnitt~\ref{sec:kompensationswicklungen} behandelten Kompensationswicklungen dar.
 
 \subsubsection{Kompensationswicklungen}
 \label{sec:kompensationswicklungen}
@@ -120,12 +120,6 @@ Theoretisch ließe sich auch die sekundäre Streuinduktivität $L_{s}$ bei zentr
 \label{sec:physikalisches_prinzip}
 
 Physikalisch betrachtet arbeitet der Messstromwandler nach dem Prinzip eines kurzgeschlossenen Transformators. Die Wandlung basiert auf der elektromagnetischen Kopplung zwischen dem Primärleiter und der Sekundärwicklung über einen Magnetkern.
-
-
-
-
-
-
 
 \subsubsection{Magnetfelder und Induktion}
 \label{sec:physik_grundlagen_induktion}
@@ -245,10 +239,12 @@ Die magnetischen Eigenschaften von Materie lassen sich anhand ihrer Reaktion auf
 
 Stoffe mit einer Permeabilität von $\mu_r < 1$ werden als diamagnetisch bezeichnet (z.\,B. Kupfer oder Wasser). In der Elektrotechnik werden Diamagnetika und Paramagnetika meist näherungsweise wie das Vakuum ($\mu_r \approx 1$) behandelt. Für die Funktion von Messstromwandlern sind ferromagnetische Stoffe aufgrund ihrer extrem hohen Permeabilität von entscheidender Bedeutung, da sie den magnetischen Fluss im Kern führen. Da $\mu_r$ bei Ferromagnetika jedoch feldstärkeabhängig ist, führen starke Felder zu Sättigungseffekten und somit zu einer massiven Beeinträchtigung der Genauigkeit bei Fremdfeldeinfluss.
 
-\subsubsection{Hysterese}
+\subsubsection{Hysterese und reales Verhalten}
+\label{sec:hysterese}
 
-Die Hysterese beschreibt das magnetische Verhalten eines ferromagnetischen Werkstoffs bei der Ummagnetisierung. Dabei lässt sich die magnetische Flussdichte B nicht unendlich steigern; bei hohen Feldstärken H tritt ein Sättigungsverhalten ein. Zudem folgt der Verlauf der Flussdichte der äußeren Feldstärke zeitlich bzw. räumlich verzögert, was zur charakteristischen Hystereseschleife führt.
-
+\begin{aufgabenbox}
+    Wird später geschrieben!
+\end{aufgabenbox}
 
 \subsubsection{Störeinflüsse bei Messstromwandlern}
 \label{sec:stoerfelder_schaltanlagen}
@@ -284,6 +280,7 @@ Durch Gleichsetzen von (\ref{equ:spannung_widerstand}) und (\ref{equ:trafo_haupt
 
 \begin{equation}
     \Phi = \frac{I_s \cdot (R_{\text{Rest}} + R_{\text{Komp}})}{4,44 \cdot f \cdot N_s}
+    \label{eq:fluss_buerde}
 \end{equation}
 
 Aus dieser Beziehung geht hervor, dass ein Anstieg von $R_{\text{Komp}}$ bei eingeprägtem Strom $I_s$ zu einer linearen Erhöhung des magnetischen Flusses $\Phi$ führt. Bei Überschreitung des Sättigungsflusses $\Phi_{\text{sat}}$ verlässt der Wandler den linearen Arbeitsbereich.
@@ -309,11 +306,16 @@ Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den bena
 \end{equation}
 
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}{}{pic:}
+\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}{}{pic:aufbau_abschaetzung_fremdfeld}
 
 Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_p$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns $A$ (in m$^2$) und Außenphasenabstand $D$ (in m).
 
+\begin{aufgabenbox}
+  Diagramm vorläufig – Anpassung möglich.
+
 \einfuegenBildGross{03_Ressourcen/simulation/fremdfeld_ra_pfunder/Vergleich_Geometrie_und_Strom.pdf}{Einfluss von Kerngröße und Stromstärke auf den zusätzlichen Streufluss}{pic:sim_streufluss_abhaengigkeit}
+
+\end{aufgabenbox}
 
 Abbildung \ref{pic:sim_streufluss_abhaengigkeit} visualisiert den durch den benachbarten Leiter in den Kern eingekoppelten zusätzlichen magnetischen Fluss $\Phi_{\text{Fremd}}$. Es werden die zwei Szenarien eines kleinen Kerns (blau) und eines großen Kerns (rot) verglichen.
 
@@ -332,6 +334,7 @@ Die Unabhängigkeit des im Diagramm gezeigten absoluten Störflusses vom Kernque
 
 \begin{equation}
     \Phi_{\text{Fremd}} \approx 10^{-6} \cdot I_p \cdot (R + 0{,}5 \cdot W) \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
+    \label{eq:phi_fremd_herleitung}
 \end{equation}
 
 Diese Beziehung bestätigt, dass der reine Störfluss $\Phi_{\text{Fremd}}$ nur von der Geometrie ($R, W, D$) und dem Störstrom abhängt, nicht jedoch von der Kerntiefe und damit dem Querschnitt. Die Robustheit großer Kerne resultiert folglich nicht aus einer geringeren Einkopplung, sondern aus ihrer höheren Kapazität zur Aufnahme dieses Zusatzflusses.
@@ -353,6 +356,7 @@ Gemäß DIN EN 61869-2 müssen zwei zentrale Kenngrößen ermittelt werden. Die 
 
 \begin{equation}
     \varepsilon = \frac{k_n \cdot I_s - I_p}{I_p} \cdot 100\,\%
+    \label{eq:messabweichung_epsilon}
 \end{equation}
 
 Hierbei entspricht $k_n$ dem Bemessungsübersetzungsverhältnis. Der zweite Parameter ist der Fehlwinkel $\Delta\phi$, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert. Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
