@@ -11,11 +11,10 @@ import re
 
 # --- KONFIGURATION ---
 DATA_FILE = "messdaten_db.parquet"
+SPECS_FILE = "wandler_specs.csv"
+PHASES = ["L1", "L2", "L3"]
 WORK_DIR = "matlab_working_dir"
 DEFAULT_MATLAB_PATH = r"C:\Program Files\MATLAB\R2025a\bin\matlab.exe"
-
-# HIER FEHLTE DIE DEFINITION:
-PHASES = ["L1", "L2", "L3"]
 
 # Fehler-Bereiche Definition für Ökonomie
 ZONES = {
@@ -23,9 +22,6 @@ ZONES = {
     "Nennstrom (80-100%)": [80, 90, 100],
     "Überlast (≥120%)": [120, 150, 200],
 }
-
-# Stammdaten-Spalten (werden direkt in der DB gespeichert)
-META_COLS = ["Preis (€)", "L (mm)", "B (mm)", "H (mm)", "Kommentar"]
 
 # --- FARBPALETTEN ---
 BLUES = [
@@ -142,20 +138,43 @@ st.set_page_config(page_title="Wandler Dashboard", layout="wide", page_icon="�
 # --- HILFSFUNKTIONEN ---
 
 
+@st.cache_data
+def load_data():
+    if not os.path.exists(DATA_FILE):
+        return None
+    df = pd.read_parquet(DATA_FILE)
+    if "dut_name" in df.columns:
+        df["trace_id"] = df["folder"] + " | " + df["dut_name"].astype(str)
+    else:
+        df["trace_id"] = df["folder"]
+    if "target_load" in df.columns:
+        df["target_load"] = pd.to_numeric(df["target_load"], errors="coerce")
+
+    # BASIS-TYP GENERIEREN (für Specs)
+    # Wir nehmen an: wandler_key enthält den vollen Namen. Wir strippen die Bürde.
+    df["base_type"] = df["wandler_key"].apply(extract_base_type)
+
+    return df
+
+
 def extract_base_type(wandler_key):
     """
     Entfernt Bürden-Infos (z.B. 8R1, 0R5) und irrelevante Suffixe aus dem Key.
     Ziel: Identische Wandler (Hersteller + Typ) gruppieren.
     """
     s = str(wandler_key)
+    # Splitte bei typischen Trennern
     tokens = re.split(r"[_\s\-]+", s)
 
     clean_tokens = []
     for t in tokens:
+        # Filter: Bürde (Zahl + R + Zahl, z.B. 8R1, 10R)
         if re.match(r"^\d+R\d*$", t, re.IGNORECASE):
             continue
+        # Filter: Parallel/Dreieck/Messstrecke Infos, falls die als "Typ" egal sind
         if t.lower() in ["parallel", "dreieck", "messstrecke", "l1", "l2", "l3"]:
             continue
+        # Filter: Leere Tokens
         if not t:
             continue
         clean_tokens.append(t)
@@ -163,45 +182,86 @@ def extract_base_type(wandler_key):
     return " ".join(clean_tokens)
 
 
-@st.cache_data
-def load_data():
-    if not os.path.exists(DATA_FILE):
-        return None
-    df = pd.read_parquet(DATA_FILE)
+def load_specs(all_base_types):
+    """
+    Lädt Specs basierend auf 'base_type' (Bereinigter Typ).
+    """
+    if os.path.exists(SPECS_FILE):
+        df_specs = pd.read_csv(SPECS_FILE)
+        # Migration falls nötig (Spalte umbenennen)
+        if "base_type" not in df_specs.columns and "wandler_key" in df_specs.columns:
+            st.toast("Migriere Specs auf Basis-Typ...", icon="🔄")
+            df_specs.rename(columns={"wandler_key": "base_type"}, inplace=True)
+        elif "base_type" not in df_specs.columns and "dut_name" in df_specs.columns:
+            df_specs.rename(columns={"dut_name": "base_type"}, inplace=True)
 
-    # Trace ID generieren
-    if "dut_name" in df.columns:
-        df["trace_id"] = df["folder"] + " | " + df["dut_name"].astype(str)
+        df_specs["base_type"] = df_specs["base_type"].astype(str)
     else:
-        df["trace_id"] = df["folder"]
+        df_specs = pd.DataFrame(
+            columns=[
+                "base_type",
+                "Preis (€)",
+                "L (mm)",
+                "B (mm)",
+                "H (mm)",
+                "Kommentar",
+            ]
+        )
 
-    if "target_load" in df.columns:
-        df["target_load"] = pd.to_numeric(df["target_load"], errors="coerce")
+    existing_keys = df_specs["base_type"].tolist()
+    new_rows = []
+    for k in all_base_types:
+        if str(k) not in existing_keys:
+            new_rows.append(
+                {
+                    "base_type": str(k),
+                    "Preis (€)": 0.0,
+                    "L (mm)": 0.0,
+                    "B (mm)": 0.0,
+                    "H (mm)": 0.0,
+                    "Kommentar": "",
+                }
+            )
 
-    # BASIS-TYP GENERIEREN (falls noch nicht in DB)
-    if "base_type" not in df.columns:
-        df["base_type"] = df["wandler_key"].apply(extract_base_type)
-
-    # Stammdaten-Spalten initialisieren, falls alte DB
-    for col in META_COLS:
-        if col not in df.columns:
-            if col == "Kommentar":
-                df[col] = ""
-            else:
-                df[col] = 0.0
-
-    return df
+    if new_rows:
+        df_specs = pd.concat([df_specs, pd.DataFrame(new_rows)], ignore_index=True)
+    return df_specs
 
 
-def save_db(df_to_save):
-    """Speichert DataFrame und invalidiert Cache"""
-    try:
-        df_to_save.to_parquet(DATA_FILE)
-        st.cache_data.clear()
-        return True
-    except Exception as e:
-        st.error(f"Fehler beim Speichern: {e}")
-        return False
+def calculate_zone_errors(df_filtered):
+    """
+    Berechnet Fehler pro Zone (Nieder, Nenn, Überlast) aggregiert pro WANDLER_KEY (Messung).
+    Aber wir behalten 'base_type' bei, um später zu mergen.
+    """
+    results = []
+    if "abs_error_pct" not in df_filtered.columns:
+        df_filtered["abs_error_pct"] = df_filtered["err_ratio"].abs()
+
+    # Wir gruppieren nach wandler_key (damit wir im Plot noch die Punkte sehen),
+    # aber merken uns den base_type
+    for w_key, group in df_filtered.groupby("wandler_key"):
+
+        base_t = group["base_type"].iloc[0]  # Sollte identisch sein in der Gruppe
+
+        mask_low = group["target_load"].isin(ZONES["Niederstrom (5-50%)"])
+        err_low = group.loc[mask_low, "abs_error_pct"].mean()
+
+        mask_nom = group["target_load"].isin(ZONES["Nennstrom (80-100%)"])
+        err_nom = group.loc[mask_nom, "abs_error_pct"].mean()
+
+        mask_high = group["target_load"] >= 120
+        err_high = group.loc[mask_high, "abs_error_pct"].mean()
+
+        results.append(
+            {
+                "wandler_key": w_key,
+                "base_type": base_t,
+                "Fehler Niederstrom (%)": err_low,
+                "Fehler Nennstrom (%)": err_nom,
+                "Fehler Überlast (%)": err_high,
+            }
+        )
+    return pd.DataFrame(results)
 
 
 def get_trumpet_limits(class_val):
@@ -374,7 +434,10 @@ sel_duts = st.sidebar.multiselect(
     on_change=clear_cache,
 )
 
-# --- FILTER ANWENDEN ---
+if not sel_duts:
+    st.stop()
+
+# --- DATEN FILTERN ---
 mask = (
     (df["nennstrom"] == sel_current)
     & (df["wandler_key"].isin(sel_wandlers))
@@ -390,14 +453,6 @@ if "comparison_mode" in df.columns:
     mask = mask & (df["comparison_mode"] == comp_mode_val)
 
 df_sub = df[mask].copy()
-
-# --- SICHERHEITS-CHECK (Leer-Prüfung) ---
-if df_sub.empty:
-    st.warning(
-        "⚠️ Keine Daten für diese Auswahl gefunden. Bitte prüfen Sie die Filter (insb. DUTs) oder den Vergleichsmodus."
-    )
-    st.stop()
-
 if comp_mode_val == "device_ref" and "ref_name" in df_sub.columns:
     df_sub = df_sub[df_sub["dut_name"] != df_sub["ref_name"]]
 
@@ -609,10 +664,10 @@ if "zip_data" in st.session_state:
 # =============================================================================
 
 tab1, tab2, tab3 = st.tabs(
-    ["📈 Gesamtgenauigkeit", "💰 Ökonomische Analyse", "⚙️ Stammdaten-Editor"]
+    ["📈 Gesamtgenauigkeit", "💰 Ökonomische Analyse", "⚙️ Stammdaten"]
 )
 
-# --- TAB 1 --- 
+# --- TAB 1 ---
 with tab1:
     ref_name_disp = (
         df_sub.iloc[0]["ref_name"]
@@ -696,211 +751,114 @@ with tab1:
     fig.update_xaxes(title_text="Last [% In]", row=2, col=2)
     st.plotly_chart(fig, use_container_width=True)
 
-
-# --- TAB 2: ÖKONOMIE ---
+# --- TAB 2: ÖKONOMIE (Gematcht über Base Type) ---
 with tab2:
-    st.markdown("### 💰 Preis/Leistung & Varianten-Vergleich")
+    st.markdown("### 💰 Preis, Volumen & Zonen-Genauigkeit")
+    df_zones = calculate_zone_errors(df_sub)
 
-    # Aggregation pro Unique ID (damit Parallel/Dreieck getrennt bleiben)
-    df_err = (
-        df_sub.groupby("unique_id")
-        .agg(
-            wandler_key=("wandler_key", "first"),
-            base_type=("base_type", "first"),
-            legend_name=(
-                "final_legend",
-                "first",
-            ),  # Das ist der spezifische Name (z.B. "... | Parallel")
-            # Fehler Metriken
-            err_nieder=(
-                "err_ratio",
-                lambda x: x[
-                    df_sub.loc[x.index, "target_load"].isin(
-                        ZONES["Niederstrom (5-50%)"]
-                    )
-                ]
-                .abs()
-                .mean(),
-            ),
-            err_nom=(
-                "err_ratio",
-                lambda x: x[
-                    df_sub.loc[x.index, "target_load"].isin(
-                        ZONES["Nennstrom (80-100%)"]
-                    )
-                ]
-                .abs()
-                .mean(),
-            ),
-            err_high=(
-                "err_ratio",
-                lambda x: x[
-                    df_sub.loc[x.index, "target_load"].isin(ZONES["Überlast (≥120%)"])
-                ]
-                .abs()
-                .mean(),
-            ),
-            # Stammdaten
-            preis=("Preis (€)", "first"),
-            vol_l=("L (mm)", "first"),
-            vol_b=("B (mm)", "first"),
-            vol_h=("H (mm)", "first"),
-            # Wir holen uns auch die Farbe aus Tab 1, damit es konsistent bleibt
-            color_hex=("final_color", "first") 
-        )
-        .reset_index()
-    )
+    # Hier laden wir Specs anhand der Basis-Typen im aktuellen Filter
+    unique_base_types = sorted(df_sub["base_type"].unique())
+    df_specs = load_specs(unique_base_types)
 
-    # Volumen berechnen
-    df_err["volumen"] = (df_err["vol_l"] * df_err["vol_b"] * df_err["vol_h"]) / 1000.0
+    # Merge über 'base_type' statt wandler_key
+    df_analysis = pd.merge(df_zones, df_specs, on="base_type", how="left")
+    df_analysis["Volumen (cm³)"] = (
+        df_analysis["L (mm)"] * df_analysis["B (mm)"] * df_analysis["H (mm)"]
+    ) / 1000.0
 
-    # Spaltenauswahl für Diagramm
     c1, c2, c3 = st.columns(3)
-
     with c1:
-        x_map = {"Preis (€)": "preis", "Volumen (cm³)": "volumen"}
-        x_sel = st.selectbox("X-Achse:", list(x_map.keys()))
-        x_col = x_map[x_sel]
-
+        x_axis = st.selectbox("X-Achse:", ["Preis (€)", "Volumen (cm³)"])
     with c2:
-        y_map = {
-            "Fehler Niederstrom (%)": "err_nieder",
-            "Fehler Nennstrom (%)": "err_nom",
-            "Fehler Überlast (%)": "err_high",
-            "🌟 Alle Fehlerbereiche anzeigen": "all",
-        }
-        y_sel = st.selectbox("Y-Achse:", list(y_map.keys()))
-        y_col = y_map[y_sel]
-
+        y_axis = st.selectbox(
+            "Y-Achse:",
+            ["Fehler Niederstrom (%)", "Fehler Nennstrom (%)", "Fehler Überlast (%)"],
+        )
     with c3:
-        chart_type = st.radio("Diagramm-Typ:", ["Scatter", "Radar"])
+        chart_type = st.radio("Typ:", ["Scatter", "Radar"])
 
-    if df_err.empty:
-        st.info("Keine Daten verfügbar.")
+    if df_analysis.empty:
+        st.warning("Keine Daten.")
     elif chart_type == "Scatter":
-        
-        # Farb-Mapping erstellen, damit die Farben exakt wie in Tab 1 sind
-        # Wir ordnen jedem 'legend_name' seinen 'color_hex' zu
-        color_map_dict = dict(zip(df_err["legend_name"], df_err["color_hex"]))
-
-        if y_col == "all":
-            # --- Ansicht: Alle Fehlerbereiche ---
-            # Wir entfernen x_col aus id_vars, um Konflikte zu vermeiden
-            df_long = df_err.melt(
-                id_vars=["unique_id", "wandler_key", "base_type", "legend_name", "preis", "volumen"],
-                value_vars=["err_nieder", "err_nom", "err_high"],
-                var_name="Fehlerart",
-                value_name="Fehlerwert"
-            )
-            
-            df_long["Fehlerart"] = df_long["Fehlerart"].map({
-                "err_nieder": "Niederstrom (5-50%)",
-                "err_nom": "Nennstrom (80-100%)",
-                "err_high": "Überlast (>120%)"
-            })
-            
-            fig_eco = px.scatter(
-                df_long, 
-                x=x_col, y="Fehlerwert",
-                # HIER GEÄNDERT: legend_name statt base_type für die Farbe
-                color="legend_name", 
-                symbol="Fehlerart", 
-                hover_name="legend_name",
-                hover_data=["preis"],
-                size=[12]*len(df_long),
-                # Wir nutzen die Farben aus Tab 1
-                color_discrete_map=color_map_dict,
-                labels={x_col: x_sel, "Fehlerwert": "Fehler (%)", "legend_name": "Messreihe"},
-                title=f"{x_sel} vs. Alle Fehlerbereiche",
-                template="plotly_white"
-            )
-        else:
-            # --- Ansicht: Einzelner Fehlerbereich ---
-            fig_eco = px.scatter(
-                df_err, 
-                x=x_col, y=y_col,
-                # HIER GEÄNDERT: legend_name statt base_type für die Farbe
-                color="legend_name", 
-                hover_name="legend_name",
-                hover_data=["preis", "err_nom"],
-                size=[15]*len(df_err),
-                # Wir nutzen die Farben aus Tab 1
-                color_discrete_map=color_map_dict,
-                labels={x_col: x_sel, y_col: y_sel, "legend_name": "Messreihe"},
-                title=f"{x_sel} vs. {y_sel}",
-                template="plotly_white"
-            )
-            
+        # Wir zeigen im Plot immer noch den detaillierten wandler_key (z.B. mit 8R1),
+        # aber die X-Achse (Preis) kommt vom Basis-Typ.
+        fig_eco = px.scatter(
+            df_analysis,
+            x=x_axis,
+            y=y_axis,
+            color="base_type",
+            hover_name="wandler_key",  # Detailinfo beim Drüberfahren
+            size=[15] * len(df_analysis),
+            title=f"{x_axis} vs. {y_axis}",
+            template="plotly_white",
+        )
+        fig_eco.update_traces(textposition="top center")
         st.plotly_chart(fig_eco, use_container_width=True)
     else:
-        # Radar Chart
-        fig_r = go.Figure()
-        cats = ["Preis", "Volumen", "Err Nieder", "Err Nenn", "Err High"]
-        
-        mx_p = df_err["preis"].max() or 1
-        mx_v = df_err["volumen"].max() or 1
-        mx_en = df_err["err_nieder"].max() or 0.01
-        mx_nn = df_err["err_nom"].max() or 0.01
-        mx_eh = df_err["err_high"].max() or 0.01
-        
-        for i, row in df_err.iterrows():
-            vals = [
-                row["preis"]/mx_p, row["volumen"]/mx_v, 
-                (row["err_nieder"] or 0)/mx_en, (row["err_nom"] or 0)/mx_nn, (row["err_high"] or 0)/mx_eh,
-                row["preis"]/mx_p
+        fig_radar = go.Figure()
+        max_vals = {
+            "Preis (€)": df_analysis["Preis (€)"].max() or 1,
+            "Volumen (cm³)": df_analysis["Volumen (cm³)"].max() or 1,
+            "Fehler Niederstrom (%)": df_analysis["Fehler Niederstrom (%)"].max()
+            or 0.01,
+            "Fehler Nennstrom (%)": df_analysis["Fehler Nennstrom (%)"].max() or 0.01,
+            "Fehler Überlast (%)": df_analysis["Fehler Überlast (%)"].max() or 0.01,
+        }
+        cats = [
+            "Preis (€)",
+            "Volumen (cm³)",
+            "Fehler Nieder",
+            "Fehler Nenn",
+            "Fehler Überlast",
+        ]
+        # Für Radar nehmen wir nur EINEN Eintrag pro Basis-Typ (mitteln falls mehrere Bürden da sind?),
+        # oder wir zeigen alle. Hier zeigen wir alle Punkte als Linien.
+        for i, row in df_analysis.iterrows():
+            r_vals = [
+                row["Preis (€)"] / max_vals["Preis (€)"],
+                row["Volumen (cm³)"] / max_vals["Volumen (cm³)"],
+                (row["Fehler Niederstrom (%)"] or 0)
+                / max_vals["Fehler Niederstrom (%)"],
+                (row["Fehler Nennstrom (%)"] or 0) / max_vals["Fehler Nennstrom (%)"],
+                (row["Fehler Überlast (%)"] or 0) / max_vals["Fehler Überlast (%)"],
+                row["Preis (€)"] / max_vals["Preis (€)"],
             ]
-            # Radar nutzt direkt die Farbe aus der DB
-            fig_r.add_trace(go.Scatterpolar(
-                r=vals, 
-                theta=cats + [cats[0]], 
-                fill='toself', 
-                name=row["legend_name"],
-                line_color=row["color_hex"]
-            ))
-            
-        fig_r.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])), title="Profilvergleich (Normalisiert)", height=600)
-        st.plotly_chart(fig_r, use_container_width=True)
-# --- TAB 3: STAMMDATEN EDITOR ---
+            fig_radar.add_trace(
+                go.Scatterpolar(
+                    r=r_vals,
+                    theta=cats + [cats[0]],
+                    fill="toself",
+                    name=row["wandler_key"],
+                )
+            )
+        fig_radar.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+            title="Normalisiertes Profil (Innen=Besser)",
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+
+# --- TAB 3: STAMMDATEN (Nur Basis-Typen) ---
 with tab3:
-    st.markdown("### ⚙️ Stammdaten-Verwaltung")
-    st.info(
-        "Änderungen hier werden direkt in die Datenbank (`messdaten_db.parquet`) geschrieben und gelten für alle Messungen des jeweiligen Typs."
-    )
+    st.markdown("### ⚙️ Preise & Maße (Wandler-Typen gruppiert)")
+    st.info("Bürden (z.B. 8R1) werden ignoriert. Trage Werte für den Basis-Typ ein.")
 
-    df_all_unique = (
-        df[["base_type"] + META_COLS]
-        .drop_duplicates(subset=["base_type"])
-        .sort_values("base_type")
-    )
+    # Alle Basis-Typen aus der DB holen
+    all_base_types = sorted(df["base_type"].unique())
+    current_specs = load_specs(all_base_types)
 
-    edited_df = st.data_editor(
-        df_all_unique,
+    edited_specs = st.data_editor(
+        current_specs,
         column_config={
             "base_type": st.column_config.TextColumn(
-                "Wandler-Typ (Schlüssel)",
-                disabled=True,
-                help="Wird automatisch generiert",
+                "Wandler-Typ (Ohne Bürde)", disabled=True
             ),
-            "Preis (€)": st.column_config.NumberColumn("Preis", format="%.2f €"),
-            "L (mm)": st.column_config.NumberColumn("Länge", format="%d mm"),
-            "B (mm)": st.column_config.NumberColumn("Breite", format="%d mm"),
-            "H (mm)": st.column_config.NumberColumn("Höhe", format="%d mm"),
-            "Kommentar": st.column_config.TextColumn("Kommentar", width="medium"),
+            "Preis (€)": st.column_config.NumberColumn("Preis (€)", format="%.2f"),
         },
+        num_rows="fixed",
         hide_index=True,
         use_container_width=True,
-        key="specs_editor",
     )
-
-    if st.button("💾 Speichern & Aktualisieren", type="primary"):
-        with st.spinner("Speichere in Datenbank..."):
-            df_to_save = df.copy()
-            for col in META_COLS:
-                update_map = edited_df.set_index("base_type")[col]
-                df_to_save[col] = (
-                    df_to_save["base_type"].map(update_map).fillna(df_to_save[col])
-                )
-
-            if save_db(df_to_save):
-                st.success("✅ Gespeichert! Seite wird neu geladen...")
-                st.rerun()
+    if st.button("💾 Speichern"):
+        edited_specs.to_csv(SPECS_FILE, index=False)
+        st.success("Gespeichert!")
+        st.rerun()
