@@ -54,12 +54,8 @@ Die Auswertung der ersten Messreihen zeigt Abweichungen, die über den gesamten 
 
 Die grafische Darstellung verdeutlicht, dass beide Messsysteme die durch die Norm vorgegebenen Toleranzgrenzen (gestrichelte Linien) nicht einhalten. In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den positiven Grenzwert, während die Rogowskispulen eine negative Abweichung zwischen -1\,\% und -2,5\,\% aufweisen. In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa -2\,\%, wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen. Da die Verläufe der beiden Messsysteme voneinander abweichen, kann kein eindeutiger Referenzwert für den Primärstrom bestimmt werden.
 
-\begin{aufgabenbox}
-    Die Diagramme werden im Diagrammverzeichnis geführt und später hochauflösender dargestellt.
+\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_alt.pdf}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
 
-\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_alt.png}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
-
-\end{aufgabenbox}
 
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt, dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen. Dies ist darauf zurückzuführen, dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt, woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung. Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal. Dabei weisen die K-3-Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen. Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend. Im folgenden Abschnitt \ref{sec:optimierung} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
 
@@ -107,12 +103,9 @@ Die Validierung der optimierten Messstrecke belegt eine signifikante Steigerung 
 
 Der magenta Kurvenverlauf verdeutlicht, dass das PAC 4220 über nahezu den gesamten Lastbereich innerhalb des normativen Toleranzbandes der Genauigkeitsklasse 0,2 verbleibt. Ab einer Last von 20\,\% des Nennstroms stabilisiert sich die Messabweichung nahe der Nulllinie. Lediglich im Bereich geringer Ströme (5\,\%) ist eine Abweichung außerhalb der Normgrenzen erkennbar. Wie bereits in Abschnitt \ref{sec:fehleranalyse} analysiert, resultiert dieser Effekt aus dem begrenzten Stellbereich des Säulenstelltransformators, der bei minimaler Auslenkung keine stabile Stromvorgabe ermöglicht. Durch die hohe Auflösung des PAC 4220 kann diese physikalische Grenze des Prüfstandes nun präzise messtechnisch erfasst werden.
 
-\begin{aufgabenbox}
-    Die Diagramme werden im Diagrammverzeichnis geführt und später hochauflösender dargestellt.
 
-\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_neu.png}{Vergleichende Analyse der Messabweichung (oben) und Standardabweichung (unten) unter Einsatz des PAC 4220}{pic:dia_messstrecke_neu}
+\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_neu.pdf}{Vergleichende Analyse der Messabweichung (oben) und Standardabweichung (unten) unter Einsatz des PAC 4220}{pic:dia_messstrecke_neu}
 
-\end{aufgabenbox}
 
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_neu} visualisierte Standardabweichung verdeutlicht die Präzision der Messsysteme bezüglich der Streuung. Hierbei zeigt sich, dass das PAC 4220 und der Messumformer K-3 ein sehr ähnliches Verhalten mit einer vergleichbar geringen Streuung aufweisen. Ab einer Last von 50\,\% sinkt die Standardabweichung für beide Geräte auf ein Niveau von unter 0,5\,\% ab. Im Gegensatz dazu weisen die Rogowskispulen über den gesamten Messbereich eine deutlich höhere Streuung auf, was auf eine geringere Reproduzierbarkeit der Messwerte hindeutet. 
 
