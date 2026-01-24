@@ -27,14 +27,14 @@ Die Stromregelung ist als digitaler \gls{pid}-Regelkreis innerhalb der Siemens \
     \small
     \begin{tabular}{@{}l l l l l@{}}
         \toprule
-        \textbf{Komponente}  & \textbf{Typ}    & \textbf{Leistung / Bürde} & \textbf{Primär / Input} & \textbf{Sekundär / Output}          \\ \midrule
-        Säulenstelltransformator     & Ruhstrat        & \SI{90}{kVA}              & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A}) \\
-        Festtransformator    & Janssen         & \SI{30}{kVA}              & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})            \\
-        Stromwandler         & Celsa ICG       & \SI{5}{VA}                & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                \\
-        Messumformer (K-3)   & 3-K Elektrik    & --                        & \SI{0}{A}--\SI{5}{A} AC & \SI{0}{mA}--\SI{20}{mA} \gls{dc}          \\ \midrule
-        \textbf{Leittechnik} & \textbf{Typ}    & \multicolumn{3}{l}{\textbf{Beschreibung}}                                              \\ \cmidrule(r){1-2}
-        Steuerung            & Siemens \gls{et200s} & \multicolumn{3}{l}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}                  \\
-        Visualisierung       & Siemens \gls{wincc}   & \multicolumn{3}{l}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}                       \\ \bottomrule
+        \textbf{Komponente}      & \textbf{Typ}         & \textbf{Leistung / Bürde}                                                   & \textbf{Primär / Input} & \textbf{Sekundär / Output}          \\ \midrule
+        Säulenstelltransformator & Ruhstrat             & \SI{90}{kVA}                                                                & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A}) \\
+        Festtransformator        & Janssen              & \SI{30}{kVA}                                                                & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})            \\
+        Stromwandler             & Celsa ICG            & \SI{5}{VA}                                                                  & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                \\
+        Messumformer (K-3)       & 3-K Elektrik         & --                                                                          & \SI{0}{A}--\SI{5}{A} AC & \SI{0}{mA}--\SI{20}{mA} \gls{dc}    \\ \midrule
+        \textbf{Leittechnik}     & \textbf{Typ}         & \multicolumn{3}{l}{\textbf{Beschreibung}}                                                                                                   \\ \cmidrule(r){1-2}
+        Steuerung                & Siemens \gls{et200s} & \multicolumn{3}{l}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}                                                                 \\
+        Visualisierung           & Siemens \gls{wincc}  & \multicolumn{3}{l}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}                                                                      \\ \bottomrule
     \end{tabular}
 \end{table}
 
@@ -117,12 +117,93 @@ Obwohl die K-3-Umformer eine ähnlich geringe Streuung wie das PAC-Messgerät er
 
 
 
-\subsection{Konstruktive Gestaltung der Primärleiterführung}
+\subsection{Versuchsaufbau der Messobjekte und Leiteranordnung}
 \label{sec:geometrie_kupferschienen}
 
 Zusätzlich zur messtechnischen Optimierung wird die geometrische Anordnung des Primärleiters variiert, um deren Einfluss auf die Fremdfeldbeeinflussung zu untersuchen.
 
-\subsubsection{Geometrische Anordnung: Parallel- vs. Dreieckskonfiguration}
+\subsubsection{Auswahl und Spezifikation der Messstromwandler}
+\label{sec:auswahl_wandler}
+
+Für die experimentellen Untersuchungen werden Stromwandler der Hersteller MBS, Celsa und Redur eingesetzt. Die Auswahl deckt ein Spektrum von marktüblichen Standardwandlern bis hin zu spezialisierten Modellen mit integriertem Fremdfeldschutz ab. Ziel dieser Zusammenstellung ist es, eine belastbare Datenbasis für die Analyse der Beeinflussungseffekte unter verschiedenen technologischen Voraussetzungen zu schaffen.
+
+Tabelle \ref{tab:wandler_spezifikationen_erweitert} fasst die technischen Kenndaten der Prüflinge zusammen. Neben dem Nennstrom $I_n$ und der Bemessungsleistung $S_n$ ist das Gehäusevolumen aufgeführt. Dieses dient als Vergleichsgröße für die Wirtschaftlichkeitsbetrachtung und errechnet sich aus dem Produkt der maximalen äußeren Gehäuseabmessungen (Höhe $\times$ Breite $\times$ Tiefe).
+
+Es ist anzumerken, dass es sich hierbei um eine Vereinfachung handelt, die den Wandler auf seinen quaderförmigen Hüllkörper reduziert. Spezifische Geometrien, wie etwa Verjüngungen oder Abrundungen am Gehäuse, werden in dieser Berechnung vernachlässigt, sodass das tatsächliche Materialvolumen geringer ausfallen kann. Für die konstruktive Bewertung in Schaltanlagen ist diese Betrachtungsweise jedoch maßgeblich, da für die Montageplanung der maximale Platzbedarf (Bauraum) reserviert werden muss, den der Wandler im Anschlussraum effektiv beansprucht.
+
+\begin{table}[H]
+    \centering
+    \caption{Erweiterte Spezifikationen und wirtschaftliche Kennwerte der Prüflinge}
+    \label{tab:wandler_spezifikationen_erweitert}
+    \begin{tabular}{@{}lll
+            S[table-format=4.0]
+            S[table-format=2.1]
+            S[table-format=4.0]
+            S@{}}
+        \toprule
+        \textbf{Hersteller}                          & 
+        \textbf{Typ}                                 & 
+        \textbf{Technologie}                         & 
+        {\textbf{$I_n$ [\si{\ampere}]}}              & 
+        {\textbf{$S_n$ [\si{\volt\ampere}]}}         & 
+        {\textbf{Volumen [\si{\centi\meter\cubed}]}} & 
+        \textbf{Preis [\euro]}                                                                                     \\
+        \midrule
+        Celsa                                        & ALO 10030     & Standard    & 2000 & 2,5  & 634,3  & 45,50  \\
+        Celsa                                        & ALO 8030 K    & Kompensiert & 2000 & 10,0 & 710,2  & 95,95  \\
+        Celsa                                        & ALO 10030     & Standard    & 2500 & 2,5  & 634,3  & 45,50  \\
+        Celsa                                        & ALO 10050 K   & Kompensiert & 2500 & 5,0  & 1027,0 & 104,20 \\
+        Celsa                                        & ALO 12070     & Standard    & 3000 & 15,0 & 1520,0 & 71,51  \\
+        Celsa                                        & ALO 12070 K   & Kompensiert & 3000 & 15,0 & 1520,0 & 346,06 \\
+        Celsa                                        & ALO 12070     & Standard    & 4000 & 15,0 & 1520,0 & 71,51  \\
+        Celsa                                        & ALO 12070 K   & Kompensiert & 4000 & 15,0 & 1520,0 & 401,91 \\
+        Celsa                                        & ALO 20060     & Standard    & 5000 & 40,0 & 1989,0 & 124,76 \\
+        Celsa                                        & ALO E 16050 K & Kompensiert & 5000 & 40,0 & 1903,0 & 414,56 \\
+        \addlinespace
+        MBS                                          & ASK 101.4     & Standard    & 2000 & 10,0 & 733,2  & 141,90 \\
+        MBS                                          & ASK 129.10    & Standard    & 5000 & 15,0 & 6175,0 & 303,10 \\
+        \addlinespace
+        Redur                                        & 13A1030.3ffp  & FFP         & 2000 & 10,0 & 778,7  & ??     \\
+        Redur                                        & 20A1456.5vffp & VFFP        & 5000 & 15,0 & 1600,0 & ??     \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+
+Die eingesetzten Wandler lassen sich technologisch in drei Kategorien unterteilen. Als Basis dienen Standardwandler, die einen klassischen Aufbau ohne zusätzliche konstruktive Schutzmaßnahmen gegen externe Felder aufweisen (siehe Abschnitt \ref{sec:aufbau_wandler}). Eine weiterführende Bauform stellen die kompensierten Wandler dar. Diese Modelle verfügen über eine modifizierte Wicklungsanordnung, die gezielt zur Reduktion von Messabweichungen bei asymmetrischer Primärleiterlage eingesetzt wird (siehe Abschnitt \ref{sec:kompensationswicklungen}). Die dritte Gruppe bilden die spezialisierten FFP- und VFFP-Wandler der Firma Redur, die die Technologie der Fremdfeldprotektoren nutzen.
+
+Die Bezeichnung FFP steht für \textit{Fremdfeldprotektoren}. Diese Technologie wurde entwickelt, um den Eintritt magnetischer Fremdfelder in den Wandlerkern zu verringern. Der Hersteller unterteilt die Protektoren in Klassen wie FFP1, FFP5 und FFP10, welche den Grad der Schirmwirkung definieren. Technisch wird dies durch die Integration eines Werkstoffs mit hoher magnetischer Permeabilität am oder im Gehäuse des Wandlers realisiert. Diese Schirmung fungiert als magnetischer Shunt, der die Feldlinien benachbarter Leiter um den Messkern herumleitet. Infolgedessen bleibt die magnetische Induktion im Kernmaterial weitgehend unbeeinflusst von äußeren Feldern \cite{Redur2021Fremdfeld}.
+
+Um die Vergleichbarkeit der Messergebnisse zu gewährleisten, entsprechen alle ausgewählten Wandler der Genauigkeitsklasse 1,0. Die in der Tabelle aufgeführten Nennbürden sind so gewählt, dass sie die Anforderungen für die in Abschnitt \ref{sec:integration_programmierung} beschriebene thermische Dauerbelastung erfüllen.
+
+
+\begin{table}[htbp]
+    \centering
+    \caption{Geometrische Parameter der Schienenanordnung (Phasenmittelabstände)}
+    \label{tab:schienenquerschnitte}
+    \small % Schrift etwas kleiner, damit die breite Tabelle gut passt
+    \begin{tabular}{@{}l ccc ccc ccc@{}}
+        \toprule
+                                     & \multicolumn{9}{c}{\textbf{Phasenmittelabstand}}                                                                                                                                 \\
+        \cmidrule(l){2-10}
+                                     & \multicolumn{3}{c}{\textbf{A}}                   & \multicolumn{3}{c}{\textbf{B}} & \multicolumn{3}{c}{\textbf{C}}                                                               \\
+        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(l){8-10}
+        \textbf{Konfiguration}       & {L1-L2}                                          & {L2-L3}                        & {Gesamt}                       & {L1-L2} & {L2-L3} & {Gesamt} & {L1-L2} & {L2-L3} & {Gesamt} \\ 
+        \midrule
+        \textbf{Kupferquerschnitt 1} &                                                  &                                &                                &         &         &          &         &         &          \\
+        Wandler A (z.B. Celsa)       & ...                                              & ...                            & ...                            & ...     & ...     & ...      & ...     & ...     & ...      \\
+        Wandler G (z.B. Redur)       & ...                                              & ...                            & ...                            & ...     & ...     & ...      & ...     & ...     & ...      \\
+        \addlinespace
+        \textbf{Kupferquerschnitt 2} &                                                  &                                &                                &         &         &          &         &         &          \\
+        Wandler A                    & ...                                              & ...                            & ...                            & ...     & ...     & ...      & ...     & ...     & ...      \\
+        Wandler G                    & ...                                              & ...                            & ...                            & ...     & ...     & ...      & ...     & ...     & ...      \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\subsubsection{Geometrische Anordnung der Primärleiter}
 \label{sec:layout_geometrie}
 
 In Niederspannungsschaltanlagen werden Kupferschienen überwiegend in paralleler Anordnung montiert. Diese Installationsweise wird bevorzugt, da sie platzsparend ist und sich durch eine geringe Montagekomplexität auszeichnet. Die Führung der Schienen ist dabei konstruktiv maßgeblich durch die Anschlüsse des Leistungsschalters vorbestimmt, weshalb Variationen der Geometrie im realen Anlagenbau nur eingeschränkt möglich sind.
