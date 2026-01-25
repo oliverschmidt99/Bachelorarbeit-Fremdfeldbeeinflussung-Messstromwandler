@@ -54,11 +54,14 @@ Die Auswertung der ersten Messreihen zeigt Abweichungen, die über den gesamten 
 
 Die grafische Darstellung verdeutlicht, dass beide Messsysteme die durch die Norm vorgegebenen Toleranzgrenzen (gestrichelte Linien) nicht einhalten. In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den positiven Grenzwert, während die Rogowskispulen eine negative Abweichung zwischen -1\,\% und -2,5\,\% aufweisen. In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa -2\,\%, wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen. Da die Verläufe der beiden Messsysteme voneinander abweichen, kann kein eindeutiger Referenzwert für den Primärstrom bestimmt werden.
 
+\begin{aufgabenbox}
+Die Grenzen müssen auf 0,2 gestellt werden, da es eine MEssung für die Klasse 0,2 ist.    
+
 \einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_alt.pdf}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
 
+\end{aufgabenbox}
 
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt, dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen. Dies ist darauf zurückzuführen, dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt, woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung. Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal. Dabei weisen die K-3-Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen. Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend. Im folgenden Abschnitt \ref{sec:optimierung} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
-
 
 
 \subsection{Optimiertes Messsystem}
@@ -96,6 +99,86 @@ Der logische Ablauf dieser Automatisierung ist im Struktogramm des Funktionsbaus
 Zur Überprüfung der Messwertstabilität wird die Funktion \gls{fc}4 aufgerufen, welche kontrolliert, ob die Phasenströme innerhalb eines definierten Toleranzfensters um den Sollwert liegen. Ein Zeitglied T1 dient dabei der Entprellung beim Eintritt in das Fenster, während das Zeitglied T2 kurze Einbrüche überbrückt, um eine stabile Datenbasis sicherzustellen. Die eigentliche Messzeit wird durch den Timer T3 gesteuert, der nach Ablauf die Messung am aktuellen Punkt als abgeschlossen markiert. Die Weiterschaltlogik der Schrittkette wertet diesen Status aus: Im Ausgangszustand wird auf die Startbedingungen gewartet, während in den aktiven Prüfschritten der Übergang zum nächsten Pegel erst nach erfolgreichem Ablauf der Messzeit erfolgt. Abschließend werden der ermittelte Sollwert an den Regler ausgegeben und der Schrittstatus für den nächsten Zyklus aktualisiert.
 
 
+\subsubsection{Softwaregestützte Prozesskette zur Datenauswertung}
+\label{sec:datenaufbereitung_analyse}
+
+Die von der Visualisierung exportierten Rohdaten liegen im \gls{csv}-Format vor und enthalten die zeitlichen Verläufe der Ströme $I_{prim}$ (Referenz) und $I_{sek}$ (Prüfling). Angesichts des Umfangs der Untersuchung, die 31 Konfigurationen mit jeweils zwei Messgeräten und drei Phasen umfasst, ergaben sich insgesamt über 180 auszuwertende Einzelmessreihen. Eine manuelle Verarbeitung dieser Datenmenge mittels Tabellenkalkulation wäre zeitaufwendig und anfällig für Übertragungsfehler gewesen. Aus diesem Grund wurde eine mehrstufige Pipeline in der Programmiersprache Python entwickelt (unter Nutzung der Bibliothek \textit{pandas}), welche den Auswertungsprozess von der Rohdatenfilterung bis zur grafischen Darstellung automatisiert.
+
+Da die Schrittkette (siehe Abschnitt \ref{sec:integration_programmierung}) physikalisch bedingte Einschwingvorgänge beim Anfahren der Lastpunkte aufweist, ist zunächst eine Filterung der Rohdaten erforderlich. Ziel ist es, die stabilen Bereiche für die Genauigkeitsberechnung heranzuziehen. Zur Organisation wurde hierfür der \textit{Messdaten-Selektor} (Skript: \texttt{messdaten\_selektor.py}) entwickelt. Diese Software visualisiert die Zeitverläufe der Messungen und ermöglicht eine interaktive Bearbeitung. Der Anwender prüft visuell die Kennlinien und definiert manuell die zeitlichen Grenzen (Start- und Endzeitpunkt) der stabilen Lastplateaus über eine Eingabemaske.
+
+\einfuegenBildGross{03_Ressourcen/pdf/manueller_rohdaten_export/gesamtansicht.png}{Benutzeroberfläche des manuellen Messdaten-Selektors}{pic:manual_tagger}
+
+Dies dient der Datenzuverlässigkeit, da instabile Randbereiche ausgeschlossen werden. Auf Basis dieser Benutzereingaben werden die definierten Bereiche extrahiert und in separate, sortierte \gls{csv}-Dateien für jede Messung überführt. Dieser Schritt der Segmentierung verringert den Zeitaufwand in der weiteren Verarbeitung und stellt eine einheitliche Datenbasis sicher.
+
+Um die segmentierten Messreihen vergleichbar zu machen, erfolgt im Anschluss die mathematische Weiterverarbeitung durch den \textit{Daten-Aggregator} (Skript: \texttt{daten\_aggregator.py}). Dieses Modul durchläuft automatisiert die sortierten Dateien und führt die statistischen Berechnungen durch.
+
+Dabei werden für jede Messreihe verschiedene Vergleichsoperationen durchgeführt, um die Güte der Versuchsführung sowie die Genauigkeit des Prüflings zu bewerten. Tabelle~\ref{tab:berechnungsmodi} gibt eine Übersicht über die implementierten Berechnungsmodi und deren Zielsetzung.
+
+\begin{table}[H]
+    \centering
+    \caption{Übersicht der Berechnungsmodi im Daten-Aggregator}
+    \label{tab:berechnungsmodi}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}l l l p{5cm}@{}}
+        \toprule
+        \textbf{Modus} & \textbf{Referenzwert ($I_{ref}$)} & \textbf{Messwert ($I_{ist}$)} & \textbf{Untersuchungsziel} \\ \midrule
+        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat. \\ \addlinespace
+        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung). \\ \addlinespace
+        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S). \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt für alle Modi gemäß der Formel:
+
+\begin{equation}
+    \label{eq:messabweichung_allg}
+    \varepsilon = \frac{I_{ist} - I_{ref}}{I_{ref}} \cdot 100\,\%
+\end{equation}
+
+Hierbei beschreibt $I_{ist}$ den arithmetischen Mittelwert der gemessenen Stromstärke des Prüflings über das stabile Zeitfenster, während $I_{ref}$ den entsprechenden Referenzwert darstellt. Zusätzlich wird für jeden Lastpunkt die Standardabweichung $\sigma$ berechnet, um die Signalstabilität zu quantifizieren:
+
+\begin{equation}
+    \label{eq:standardabweichung}
+    \sigma = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})^2}
+\end{equation}
+
+Die resultierenden Datensätze, bestehend aus Mittelwerten ($\bar{x}$), Standardabweichungen ($\sigma$) und berechneten Fehlern ($\varepsilon$), werden abschließend in einer Datenbank im Apache-Parquet-Format (\texttt{messdaten\_db.parquet}) persistiert. Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien eine höhere Lese-Performance für die nachgelagerte Visualisierung.
+
+Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}). Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu. Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
+\begin{table}[H]
+    \centering
+    \caption{Übersicht der Berechnungsmodi im Daten-Aggregator}
+    \label{tab:berechnungsmodi}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}l l l p{5cm}@{}}
+        \toprule
+        \textbf{Modus} & \textbf{Referenzwert ($I_{ref}$)} & \textbf{Messwert ($I_{ist}$)} & \textbf{Untersuchungsziel} \\ \midrule
+        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat. \\ \addlinespace
+        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung). \\ \addlinespace
+        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S). \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt für alle Modi gemäß der Formel:
+
+\begin{equation}
+    \label{eq:messabweichung_allg}
+    \varepsilon = \frac{I_{ist} - I_{ref}}{I_{ref}} \cdot 100\,\%
+\end{equation}
+
+Hierbei beschreibt $I_{ist}$ den arithmetischen Mittelwert der gemessenen Stromstärke des Prüflings über das stabile Zeitfenster, während $I_{ref}$ den entsprechenden Referenzwert darstellt. Zusätzlich wird für jeden Lastpunkt die Standardabweichung $\sigma$ berechnet, um die Signalstabilität zu quantifizieren:
+
+\begin{equation}
+    \label{eq:standardabweichung}
+    \sigma = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})^2}
+\end{equation}
+
+Die resultierenden Datensätze, bestehend aus Mittelwerten ($\bar{x}$), Standardabweichungen ($\sigma$) und berechneten Fehlern ($\varepsilon$), werden abschließend in einer Datenbank im Apache-Parquet-Format (\texttt{messdaten\_db.parquet}) persistiert. Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien eine höhere Lese-Performance für die nachgelagerte Visualisierung.
+
+Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}). Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu. Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
+
+
+
 \subsubsection{Auswertung der neuen Messstrecke}
 \label{sec:auswertung_messstrecke}
 
@@ -110,11 +193,6 @@ Der magenta Kurvenverlauf verdeutlicht, dass das PAC 4220 über nahezu den gesam
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_neu} visualisierte Standardabweichung verdeutlicht die Präzision der Messsysteme bezüglich der Streuung. Hierbei zeigt sich, dass das PAC 4220 und der Messumformer K-3 ein sehr ähnliches Verhalten mit einer vergleichbar geringen Streuung aufweisen. Ab einer Last von 50\,\% sinkt die Standardabweichung für beide Geräte auf ein Niveau von unter 0,5\,\% ab. Im Gegensatz dazu weisen die Rogowskispulen über den gesamten Messbereich eine deutlich höhere Streuung auf, was auf eine geringere Reproduzierbarkeit der Messwerte hindeutet. 
 
 Obwohl die K-3-Umformer eine ähnlich geringe Streuung wie das PAC-Messgerät erzielen, verbleiben sie aufgrund ihrer hohen systematischen Abweichung außerhalb der geforderten Genauigkeitsklasse. Die Ergebnisse bestätigen somit, dass erst durch den Einsatz der digitalen PAC-Messgeräte eine valide Datenbasis geschaffen wurde, die sowohl eine geringe Streuung als auch eine normgerechte Genauigkeit für die Charakterisierung der Stromwandler vereint.
-
-
-
-
-
 
 
 \subsection{Versuchsaufbau der Messobjekte und Leiteranordnung}
@@ -176,6 +254,7 @@ Die eingesetzten Wandler lassen sich technologisch in drei Kategorien unterteile
 Die Bezeichnung FFP steht für \textit{Fremdfeldprotektoren}. Diese Technologie wurde entwickelt, um den Eintritt magnetischer Fremdfelder in den Wandlerkern zu verringern. Der Hersteller unterteilt die Protektoren in Klassen wie FFP1, FFP5 und FFP10, welche den Grad der Schirmwirkung definieren. Technisch wird dies durch die Integration eines Werkstoffs mit hoher magnetischer Permeabilität am oder im Gehäuse des Wandlers realisiert. Diese Schirmung fungiert als magnetischer Shunt, der die Feldlinien benachbarter Leiter um den Messkern herumleitet. Infolgedessen bleibt die magnetische Induktion im Kernmaterial weitgehend unbeeinflusst von äußeren Feldern \cite{Redur2021Fremdfeld}.
 
 Um die Vergleichbarkeit der Messergebnisse zu gewährleisten, entsprechen alle ausgewählten Wandler der Genauigkeitsklasse 1,0. Die in der Tabelle aufgeführten Nennbürden sind so gewählt, dass sie die Anforderungen für die in Abschnitt \ref{sec:integration_programmierung} beschriebene thermische Dauerbelastung erfüllen.
+
 
 
 \subsubsection{Geometrische Anordnung der Primärleiter}
