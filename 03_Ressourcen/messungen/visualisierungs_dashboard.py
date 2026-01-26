@@ -111,6 +111,16 @@ def delete_config(name):
     return False
 
 
+# --- HELPER: FILE NAMING ---
+def sanitize_filename(name):
+    """Entfernt ungültige Zeichen für Dateinamen."""
+    if not name:
+        return "Unbenannt"
+    # Ersetze ungültige Zeichen durch Unterstrich oder leer
+    clean = re.sub(r'[\\/*?:"<>|]', "", name).strip()
+    return clean.replace(" ", "_")
+
+
 # --- HELPER: PLOTTING & DATA ---
 def get_trumpet_limits(class_val):
     x = [1, 5, 20, 100, 120]
@@ -267,7 +277,13 @@ def create_single_phase_figure(
         width=1123,
         height=794,
         font=dict(family="Serif", size=14, color="black"),
-        legend=dict(orientation="h", y=-0.15, x=0.5, bgcolor="rgba(255,255,255,0.8)"),
+        legend=dict(
+            orientation="h", 
+            y=-0.15, 
+            x=0.5, 
+            xanchor="center", 
+            bgcolor="rgba(255,255,255,0.8)"
+        ),
         margin=dict(l=60, r=30, t=80, b=120),
     )
     fig.update_yaxes(range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1)
@@ -319,7 +335,8 @@ try
         end
         title(ax1, sprintf('Fehlerverlauf - Phase %s', p));
         ylabel(ax1, 'Fehler [%]'); ylim(ax1, [- Y_LIMIT_PH, Y_LIMIT_PH]); xlim(ax1, [0, 125]);
-        legend(ax1, 'Location', 'southoutside', 'Orientation', 'horizontal', 'NumColumns', 2, 'Interpreter', 'tex');
+        
+        legend(ax1, 'Location', 'southoutside', 'Orientation', 'horizontal', 'Interpreter', 'tex', 'Box', 'off');
         
         ax2 = nexttile; hold(ax2, 'on'); grid(ax2, 'on'); box(ax2, 'on');
         num_groups = length(unique_traces);
@@ -636,23 +653,48 @@ df_sub["final_color"] = df_sub["unique_id"].map(map_color)
 
 with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
     loaded_titles = st.session_state.get("loaded_titles", {})
+    
+    # Hier wird das Schema: Nennstrom | Typ | Freiertext angewendet
+    # current_title_str enthält z.B. "2000 A" oder "100, 200 A"
+    
     default_titles_data = [
         {
             "Typ": "Gesamtübersicht (Tab 1)",
-            "Default": f"Gesamtübersicht: {current_title_str}",
+            "Default": f"{current_title_str} | Fehlerkurve |  | Phasen-Vergleich",
         },
-        {"Typ": "Scatter-Plot", "Default": "Kosten-Nutzen-Analyse"},
-        {"Typ": "Performance-Index", "Default": "Performance Index"},
-        {"Typ": "Heatmap", "Default": "Fehler-Heatmap"},
-        {"Typ": "Boxplot", "Default": "Fehlerverteilung (Boxplot)"},
-        {"Typ": "Pareto", "Default": "Pareto-Analyse"},
-        {"Typ": "Radar", "Default": "Radar-Profil"},
+        {
+            "Typ": "Scatter-Plot", 
+            "Default": f"{current_title_str} | Scatter-Plot | Kosten-Nutzen-Analyse"
+        },
+        {
+            "Typ": "Performance-Index", 
+            "Default": f"{current_title_str} | Performance-Index | Ranking"
+        },
+        {
+            "Typ": "Heatmap", 
+            "Default": f"{current_title_str} | Heatmap | Fehlerverteilung"
+        },
+        {
+            "Typ": "Boxplot", 
+            "Default": f"{current_title_str} | Boxplot | Statistik"
+        },
+        {
+            "Typ": "Pareto", 
+            "Default": f"{current_title_str} | Pareto | Fehler-Ursachen"
+        },
+        {
+            "Typ": "Radar", 
+            "Default": f"{current_title_str} | Radar | Multi-Kriteriell"
+        },
     ]
+    
     merged_titles = []
     for item in default_titles_data:
         t_type = item["Typ"]
+        # Wenn bereits ein Titel geladen/gespeichert wurde, nimm diesen, sonst den neuen Default
         val = loaded_titles.get(t_type, item["Default"])
         merged_titles.append({"Typ": t_type, "Titel": val})
+        
     edited_titles_df = st.data_editor(
         pd.DataFrame(merged_titles),
         column_config={
@@ -663,7 +705,6 @@ with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
         key="titles_editor",
     )
     TITLES_MAP = dict(zip(edited_titles_df["Typ"], edited_titles_df["Titel"]))
-
 if st.session_state.get("trigger_save", False):
     snapshot_data = {
         "current": sel_currents,
@@ -717,6 +758,13 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
     if not export_selection:
         st.error("Bitte mindestens ein Diagramm auswählen.")
     else:
+        # Ermittle Konfigurationsnamen für Dateinamen
+        current_config_name = "Unbenannt"
+        if sel_config_load and sel_config_load != "-- Neu / Leer --":
+            current_config_name = sel_config_load
+        
+        safe_conf_name = sanitize_filename(current_config_name)
+
         zip_buffer = io.BytesIO()
         has_eco_request = any("Ökonomie" in s for s in export_selection)
         if has_eco_request:
@@ -829,9 +877,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             width=1123,
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
+                            legend=dict(
+                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                            ),
                         )
                         zf.writestr(
-                            "Oekonomie_Performance_Index.pdf",
+                            f"{safe_conf_name}-Oekonomie_Performance_Index.pdf",
                             fig_perf.to_image(format="pdf"),
                         )
                     if "Ökonomie: Scatter-Plot" in export_selection:
@@ -852,9 +903,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             width=1123,
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
+                            legend=dict(
+                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                            ),
                         )
                         zf.writestr(
-                            "Oekonomie_Scatter.pdf", fig_scat.to_image(format="pdf")
+                            f"{safe_conf_name}-Oekonomie_Scatter.pdf", fig_scat.to_image(format="pdf")
                         )
                     if "Ökonomie: Heatmap" in export_selection:
                         title_str = TITLES_MAP.get("Heatmap", "Fehler-Heatmap")
@@ -879,7 +933,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             font=dict(family="Serif", size=14, color="black"),
                         )
                         zf.writestr(
-                            "Oekonomie_Heatmap.pdf", fig_hm.to_image(format="pdf")
+                            f"{safe_conf_name}-Oekonomie_Heatmap.pdf", fig_hm.to_image(format="pdf")
                         )
                     if "Ökonomie: Boxplot" in export_selection:
                         title_str = TITLES_MAP.get(
@@ -903,9 +957,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             width=1123,
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
+                            legend=dict(
+                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                            ),
                         )
                         zf.writestr(
-                            "Oekonomie_Boxplot.pdf", fig_box.to_image(format="pdf")
+                            f"{safe_conf_name}-Oekonomie_Boxplot.pdf", fig_box.to_image(format="pdf")
                         )
                     if "Ökonomie: Pareto" in export_selection:
                         title_str = TITLES_MAP.get("Pareto", "Pareto-Analyse")
@@ -939,9 +996,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             width=1123,
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
+                            legend=dict(
+                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                            ),
                         )
                         zf.writestr(
-                            "Oekonomie_Pareto.pdf", fig_par.to_image(format="pdf")
+                            f"{safe_conf_name}-Oekonomie_Pareto.pdf", fig_par.to_image(format="pdf")
                         )
                     if "Ökonomie: Radar" in export_selection:
                         title_str = TITLES_MAP.get("Radar", "Radar-Profil")
@@ -978,9 +1038,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             width=1123,
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
+                            legend=dict(
+                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                            ),
                         )
                         zf.writestr(
-                            "Oekonomie_Radar.pdf", fig_rad.to_image(format="pdf")
+                            f"{safe_conf_name}-Oekonomie_Radar.pdf", fig_rad.to_image(format="pdf")
                         )
             except Exception as e:
                 st.error(f"Fehler bei Ökonomie-Export: {e}")
@@ -1060,12 +1123,12 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                     width=1123,
                     height=794,
                     font=dict(family="Serif", size=14, color="black"),
-                    legend=dict(orientation="h", y=-0.15, x=0.5),
+                    legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center"),
                 )
                 fig_ex.update_yaxes(range=[-y_limit, y_limit], row=1)
                 with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED) as zf:
                     zf.writestr(
-                        f"Zusammenfassung_MultiCurrent.pdf",
+                        f"{safe_conf_name}-Zusammenfassung_MultiCurrent.pdf",
                         fig_ex.to_image(format="pdf", width=1123, height=794),
                     )
 
@@ -1092,7 +1155,6 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                         with open(
                             os.path.join(work_dir_abs, "create_plots.m"), "w"
                         ) as f:
-                            # Wir nutzen den ersten ausgewählten Strom als Platzhalter, falls mehrere ausgewählt sind
                             nom_curr_val = int(sel_currents[0]) if sel_currents else 0
                             f.write(
                                 MATLAB_SCRIPT_TEMPLATE.replace(
@@ -1107,10 +1169,11 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 cwd=work_dir_abs,
                                 check=True,
                             )
+                            # Dateien mit Prefix in die Zip packen
                             [
                                 zipfile.ZipFile(
                                     zip_buffer, "a", zipfile.ZIP_DEFLATED
-                                ).write(os.path.join(work_dir_abs, f), f)
+                                ).write(os.path.join(work_dir_abs, f), f"{safe_conf_name}-{f}")
                                 for f in os.listdir(work_dir_abs)
                                 if f.endswith(".pdf")
                             ]
@@ -1130,16 +1193,17 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 title_prefix=f"{current_title_str}",
                             )
                             zf.writestr(
-                                f"Detail_{ph}_MultiCurrent.pdf",
+                                f"{safe_conf_name}-Detail_{ph}_MultiCurrent.pdf",
                                 fig_s.to_image(format="pdf", width=1123, height=794),
                             )
                     st.success("✅ Details exportiert")
 
         st.session_state["zip_data"] = zip_buffer.getvalue()
+        st.session_state["zip_name"] = f"{safe_conf_name}.zip"
 
 if "zip_data" in st.session_state:
     st.sidebar.download_button(
-        "💾 Download ZIP", st.session_state["zip_data"], "Report.zip", "application/zip"
+        "💾 Download ZIP", st.session_state["zip_data"], st.session_state["zip_name"], "application/zip"
     )
 
 # =============================================================================
@@ -1218,7 +1282,7 @@ with tab1:
         title=custom_title_tab1,
         template="plotly_white",
         height=800,
-        legend=dict(orientation="h", y=-0.15, x=0.5),
+        legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center"),
     )
     if sync_axes:
         fig_main.update_yaxes(matches="y", row=1)
@@ -1343,6 +1407,7 @@ with tab2:
                     color_discrete_map=color_map_dict,
                     title=title_str,
                 )
+                fig_eco.update_layout(legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Performance-Index":
                 title_str = TITLES_MAP.get("Performance-Index", "Performance Index")
@@ -1412,6 +1477,7 @@ with tab2:
                     color="Kategorie",
                     title=title_str,
                 )
+                fig_eco.update_layout(legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Pareto":
                 title_str = TITLES_MAP.get("Pareto", "Pareto-Analyse")
@@ -1441,7 +1507,7 @@ with tab2:
                     ),
                     secondary_y=True,
                 )
-                fig_par.update_layout(title=title_str)
+                fig_par.update_layout(title=title_str, legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
                 st.plotly_chart(fig_par, use_container_width=True)
             elif chart_type == "Radar":
                 title_str = TITLES_MAP.get("Radar", "Radar-Vergleich")
@@ -1471,6 +1537,7 @@ with tab2:
                 fig_r.update_layout(
                     polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
                     title=title_str,
+                    legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"),
                 )
                 st.plotly_chart(fig_r, use_container_width=True)
 

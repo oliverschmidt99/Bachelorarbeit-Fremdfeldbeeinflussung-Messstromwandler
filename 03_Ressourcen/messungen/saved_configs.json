@@ -1,0 +1,160 @@
+{
+  "dia_messstrecke_neu": {
+    "current": [
+      4000.0
+    ],
+    "geos": [
+      "Parallel",
+      "Messstrecke"
+    ],
+    "wandlers": [
+      "Celsa ALO 12070 0R0",
+      "Referenz Messstrecke Unbekannt"
+    ],
+    "duts": [
+      "Rogowsikeinspeisung",
+      "K3",
+      "PAC1"
+    ],
+    "comp_mode": "Nennwert (Ideal)",
+    "sync_axes": true,
+    "y_limit": 2.7,
+    "acc_class": 0.2,
+    "show_err_bars": true,
+    "custom_colors": {
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | K3": "#1212A1",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | PAC1": "#CC2979",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | Rogowsikeinspeisung": "#5AA112"
+    },
+    "custom_legends": {
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | K3": "Rogowski-Spulen | Kl. 0,2",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | PAC1": "PAC 4220 | Celsa ICG 6000/5 Kl. 0,2S",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | Rogowsikeinspeisung": "K-3 | Celsa ICG 6000/5 Kl. 0,2S"
+    },
+    "custom_titles": {
+      "Gesamtübersicht (Tab 1)": "4000 A | Messabweichung und Standardabweichung | Neuer Versuchsaufbau",
+      "Scatter-Plot": "Kosten-Nutzen-Analyse",
+      "Performance-Index": "4000 A | Performance Index | Neuer Versuchsaufbau",
+      "Heatmap": "Fehler-Heatmap",
+      "Boxplot": "Fehlerverteilung (Boxplot)",
+      "Pareto": "Pareto-Analyse",
+      "Radar": "Radar-Profil"
+    },
+    "eco_x": "Preis (€)",
+    "eco_y": [
+      "Fehler Niederstrom",
+      "Fehler Nennstrom",
+      "Fehler Überlast"
+    ],
+    "eco_type": "Performance-Index"
+  },
+  "dia_messstrecke_alt": {
+    "current": [
+      4000.0
+    ],
+    "geos": [
+      "Parallel",
+      "Messstrecke"
+    ],
+    "wandlers": [
+      "Celsa ALO 12070 0R0",
+      "Referenz Messstrecke Unbekannt"
+    ],
+    "duts": [
+      "Rogowsikeinspeisung",
+      "K3"
+    ],
+    "comp_mode": "Nennwert (Ideal)",
+    "sync_axes": true,
+    "y_limit": 2.7,
+    "acc_class": 0.2,
+    "show_err_bars": true,
+    "custom_colors": {
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | K3": "#5AA112",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | Rogowsikeinspeisung": "#1313BD"
+    },
+    "custom_legends": {
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | K3": "K-3 | Celsa ICG 6000/5 Kl. 0,2S",
+      "2026_01_07-Messstrecke-4000A-0R0_sortiert.csv | Rogowsikeinspeisung": "Rogowski-Spulen | Kl. 0,2"
+    },
+    "custom_titles": {
+      "Gesamtübersicht (Tab 1)": "4000 A | Messabweichung und Standardabweichung | Vorheriger Versuchsaufbau",
+      "Scatter-Plot": "Kosten-Nutzen-Analyse",
+      "Performance-Index": "4000 A | Performance Index | Vorheriger Versuchsaufbau",
+      "Heatmap": "Fehler-Heatmap",
+      "Boxplot": "Fehlerverteilung (Boxplot)",
+      "Pareto": "Pareto-Analyse",
+      "Radar": "Radar-Profil"
+    },
+    "eco_x": "Preis (€)",
+    "eco_y": [
+      "Fehler Niederstrom",
+      "Fehler Nennstrom",
+      "Fehler Überlast"
+    ],
+    "eco_type": "Radar"
+  },
+  "dia_2000A": {
+    "current": [
+      2000.0
+    ],
+    "geos": [
+      "Parallel",
+      "Dreieck"
+    ],
+    "wandlers": [
+      "Celsa ALO 10030 1R35",
+      "Celsa ALO 8030 K 8R1",
+      "MBS ASK101.4 8R1",
+      "Redur 13A1030.3ffp 0R0",
+      "Redur 13A1030.3ffp 8R1"
+    ],
+    "duts": [
+      "Einspeisung",
+      "Pruefling"
+    ],
+    "comp_mode": "Messgerät (z.B. PAC1)",
+    "sync_axes": true,
+    "y_limit": 3.0,
+    "acc_class": 1.0,
+    "show_err_bars": true,
+    "custom_colors": {
+      "2025_12_05_1020-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "#d9772a",
+      "2025_12_05_1057-Redur-13A1030.3ffp-2000A-0R0_sortiert.csv | Pruefling": "#e6863a",
+      "2025_12_05_1356-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "#2f6fb0",
+      "2025_12_04_1506-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "#4a8fd1",
+      "2025_12_08_1219-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "#c86422",
+      "2025_12_08_1121-MBS-ASK101.4-2000A-8R1_sortiert.csv | Pruefling": "#2f8f4e",
+      "2025_12_08_0856-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "#6aa9e3",
+      "2025_12_08_1305-Redur-13A1030.3ffp-2000A-0R0_sortiert.csv | Pruefling": "#f09a55",
+      "2025_12_08_1026-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "#8bbce9"
+    },
+    "custom_legends": {
+      "2025_12_05_1020-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "Redur 13A1030.3ffp | Pruefling | 8,1 Ω | Parallel (2000A)",
+      "2025_12_05_1057-Redur-13A1030.3ffp-2000A-0R0_sortiert.csv | Pruefling": "Redur 13A1030.3ffp | Pruefling | 0,0 Ω | Parallel (2000A)",
+      "2025_12_05_1356-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "Celsa ALO 10030 | Pruefling | 1,35 Ω | Parallel (2000A)",
+      "2025_12_04_1506-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "Celsa ALO 8030 K | Pruefling | 8,1 Ω | Parallel (2000A)",
+      "2025_12_08_1219-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "Redur 13A1030.3ffp | Pruefling | 8,1 Ω | Dreieck (2000A)",
+      "2025_12_08_1121-MBS-ASK101.4-2000A-8R1_sortiert.csv | Pruefling": "MBS ASK101.4 | Pruefling | 8,1 Ω | Dreieck (2000A)",
+      "2025_12_08_0856-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "Celsa ALO 10030 | Pruefling | 1,35 Ω | Dreieck (2000A)",
+      "2025_12_08_1305-Redur-13A1030.3ffp-2000A-0R0_sortiert.csv | Pruefling": "Redur 13A1030.3ffp | Pruefling | 0,0 Ω | Dreieck (2000A)",
+      "2025_12_08_1026-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "Celsa ALO 8030 K | Pruefling | 8,1 Ω | Dreieck (2000A)"
+    },
+    "custom_titles": {
+      "Gesamtübersicht (Tab 1)": "4000 A | Fehlerkurve | Celsa",
+      "Scatter-Plot": "Kosten-Nutzen-Analyse",
+      "Performance-Index": "4000 A | Performance Index | Neuer Versuchsaufbau",
+      "Heatmap": "Fehler-Heatmap",
+      "Boxplot": "Fehlerverteilung (Boxplot)",
+      "Pareto": "Pareto-Analyse",
+      "Radar": "Radar-Profil"
+    },
+    "eco_x": "Preis (€)",
+    "eco_y": [
+      "Fehler Nennstrom",
+      "Fehler Niederstrom",
+      "Fehler Überlast"
+    ],
+    "eco_type": "Performance-Index"
+  }
+}
