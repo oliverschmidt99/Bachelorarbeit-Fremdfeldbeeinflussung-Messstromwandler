@@ -3,10 +3,13 @@ import pandas as pd
 import plotly.graph_objects as go
 import os
 import re
+import json
+import numpy as np
 from pathlib import Path
 
 # --- KONFIGURATION ---
 TRACKING_CSV = "manuelle_ergebnisse.csv"
+CONFIG_JSON = "saved_configs.json"
 TARGET_LEVELS = [5, 20, 50, 80, 90, 100, 120]
 PHASES = ["L1", "L2", "L3"]
 OUTPUT_ROOT_DIR = "messungen_sortiert"
@@ -21,49 +24,161 @@ for level in TARGET_LEVELS:
         st.session_state[f"e_{level}"] = 0
 
 
+# --- CONFIG JSON HANDLING ---
+def load_config(filename):
+    """Lädt gespeicherte Bereiche aus der JSON"""
+    if os.path.exists(CONFIG_JSON):
+        try:
+            with open(CONFIG_JSON, "r") as f:
+                data = json.load(f)
+                return data.get(filename, {})
+        except:
+            return {}
+    return {}
+
+
+def save_config(filename, ranges_map):
+    """Speichert Bereiche in die JSON"""
+    data = {}
+    if os.path.exists(CONFIG_JSON):
+        try:
+            with open(CONFIG_JSON, "r") as f:
+                data = json.load(f)
+        except:
+            data = {}
+
+    data[filename] = ranges_map
+    with open(CONFIG_JSON, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+# --- SMART RECOVERY (DATEN WIEDERFINDEN) ---
+def find_subsequence(full_series, sub_series, tolerance=1e-2):
+    """
+    Sucht eine Teil-Sequenz (sub_series) innerhalb einer vollen Serie (full_series).
+    Gibt den Start-Index zurück oder None.
+    Nutzt numpy für Geschwindigkeit.
+    """
+    if len(sub_series) > len(full_series) or len(sub_series) == 0:
+        return None
+
+    # Wir suchen anhand der ersten 10 Punkte (Signatur), um Zeit zu sparen
+    signature_len = min(50, len(sub_series))
+    signature = sub_series[:signature_len]
+
+    # Numpy Arrays
+    full_arr = full_series.to_numpy()
+    sig_arr = signature.to_numpy()
+
+    # Wir iterieren nicht stumpf, das ist zu langsam.
+    # Wir suchen nach Kandidaten für den ersten Wert.
+    first_val = sig_arr[0]
+
+    # Toleranz-Check für den ersten Wert (Float Vergleich ist tricky)
+    candidates = np.where(
+        np.isclose(full_arr[: -len(sub_series) + 1], first_val, atol=tolerance)
+    )[0]
+
+    for idx in candidates:
+        # Prüfen ob der Rest der Signatur passt
+        check_slice = full_arr[idx : idx + signature_len]
+        if np.allclose(check_slice, sig_arr, atol=tolerance):
+            # Wenn Signatur passt, prüfen wir die Länge, um sicher zu sein
+            # (Optional: ganze Länge prüfen, aber meist reicht die Signatur)
+            return idx
+
+    return None
+
+
+def try_recover_from_sorted_file(original_path, full_data_l1, dev_name):
+    """
+    Versucht, die sortierte Datei zu laden und die Bereiche im Original wiederzufinden.
+    """
+    orig_p = Path(original_path)
+    target_dir = Path(OUTPUT_ROOT_DIR) / orig_p.parent
+    sorted_filename = f"{orig_p.stem}_sortiert.csv"
+    sorted_path = target_dir / sorted_filename
+
+    if not sorted_path.exists():
+        return False, "Keine sortierte Datei gefunden."
+
+    try:
+        # CSV laden
+        df_sorted = pd.read_csv(sorted_path, sep=";", decimal=".", engine="python")
+        # Falls decimal="," war, checken wir kurz
+        if df_sorted.shape[1] < 2:
+            df_sorted = pd.read_csv(sorted_path, sep=";", decimal=",", engine="python")
+
+        recovered_count = 0
+
+        # Iteriere über Levels
+        for level in TARGET_LEVELS:
+            # Wir suchen nach Spalte: XX_L1_Gerätename_I
+            # Wir müssen den Spaltennamen erraten/konstruieren
+            # Da wir mehrere Geräte haben, nehmen wir das, das wir im Plot sehen (dev_name)
+            col_name = f"{level:02d}_L1_{dev_name}_I"
+
+            if col_name in df_sorted.columns:
+                sub_data = df_sorted[col_name].dropna()
+                if len(sub_data) > 0:
+                    start_idx = find_subsequence(full_data_l1, sub_data)
+
+                    if start_idx is not None:
+                        end_idx = start_idx + len(sub_data)
+                        st.session_state[f"s_{level}"] = int(start_idx)
+                        st.session_state[f"e_{level}"] = int(end_idx)
+                        recovered_count += 1
+
+        if recovered_count > 0:
+            return True, f"{recovered_count} Bereiche wiederhergestellt!"
+        else:
+            return (
+                False,
+                "Datenformat passt, aber keine Positionen im Original gefunden (Werteabweichung?).",
+            )
+
+    except Exception as e:
+        return False, f"Fehler beim Lesen: {e}"
+
+
 # --- CALLBACKS ---
 def update_start_callback(lvl):
-    """Berechnet Start = Ende - 500"""
     end_key = f"e_{lvl}"
     start_key = f"s_{lvl}"
     current_end = st.session_state[end_key]
-    new_start = max(0, current_end - 500)
-    st.session_state[start_key] = new_start
+    # Nur Default setzen, wenn Start noch 0 ist (verhindert Überschreiben beim Laden)
+    if st.session_state[start_key] == 0:
+        # HIER GEÄNDERT: Von 500 auf 180
+        new_start = max(0, current_end - 180)
+        st.session_state[start_key] = new_start
 
 
-def reset_values():
-    """Setzt alle Felder auf 0 zurück"""
+def on_file_change():
+    """Wird aufgerufen, wenn neue Datei gewählt wird"""
+    # 1. Reset
     for level in TARGET_LEVELS:
         st.session_state[f"s_{level}"] = 0
         st.session_state[f"e_{level}"] = 0
 
+    # 2. Versuch aus JSON zu laden
+    # Dateiname holen (etwas hacky, da wir hier nicht direkt access auf den selectbox value haben,
+    # aber wir holen ihn gleich im Main loop.
+    # Besser: Wir machen das Laden direkt nach dem selectbox call im Main Flow.
+    pass
 
-# --- HELFER: GERÄTE ERKENNUNG ---
+
+# --- HELFER: GERÄTE ERKENNUNG & DATEN ---
 def identify_devices(df):
-    """
-    Analysiert die Spaltennamen und findet heraus, welche Geräte existieren.
-    Ignoriert Phasen (L1-L3) und ValueY/Time, um den reinen Gerätenamen zu finden.
-    """
     df.columns = [c.strip().strip('"').strip("'") for c in df.columns]
     val_cols = [c for c in df.columns if "ValueY" in c]
-
     devices = set()
     for col in val_cols:
-        # 1. "ValueY" entfernen
         name = col.replace("ValueY", "").strip()
-        # 2. Phasen L1, L2, L3 entfernen (case insensitive)
-        # Regex sucht nach _L1_, _L1, L1_ oder L1 mit optionalen Leerzeichen/Unterstrichen
         name = re.sub(r"[_ ]?L[123][_ ]?", "", name, flags=re.IGNORECASE)
-        # 3. Übrige Unterstriche am Rand entfernen
         name = name.strip("_ ")
-
         if name:
             devices.add(name)
-
     return sorted(list(devices))
-
-
-# --- DATEI- & LADE-FUNKTIONEN ---
 
 
 def get_files():
@@ -93,7 +208,6 @@ def extract_metadata(filepath):
 
 @st.cache_data
 def load_file_preview(filepath):
-    """Lädt nur Header für die Geräteerkennung"""
     df = None
     encodings = ["utf-16", "utf-8", "cp1252", "latin1"]
     for enc in encodings:
@@ -115,7 +229,6 @@ def load_file_preview(filepath):
                 break
         except:
             continue
-
     if df is None:
         return []
     return identify_devices(df)
@@ -123,10 +236,6 @@ def load_file_preview(filepath):
 
 @st.cache_data
 def load_all_data(filepath, all_devices):
-    """
-    Lädt die Daten für ALLE erkannten Geräte in ein Dictionary.
-    Struktur: data[Gerätename][Phase] = Series
-    """
     df = None
     encodings = ["utf-16", "utf-8", "cp1252", "latin1"]
     for enc in encodings:
@@ -143,48 +252,32 @@ def load_all_data(filepath, all_devices):
                 break
         except:
             continue
-
     if df is None:
         return None, None
+
     df.columns = [c.strip().strip('"').strip("'") for c in df.columns]
     val_cols = [c for c in df.columns if "ValueY" in c]
-
-    # Haupt-Datenstruktur: keys sind Gerätenamen (z.B. "PAC1", "K3", "Rogowsik_prüfling")
     full_data = {dev: {} for dev in all_devices}
-
-    # Zeitachse (wir nehmen einfach die Länge der ersten gefundenen Spalte)
     t = []
 
-    # Iteriere durch alle Geräte und alle Phasen
     for device in all_devices:
         for phase in PHASES:
-            # Suche die passende Spalte für (Gerät + Phase)
             target_col = None
-
             for col in val_cols:
-                # Wir bauen den "Clean Name" der Spalte nach, um zu prüfen, ob sie matcht
-                # 1. Name putzen
                 clean_name = col.replace("ValueY", "").strip()
-                # 2. Phase entfernen für Gerätename-Check
                 dev_name_check = re.sub(
                     r"[_ ]?L[123][_ ]?", "", clean_name, flags=re.IGNORECASE
                 ).strip("_ ")
-
-                # Check: Ist das der gesuchte Gerätename UND ist die Phase im Originalnamen?
                 if dev_name_check == device and phase in col:
                     target_col = col
                     break
-
             if target_col:
                 vals = pd.to_numeric(df[target_col], errors="coerce").fillna(0)
                 full_data[device][phase] = vals
-
-                # Wenn wir noch keine Zeitachse haben, nehmen wir diese
                 if not t and len(vals) > 0:
                     t = list(range(len(vals)))
             else:
                 full_data[device][phase] = None
-
     return t, full_data
 
 
@@ -200,7 +293,9 @@ def save_tracking_status(base_name, status):
     df_track.to_csv(TRACKING_CSV)
 
 
-def save_sorted_raw_data(original_filepath, full_data, start_end_map, all_devices):
+def save_sorted_raw_data(
+    original_filepath, full_data, start_end_map, all_devices, clean_filename
+):
     orig_path = Path(original_filepath)
     target_dir = Path(OUTPUT_ROOT_DIR) / orig_path.parent
     base_name = orig_path.stem
@@ -208,44 +303,28 @@ def save_sorted_raw_data(original_filepath, full_data, start_end_map, all_device
     output_path = target_dir / new_filename
 
     df_export = pd.DataFrame()
-
     try:
         target_dir.mkdir(parents=True, exist_ok=True)
-
-        # 1. Loop über Levels (5%, 20%...)
         for level in TARGET_LEVELS:
             s, e = start_end_map.get(level, (0, 0))
-
-            # Nur speichern, wenn Bereich gültig
             if s > 0 and e > s:
-
-                # 2. Loop über ALLE Geräte (PAC1, PAC2, K3...)
-                # Wir sortieren sie, damit die Reihenfolge konstant bleibt
                 for device in sorted(all_devices):
-
-                    # 3. Loop über Phasen (L1, L2, L3)
                     for phase in PHASES:
                         vals = full_data[device][phase]
-
                         if vals is not None and e <= len(vals):
-                            # Daten ausschneiden
                             slice_data = vals.iloc[s:e].reset_index(drop=True)
-
-                            # Spaltennamen generieren
-                            # Format: {Level}_{Phase}_{Gerät}_{Typ}
-                            # Bsp: 05_L1_PAC1_I  oder 05_L1_K3_I
                             col_t = f"{level:02d}_{phase}_{device}_t"
                             col_I = f"{level:02d}_{phase}_{device}_I"
-
                             df_export[col_t] = pd.Series(range(len(slice_data)))
                             df_export[col_I] = slice_data
 
         df_export.to_csv(output_path, index=False, sep=";")
-        print(f"✅ {new_filename:<40} -> Gespeichert in '{target_dir}'")
+
+        # --- JSON SPEICHERN ---
+        save_config(clean_filename, start_end_map)
+
         return str(output_path)
     except Exception as e:
-        print(f"❌ {new_filename:<40} -> Fehler: {e}")
-        st.error(f"Fehler beim Speichern: {e}")
         return None
 
 
@@ -273,25 +352,46 @@ if not files_options:
     st.warning("Keine CSV-Dateien gefunden.")
     st.stop()
 
+# Wir nutzen einen Key für die Selectbox, um Reset zu triggern
+if "selected_file_idx" not in st.session_state:
+    st.session_state.selected_file_idx = 0
+
+
+def on_select_change():
+    # Reset values bei Dateiewechsel
+    for level in TARGET_LEVELS:
+        st.session_state[f"s_{level}"] = 0
+        st.session_state[f"e_{level}"] = 0
+
+
 selected_display = st.sidebar.selectbox(
-    "Datei wählen:", files_options, on_change=reset_values
+    "Datei wählen:", files_options, key="file_selector", on_change=on_select_change
 )
 selected_file_path = file_map[selected_display]
 
 # --- HAUPTBEREICH ---
 if selected_file_path:
     wandler_name, nennstrom = extract_metadata(selected_file_path)
+
+    # 1. VERSUCH ZU LADEN (JSON)
+    saved_ranges = load_config(wandler_name)
+
+    # Session State initial befüllen
+    all_zero = all(st.session_state[f"s_{l}"] == 0 for l in TARGET_LEVELS)
+    if all_zero and saved_ranges:
+        for lvl_str, (s, e) in saved_ranges.items():
+            lvl = int(lvl_str)
+            if lvl in TARGET_LEVELS:
+                st.session_state[f"s_{lvl}"] = s
+                st.session_state[f"e_{lvl}"] = e
+
     st.header(f"Export: {wandler_name}")
 
-    # 1. Vorschau laden, um Geräte zu finden
     detected_devices = load_file_preview(selected_file_path)
-
     if not detected_devices:
-        st.error("Keine Geräte erkannt. Prüfe Spaltennamen.")
+        st.error("Keine Geräte erkannt.")
         st.stop()
 
-    # --- AUTOMATISCHE REFERENZ-WAHL ---
-    # Wir suchen nach einem Gerät, das "PAC1" oder "Einspeisung" heißt, für das Diagramm.
     default_ref_index = 0
     for i, dev in enumerate(detected_devices):
         if "pac1" in dev.lower() or "einspeisung" in dev.lower():
@@ -299,10 +399,6 @@ if selected_file_path:
             break
 
     st.sidebar.markdown("### 📊 Anzeige-Einstellungen")
-    st.sidebar.info(f"Gefundene Geräte: {', '.join(detected_devices)}")
-
-    # Der User wählt hier NUR, was im Diagramm angezeigt wird.
-    # Exportiert wird IMMER ALLES.
     ref_device_for_plot = st.sidebar.selectbox(
         "Referenz für Diagramm (L1):", detected_devices, index=default_ref_index
     )
@@ -314,17 +410,36 @@ if selected_file_path:
         else:
             nennstrom = st.number_input("Nennstrom manuell setzen [A]:", value=2000.0)
 
-    # 2. Alle Daten laden
     t, full_data = load_all_data(selected_file_path, detected_devices)
-
     if not t:
         st.error("Fehler beim Laden der Daten.")
         st.stop()
 
-    # --- PLOT (Nur Referenz L1) ---
-    # Wir holen uns die Daten für das ausgewählte Referenzgerät
-    ref_l1 = full_data[ref_device_for_plot]["L1"]
+    # --- RECOVERY BUTTON ---
+    has_active_ranges = any(st.session_state[f"e_{l}"] > 0 for l in TARGET_LEVELS)
 
+    if not has_active_ranges:
+        st.markdown("---")
+        col_rec1, col_rec2 = st.columns([1, 4])
+        with col_rec1:
+            if st.button("♻️ Bereiche aus sortierter Datei suchen"):
+                with st.spinner("Durchsuche Originaldaten nach Mustern..."):
+                    l1_data = full_data[ref_device_for_plot]["L1"]
+                    success, msg = try_recover_from_sorted_file(
+                        selected_file_path, l1_data, ref_device_for_plot
+                    )
+                    if success:
+                        st.success(msg)
+                        st.rerun()
+                    else:
+                        st.error(msg)
+        with col_rec2:
+            st.caption(
+                "Versucht, bereits sortierte Daten (falls vorhanden) im Original wiederzufinden."
+            )
+
+    # --- PLOT ---
+    ref_l1 = full_data[ref_device_for_plot]["L1"]
     if ref_l1 is not None:
         ref_pct = (ref_l1 / nennstrom) * 100
         fig = go.Figure()
@@ -337,38 +452,56 @@ if selected_file_path:
                 line=dict(color="orange", width=2),
             )
         )
+
         for level in TARGET_LEVELS:
             fig.add_hline(y=level, line_dash="dot", line_color="rgba(150,150,150,0.5)")
+            s_val = st.session_state.get(f"s_{level}", 0)
+            e_val = st.session_state.get(f"e_{level}", 0)
+            if s_val >= 0 and e_val > s_val:
+                fig.add_vrect(
+                    x0=s_val, x1=e_val, fillcolor="rgba(0, 200, 100, 0.2)", line_width=0
+                )
+                fig.add_annotation(
+                    x=(s_val + e_val) / 2,
+                    y=level + 2,
+                    text=f"<b>{level}%</b>",
+                    showarrow=False,
+                    font=dict(color="green"),
+                )
+
         fig.update_layout(
-            title=f"Verlauf {ref_device_for_plot} - L1 (Zur Orientierung)",
+            title=f"Verlauf {ref_device_for_plot} - L1",
             xaxis_title="Zeit [Index]",
             yaxis_title="Last [%]",
-            height=350,
+            height=400,
             hovermode="x unified",
             margin=dict(l=0, r=0, t=30, b=0),
         )
         st.plotly_chart(fig, width="stretch")
-    else:
-        st.warning(f"Keine L1 Daten für {ref_device_for_plot} gefunden.")
 
-    # --- EINGABE (TAB OPTIMIERT) ---
+    # --- INPUT ---
     st.markdown("### ✂️ Bereiche definieren")
 
-    status_selection = st.radio("Status:", ["OK", "Problem (⚠️)"], horizontal=True)
+    # Status laden
+    current_status = "OK"
+    if wandler_name in df_status.index:
+        current_status = df_status.loc[wandler_name, "Status"]
+
+    status_idx = 0 if current_status == "OK" else 1
+    status_selection = st.radio(
+        "Status:", ["OK", "Problem (⚠️)"], index=status_idx, horizontal=True
+    )
     st.markdown("---")
 
     def chunked(iterable, n):
         return [iterable[i : i + n] for i in range(0, len(iterable), n)]
 
     batches = chunked(TARGET_LEVELS, 4)
-
     for batch in batches:
-        # Header
         cols_head = st.columns(4)
         for i, level in enumerate(batch):
             cols_head[i].markdown(f"**{level}%**")
 
-        # Ende Felder
         cols_ende = st.columns(4)
         for i, level in enumerate(batch):
             cols_ende[i].number_input(
@@ -381,7 +514,6 @@ if selected_file_path:
                 label_visibility="collapsed",
             )
 
-        # Start Felder
         cols_start = st.columns(4)
         for i, level in enumerate(batch):
             cols_start[i].number_input(
@@ -402,14 +534,11 @@ if selected_file_path:
             e_val = st.session_state[f"e_{level}"]
             start_end_map[level] = (s_val, e_val)
 
-        # Wir übergeben jetzt detected_devices an die Speicherfunktion
         new_file_path = save_sorted_raw_data(
-            selected_file_path, full_data, start_end_map, detected_devices
+            selected_file_path, full_data, start_end_map, detected_devices, wandler_name
         )
 
         if new_file_path:
             status_code = "WARNING" if "Problem" in status_selection else "OK"
             save_tracking_status(wandler_name, status_code)
-            st.success(
-                f"Datei erstellt mit Geräten: {', '.join(detected_devices)}\n\nPfad: `{new_file_path}`"
-            )
+            st.success(f"Gespeichert & Config gesichert!\nPfad: `{new_file_path}`")

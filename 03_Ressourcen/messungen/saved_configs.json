@@ -178,7 +178,7 @@
     "sync_axes": true,
     "y_limit": 4.3,
     "acc_class": 1.0,
-    "show_err_bars": true,
+    "show_err_bars": false,
     "custom_colors": {
       "2025_12_05_1020-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "#d9772a",
       "2025_12_05_1356-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "#2f6fb0",
@@ -190,9 +190,9 @@
       "2025_12_04_1506-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "Celsa ALO 8030 K | Pruefling | 8,1 Ω | Parallel (2000A)"
     },
     "custom_titles": {
-      "Gesamtübersicht (Tab 1)": "4000 A | Fehlerkurve | Celsa",
+      "Gesamtübersicht (Tab 1)": "2000 A | Fehlerkurve | Wandler parallel",
       "Scatter-Plot": "Kosten-Nutzen-Analyse",
-      "Performance-Index": "4000 A | Performance Index | Neuer Versuchsaufbau",
+      "Performance-Index": "4000 A | Performance Index | Wandler parallel",
       "Heatmap": "Fehler-Heatmap",
       "Boxplot": "Fehlerverteilung (Boxplot)",
       "Pareto": "Pareto-Analyse",
