@@ -479,10 +479,14 @@ if not isinstance(default_curr, list):
     default_curr = [default_curr]
 default_curr = [c for c in default_curr if c in available_currents]
 
+if "k_current" not in st.session_state:
+    st.session_state["k_current"] = default_curr
+
+# 2. Widget aufrufen OHNE 'default', da der Wert nun sicher im session_state liegt
 sel_currents = st.sidebar.multiselect(
     "1. Nennstrom (Mehrfachauswahl):",
     available_currents,
-    default=default_curr,
+    # default=default_curr,  <-- Diese Zeile entfernen!
     format_func=lambda x: f"{int(x)} A",
     key="k_current",
 )

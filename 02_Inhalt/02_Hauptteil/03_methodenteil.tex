@@ -13,7 +13,7 @@ Der Hochstrom-Prüfstand dient der Erzeugung und Regelung hoher Wechselströme f
 
 Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstelltransformator der Firma Ruhstrat, der mit einer Leistung von \SI{90}{kVA} als zentrales Stellglied fungiert. Dem Transformator sind Netzdrosseln nachgeschaltet, die zur Entkopplung von Stromspitzen dienen. Die Spannungsstellung erfolgt stufenlos über verstellbare Kohlerollbürsten, wodurch eine variable Ausgangsspannung zwischen \SI{0}{V} und \SI{380}{V} bereitgestellt wird. Diese Spannung speist den nachgeschalteten Hochstrom-Festtransformator von Rolf Janssen (Typ UI 260/420 M). Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf eine Kleinspannung von \SI{6}{V} herab, was sekundärseitig die Realisierung von Prüfströmen bis zu \SI{6000}{A} am dreiphasigen Abgang ermöglicht.
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Blockschaltbild des Hochstrom-Prüfstandes mit Leistungs- und Signalpfaden}{pic:aufbau_hochstrom_pruefstand}
+\einfuegenBildMittel{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}{Blockschaltbild des Hochstrom-Prüfstandes mit Leistungs- und Signalpfaden}{pic:aufbau_hochstrom_pruefstand}
 
 \subsubsection{Regelungskonzept}
 \label{sec:regelungskonzept}
@@ -42,7 +42,7 @@ Die Stromregelung ist als digitaler \gls{pid}-Regelkreis innerhalb der Siemens \
 \subsubsection{Ursprünglicher Aufbau der Messstrecke}
 \label{sec:aufbau_alter_messstrecke}
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
+\einfuegenBildMittel{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}{pic:aufbau_messstrecke}
 
 Der erste Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) sah zwei parallele Erfassungspfade vor. Zur Bestimmung des Referenzwertes der Einspeisung wurden die K-3-Messumformer genutzt, welche das Signal an die \gls{sps} übermittelten. Parallel dazu wurde das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke im Modus „Acquire“ erfasst.
 %Die Inbetriebnahme diente dazu, die Funktionalität der Regelung sowie die Genauigkeit der Messwerterfassung unter Lastbedingungen zu verifizieren.
@@ -55,7 +55,7 @@ Die Auswertung der ersten Messreihen zeigt Abweichungen, die über den gesamten 
 Die grafische Darstellung verdeutlicht, dass beide Messsysteme die durch die Norm vorgegebenen Toleranzgrenzen (gestrichelte Linien) nicht einhalten. In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den positiven Grenzwert, während die Rogowskispulen eine negative Abweichung zwischen -1\,\% und -2,5\,\% aufweisen. In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa -2\,\%, wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen. Da die Verläufe der beiden Messsysteme voneinander abweichen, kann kein eindeutiger Referenzwert für den Primärstrom bestimmt werden.
 
 
-\einfuegenBildGross{03_Ressourcen/diagramme/dia_messstrecke_alt/dia_messstrecke_alt-Zusammenfassung_MultiCurrent.pdf}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
+\einfuegenBildMittel{03_Ressourcen/diagramme/dia_messstrecke_alt/dia_messstrecke_alt-Zusammenfassung_MultiCurrent.pdf}{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}{pic:dia_messstrecke_alt}
 
 
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt, dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen. Dies ist darauf zurückzuführen, dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt, woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung. Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal. Dabei weisen die K-3-Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen. Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend. Im folgenden Abschnitt \ref{sec:optimierung} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
@@ -72,7 +72,7 @@ Ein wesentlicher Vorteil dieser Konfiguration liegt in der dezentralen Messwerte
 
 
 
-\einfuegenBildGross{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}{Schematischer Aufbau der optimierten Messstrecke mit Siemens SENTRON Messgeräten}{pic:aufbau_messstrecke_neu}
+\einfuegenBildMittel{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}{Schematischer Aufbau der optimierten Messstrecke mit Siemens SENTRON Messgeräten}{pic:aufbau_messstrecke_neu}
 
 Die in Abbildung \ref{pic:aufbau_messstrecke_neu} dargestellte Systemarchitektur verdeutlicht die informationstechnische Vernetzung des optimierten Messaufbaus. Während der obere Teil des Schemas den bereits beschriebenen Leistungspfad darstellt, erfolgt die messtechnische Erfassung der Primärströme zyklisch durch die Geräte PAC 4220 (Einspeisung) und PAC 3220 (Prüfling). 
 
@@ -89,7 +89,7 @@ Für die Erfassung der Daten in \gls{wincc} wird im Variablenhaushalt des Visual
 
 Die Automatisierung des Prüfablaufs wird über die \gls{sps} realisiert, wobei der vorhandene \gls{pid}-Regler zur präzisen Stromeinstellung genutzt wird. Für die Genauigkeitsmessung eines Wandlers sind gemäß Norm primär die Prüfpunkte bei 5~\%, 20~\%, 100~\% und 120~\% des Primär-Nennstroms von Bedeutung. Um eine detailliertere Kennlinie zu erhalten und das Verhalten des Wandlers umfassender zu charakterisieren, wurden dem Prüfablauf weitere Messpunkte hinzugefügt. Die automatisierte Erfassung umfasst somit die Pegel 5~\%, 20~\%, 50~\%, 80~\%, 90~\%, 100~\% und 120~\%. Um diese Messpunkte automatisiert anzufahren, wurde eine Schrittkette entwickelt. Diese durchläuft die Prüfpegel sequenziell und hält jeden Messpunkt für eine Dauer von fünf Minuten konstant. Dieser Zeitraum gewährleistet eine ausreichende thermische Sättigung des Wandlerkerns und ermöglicht eine valide Mittelwertbildung der Messdaten.
 
-\einfuegenBildGross{03_Ressourcen/pdf/step7_programm/strukto_fb1.pdf}{Struktogramm der Schrittkette zur automatisierten Kennlinienaufnahme (\gls{fb}1)}{pic:strukto_fb1}
+\einfuegenBildMittel{03_Ressourcen/pdf/step7_programm/strukto_fb1.pdf}{Struktogramm der Schrittkette zur automatisierten Kennlinienaufnahme (\gls{fb}1)}{pic:strukto_fb1}
 
 Der logische Ablauf dieser Automatisierung ist im Struktogramm des Funktionsbausteins \gls{fb}1 dargestellt. Der Baustein übernimmt die zentrale Steuerung, wobei zu Beginn eine Initialisierung erfolgt, bei der die interne Sollwert-Variable auf Null gesetzt wird. Im Falle eines aktiven Reset-Signals wird die gesamte Schrittkette zurückgesetzt, indem die Schrittzähler auf Null und das Startsignal auf den Zustand Falsch gesetzt werden. Während der normalen Bearbeitung wird basierend auf dem aktuellen Schrittwert der entsprechende Sollwert für den Primärstrom vorgegeben. So entspricht beispielsweise Schritt 10 einer Last von 5~\% und Schritt 20 einer Last von 20~\% des Maximalstroms.
 
@@ -103,7 +103,7 @@ Die von der Visualisierung exportierten Rohdaten liegen im \gls{csv}-Format vor 
 
 Da die Schrittkette (siehe Abschnitt \ref{sec:integration_programmierung}) physikalisch bedingte Einschwingvorgänge beim Anfahren der Lastpunkte aufweist, ist zunächst eine Filterung der Rohdaten erforderlich. Ziel ist es, die stabilen Bereiche für die Genauigkeitsberechnung heranzuziehen. Zur Organisation wurde hierfür der \textit{Messdaten-Selektor} (Skript: \texttt{messdaten\_selektor.py}) entwickelt. Diese Software visualisiert die Zeitverläufe der Messungen und ermöglicht eine interaktive Bearbeitung. Der Anwender prüft visuell die Kennlinien und definiert manuell die zeitlichen Grenzen (Start- und Endzeitpunkt) der stabilen Lastplateaus über eine Eingabemaske.
 
-\einfuegenBildGross{03_Ressourcen/pdf/manueller_rohdaten_export/gesamtansicht.png}{Benutzeroberfläche des manuellen Messdaten-Selektors}{pic:manual_tagger}
+\einfuegenBildMittel{03_Ressourcen/pdf/manueller_rohdaten_export/gesamtansicht.png}{Benutzeroberfläche des manuellen Messdaten-Selektors}{pic:manual_tagger}
 
 Dies dient der Datenzuverlässigkeit, da instabile Randbereiche ausgeschlossen werden. Auf Basis dieser Benutzereingaben werden die definierten Bereiche extrahiert und in separate, sortierte \gls{csv}-Dateien für jede Messung überführt. Dieser Schritt der Segmentierung verringert den Zeitaufwand in der weiteren Verarbeitung und stellt eine einheitliche Datenbasis sicher.
 
@@ -142,19 +142,7 @@ Hierbei beschreibt $I_{ist}$ den arithmetischen Mittelwert der gemessenen Stroms
 Die resultierenden Datensätze, bestehend aus Mittelwerten ($\bar{x}$), Standardabweichungen ($\sigma$) und berechneten Fehlern ($\varepsilon$), werden abschließend in einer Datenbank im Apache-Parquet-Format (\texttt{messdaten\_db.parquet}) persistiert. Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien eine höhere Lese-Performance für die nachgelagerte Visualisierung.
 
 Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}). Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu. Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
-\begin{table}[H]
-    \centering
-    \caption{Übersicht der Berechnungsmodi im Daten-Aggregator}
-    \label{tab:berechnungsmodi}
-    \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{@{}l l l p{5cm}@{}}
-        \toprule
-        \textbf{Modus} & \textbf{Referenzwert ($I_{ref}$)} & \textbf{Messwert ($I_{ist}$)} & \textbf{Untersuchungsziel} \\ \midrule
-        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat. \\ \addlinespace
-        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung). \\ \addlinespace
-        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S). \\ \bottomrule
-    \end{tabular}
-\end{table}
+
 
 Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt für alle Modi gemäß der Formel:
 
@@ -296,7 +284,7 @@ Um den Einfluss der Leitergeometrie experimentell zu untersuchen, wurde das Kupf
 
 Die Ausgangssituation bildet die planare Anordnung der drei Phasenleiter L1, L2 und L3 in einer Ebene. Abbildung~\ref{pic:kupferschienen_parallel} zeigt diesen Aufbau im Prüfstand. Der Phasenmittenabstand wurde dabei analog zu den realen Bedingungen in Siemens SIVACON S8 Schaltfeldern gewählt (siehe Tabelle~\ref{tab:schienenquerschnitte}). In dieser Konfiguration ist der Prüfling, hier beispielhaft der Messstromwandler Redur 20A1456.5vffp (\SI{5000}{A}), den maximalen magnetischen Fremdfeldern der benachbarten Leiter ausgesetzt.
 
-\einfuegenBildGross{03_Ressourcen/Bilder/kupferschienen_parallel.jpg}{Versuchsaufbau in paralleler Schienenanordnung mit montiertem Messstromwandler (Typ: Redur 20A1456.5vffp)}{pic:kupferschienen_parallel}
+\einfuegenBildMittel{03_Ressourcen/Bilder/kupferschienen_parallel.jpg}{Versuchsaufbau in paralleler Schienenanordnung mit montiertem Messstromwandler (Typ: Redur 20A1456.5vffp)}{pic:kupferschienen_parallel}
 
 \textbf{Dreieckskonfiguration}
 
@@ -308,4 +296,4 @@ Zur Realisierung der Dreiecksanordnung wurde ein modifizierter Aufbau entwickelt
 
 Durch diesen Versatz spannen die Mittelpunkte der drei Leiter im Querschnitt ein Dreieck auf. Ziel dieser Anordnung ist es, die magnetische Kopplung zwischen den Phasen symmetrischer zu gestalten und die vektoriellen Anteile der Fremdfelder im Bereich des Wandlerkerns teilweise zu kompensieren. Auch in dieser Konfiguration wurde der \SI{5000}{A}-Wandler von Redur vermessen.
 
-\einfuegenBildGross{03_Ressourcen/Bilder/kupferschienen_dreieck.jpg}{Modifizierter Versuchsaufbau in Dreieckskonfiguration durch räumlichen Versatz der Phase L2 mittels Kupferadapter}{pic:kupferschienen_dreieck}
+\einfuegenBildMittel{03_Ressourcen/Bilder/kupferschienen_dreieck.jpg}{Modifizierter Versuchsaufbau in Dreieckskonfiguration durch räumlichen Versatz der Phase L2 mittels Kupferadapter}{pic:kupferschienen_dreieck}

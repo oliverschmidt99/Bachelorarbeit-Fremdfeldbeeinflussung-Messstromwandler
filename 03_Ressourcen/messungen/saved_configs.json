@@ -156,5 +156,54 @@
       "Fehler Überlast"
     ],
     "eco_type": "Performance-Index"
+  },
+  "dia_2000A_wandler_parallel": {
+    "current": [
+      2000.0
+    ],
+    "geos": [
+      "Parallel"
+    ],
+    "wandlers": [
+      "Celsa ALO 10030 1R35",
+      "Celsa ALO 8030 K 8R1",
+      "MBS ASK101.4 8R1",
+      "Redur 13A1030.3ffp 8R1"
+    ],
+    "duts": [
+      "Einspeisung",
+      "Pruefling"
+    ],
+    "comp_mode": "Messgerät (z.B. PAC1)",
+    "sync_axes": true,
+    "y_limit": 4.3,
+    "acc_class": 1.0,
+    "show_err_bars": true,
+    "custom_colors": {
+      "2025_12_05_1020-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "#d9772a",
+      "2025_12_05_1356-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "#2f6fb0",
+      "2025_12_04_1506-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "#4a8fd1"
+    },
+    "custom_legends": {
+      "2025_12_05_1020-Redur-13A1030.3ffp-2000A-8R1_sortiert.csv | Pruefling": "Redur 13A1030.3ffp | Pruefling | 8,1 Ω | Parallel (2000A)",
+      "2025_12_05_1356-Celsa-ALO_10030-2000A-1R35_sortiert.csv | Pruefling": "Celsa ALO 10030 | Pruefling | 1,35 Ω | Parallel (2000A)",
+      "2025_12_04_1506-Celsa-ALO_8030_K-2000A-8R1_sortiert.csv | Pruefling": "Celsa ALO 8030 K | Pruefling | 8,1 Ω | Parallel (2000A)"
+    },
+    "custom_titles": {
+      "Gesamtübersicht (Tab 1)": "4000 A | Fehlerkurve | Celsa",
+      "Scatter-Plot": "Kosten-Nutzen-Analyse",
+      "Performance-Index": "4000 A | Performance Index | Neuer Versuchsaufbau",
+      "Heatmap": "Fehler-Heatmap",
+      "Boxplot": "Fehlerverteilung (Boxplot)",
+      "Pareto": "Pareto-Analyse",
+      "Radar": "Radar-Profil"
+    },
+    "eco_x": "Preis (€)",
+    "eco_y": [
+      "Fehler Nennstrom",
+      "Fehler Niederstrom",
+      "Fehler Überlast"
+    ],
+    "eco_type": "Performance-Index"
   }
 }
