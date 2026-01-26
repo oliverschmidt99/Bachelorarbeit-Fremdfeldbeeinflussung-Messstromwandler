@@ -9,31 +9,21 @@ import zipfile
 import subprocess
 import re
 import json
-import glob
-import numpy as np
 
-# =============================================================================
-# KONFIGURATION & KONSTANTEN
-# =============================================================================
+# --- KONFIGURATION ---
 DATA_FILE = "messdaten_db.parquet"
 CONFIG_FILE = "saved_configs.json"
 WORK_DIR = "matlab_working_dir"
-SEARCH_DIR = "messungen_sortiert"  # Pfad zu den sortierten CSVs
 DEFAULT_MATLAB_PATH = r"C:\Program Files\MATLAB\R2025a\bin\matlab.exe"
 
 PHASES = ["L1", "L2", "L3"]
-# Targets für die DB-Berechnung (muss mit Export übereinstimmen)
-TARGET_LEVELS_DB = [5, 20, 50, 80, 90, 100, 120]
-# Schlüsselwörter zur Erkennung des Referenzgerätes
-REF_KEYWORDS = ["pac1", "einspeisung", "ref", "source", "norm"]
-
 ZONES = {
     "Niederstrom (5-50%)": [5, 20, 50],
     "Nennstrom (80-100%)": [80, 90, 100],
     "Überlast (≥120%)": [120, 150, 200],
 }
 
-# Spalten-Definitionen für Tab 3
+# --- DEFINITION DER SPALTEN (WICHTIG FÜR TAB 3) ---
 META_COLS_EDIT = [
     "Preis (€)",
     "Nennbürde (VA)",
@@ -52,7 +42,7 @@ META_COLS_FIX = [
 ]
 META_COLS = META_COLS_FIX + META_COLS_EDIT
 
-# Farben & Stile
+# --- STYLES ---
 BLUES = [
     "#1f4e8c",
     "#2c6fb2",
@@ -92,236 +82,12 @@ OTHERS = [
     "#6fd6e5",
 ]
 
+# Plotly Optionen
 LINE_STYLES = ["solid", "dash", "dot", "dashdot", "longdash"]
 MARKER_SYMBOLS = ["circle", "square", "diamond", "cross", "x", "triangle-up", "star"]
 
 
-# =============================================================================
-# TEIL 1: DATENBANK UPDATE LOGIK (Integriert aus messdaten_selektor.py)
-# =============================================================================
-
-
-def extract_metadata_for_db(filepath):
-    """Extrahiert Infos aus dem Dateinamen spezifisch für die DB-Generierung."""
-    filename = os.path.basename(filepath)
-    original_name = filename.replace("_sortiert.csv", "")
-    folder_name = os.path.basename(os.path.dirname(filepath))
-
-    match_amp = re.search(r"[-_](\d+)A[-_]", original_name)
-    nennstrom = float(match_amp.group(1)) if match_amp else 0.0
-
-    lower_name = original_name.lower()
-    if "messstrecke" in lower_name:
-        manufacturer = "Messstrecke"
-    elif "mbs" in lower_name:
-        manufacturer = "MBS"
-    elif "celsa" in lower_name:
-        manufacturer = "Celsa"
-    elif "redur" in lower_name:
-        manufacturer = "Redur"
-    else:
-        manufacturer = "Andere"
-
-    # Modellnamen raten
-    try:
-        parts = original_name.split("-")
-        candidates = [
-            p
-            for p in parts
-            if not re.match(r"^\d{4}", p)
-            and manufacturer.lower() not in p.lower()
-            and str(int(nennstrom)) not in p
-        ]
-        model_str = "_".join(candidates) if candidates else original_name
-    except:
-        model_str = original_name
-
-    wandler_key = f"{manufacturer} {model_str}"
-
-    return {
-        "filepath": filepath,
-        "folder": folder_name,
-        "hersteller": manufacturer,
-        "nennstrom": nennstrom,
-        "wandler_key": wandler_key,
-        "dateiname": filename,
-    }
-
-
-def analyze_sorted_file(filepath, meta):
-    """
-    Liest eine sortierte CSV Datei, erkennt Geräte und berechnet
-    Mittelwerte/StdDev für die definierten Levels.
-    """
-    try:
-        df = pd.read_csv(filepath, sep=";")
-    except:
-        return [], "Lesefehler"
-
-    df.columns = [c.strip() for c in df.columns]
-    value_cols = [c for c in df.columns if "_I" in c]
-    if not value_cols:
-        return [], "Keine Strom-Daten gefunden"
-
-    results = []
-
-    for level in TARGET_LEVELS_DB:
-        lvl_str = f"{level:02d}"
-        nominal_amp = meta["nennstrom"] * (level / 100.0)
-
-        for phase in PHASES:
-            # Relevante Spalten für Phase & Level suchen
-            relevant_cols = [
-                c for c in value_cols if c.startswith(f"{lvl_str}_{phase}")
-            ]
-            if not relevant_cols:
-                continue
-
-            devices_map = {}
-            for col in relevant_cols:
-                # Muster: 05_L1_PAC1_I  oder  05_L1_I_PAC1
-                match_new = re.search(rf"{lvl_str}_{phase}_(.+)_I$", col)
-                match_old = re.search(rf"{lvl_str}_{phase}_I_(.+)$", col)
-                if match_new:
-                    devices_map[match_new.group(1)] = col
-                elif match_old:
-                    devices_map[match_old.group(1)] = col
-
-            if not devices_map:
-                continue
-
-            # Referenz identifizieren
-            phys_ref_device = None
-            for kw in REF_KEYWORDS:
-                for dev in devices_map.keys():
-                    if kw in dev.lower():
-                        phys_ref_device = dev
-                        break
-                if phys_ref_device:
-                    break
-
-            # Fallback: Erstes Gerät
-            if not phys_ref_device:
-                phys_ref_device = sorted(list(devices_map.keys()))[0]
-
-            col_phys_ref = devices_map[phys_ref_device]
-            vals_phys_ref = pd.to_numeric(df[col_phys_ref], errors="coerce").dropna()
-
-            phys_ref_mean = vals_phys_ref.mean() if not vals_phys_ref.empty else 0
-            phys_ref_std = vals_phys_ref.std() if not vals_phys_ref.empty else 0
-
-            # Berechnungen für alle Geräte
-            for dev, col_dut in devices_map.items():
-                vals_dut = pd.to_numeric(df[col_dut], errors="coerce").dropna()
-                if vals_dut.empty:
-                    continue
-
-                dut_mean = vals_dut.mean()
-                dut_std = vals_dut.std()
-
-                # --- FALL A: Relativ zur Referenz (Messgerät) ---
-                if dev != phys_ref_device and phys_ref_mean > 0:
-                    results.append(
-                        {
-                            "wandler_key": meta["wandler_key"],
-                            "folder": meta["folder"],
-                            "phase": phase,
-                            "target_load": level,
-                            "nennstrom": meta["nennstrom"],
-                            "val_ref_mean": phys_ref_mean,
-                            "val_ref_std": phys_ref_std,
-                            "val_dut_mean": dut_mean,
-                            "val_dut_std": dut_std,
-                            "dut_name": dev,
-                            "ref_name": phys_ref_device,
-                            "comparison_mode": "device_ref",
-                            "raw_file": meta["dateiname"],
-                        }
-                    )
-
-                # --- FALL B: Absolut zum Nennwert ---
-                if nominal_amp > 0:
-                    results.append(
-                        {
-                            "wandler_key": meta["wandler_key"],
-                            "folder": meta["folder"],
-                            "phase": phase,
-                            "target_load": level,
-                            "nennstrom": meta["nennstrom"],
-                            "val_ref_mean": nominal_amp,
-                            "val_ref_std": 0.0,
-                            "val_dut_mean": dut_mean,
-                            "val_dut_std": dut_std,
-                            "dut_name": dev,
-                            "ref_name": "Nennwert",
-                            "comparison_mode": "nominal_ref",
-                            "raw_file": meta["dateiname"],
-                        }
-                    )
-    return results, "OK"
-
-
-def run_db_update():
-    """Führt das Update der Datenbank durch (wird per Button ausgelöst)."""
-    status_container = st.empty()
-    bar = st.progress(0)
-
-    status_container.info(f"Suche sortierte CSV-Dateien in '{SEARCH_DIR}'...")
-    files = glob.glob(os.path.join(SEARCH_DIR, "**", "*_sortiert.csv"), recursive=True)
-
-    if not files:
-        status_container.error(f"Keine Dateien in '{SEARCH_DIR}' gefunden!")
-        return False
-
-    all_data = []
-
-    for i, f in enumerate(files):
-        meta = extract_metadata_for_db(f)
-        stats, status_msg = analyze_sorted_file(f, meta)
-
-        if stats:
-            all_data.extend(stats)
-
-        pct = (i + 1) / len(files)
-        bar.progress(pct)
-        status_container.text(f"Verarbeite: {os.path.basename(f)}")
-
-    if not all_data:
-        status_container.error("Keine gültigen Daten extrahiert.")
-        return False
-
-    df_all = pd.DataFrame(all_data)
-    # Deduplizieren, um Mehrfacheinträge zu vermeiden
-    df_clean = df_all.drop_duplicates(
-        subset=[
-            "wandler_key",
-            "folder",
-            "phase",
-            "target_load",
-            "dut_name",
-            "comparison_mode",
-        ],
-        keep="last",
-    )
-
-    try:
-        df_clean.to_parquet(DATA_FILE)
-        st.cache_data.clear()  # Cache leeren!
-        bar.empty()
-        status_container.success(
-            f"✅ Datenbank aktualisiert! {len(df_clean)} Datensätze."
-        )
-        return True
-    except Exception as e:
-        status_container.error(f"Fehler beim Speichern: {e}")
-        return False
-
-
-# =============================================================================
-# TEIL 2: DASHBOARD HELPER & VISUALISIERUNG
-# =============================================================================
-
-
+# --- HELPER: CONFIG MANAGEMENT ---
 def load_all_configs():
     if os.path.exists(CONFIG_FILE):
         try:
@@ -349,13 +115,17 @@ def delete_config(name):
     return False
 
 
+# --- HELPER: FILE NAMING ---
 def sanitize_filename(name):
+    """Entfernt ungültige Zeichen für Dateinamen."""
     if not name:
         return "Unbenannt"
+    # Ersetze ungültige Zeichen durch Unterstrich oder leer
     clean = re.sub(r'[\\/*?:"<>|]', "", name).strip()
     return clean.replace(" ", "_")
 
 
+# --- HELPER: PLOTTING & DATA ---
 def get_trumpet_limits(class_val):
     x = [1, 5, 20, 100, 120]
     if class_val == 0.2:
@@ -442,10 +212,19 @@ def parse_filename_info(filename_str):
 def create_single_phase_figure(
     df_sub, phase, acc_class, y_limit, bottom_mode, title_prefix=""
 ):
+    """
+    bottom_mode: 'Standardabweichung', 'Messwert (Absolut)', 'Ausblenden'
+    """
     is_single_row = bottom_mode == "Ausblenden"
+
     if is_single_row:
-        fig = make_subplots(rows=1, cols=1, subplot_titles=[f"Fehlerverlauf {phase}"])
+        fig = make_subplots(
+            rows=1,
+            cols=1,
+            subplot_titles=[f"Fehlerverlauf {phase}"],
+        )
     else:
+        # Determine title for second row
         sec_title = (
             "Standardabweichung"
             if bottom_mode == "Standardabweichung"
@@ -460,6 +239,7 @@ def create_single_phase_figure(
             subplot_titles=(f"Fehlerverlauf {phase}", f"{sec_title} {phase}"),
         )
 
+    # --- Plotting Main Error (Row 1) ---
     lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
     fig.add_trace(
         go.Scatter(
@@ -490,9 +270,11 @@ def create_single_phase_figure(
         row_first = group.iloc[0]
         leg_name = row_first["final_legend"]
         color = row_first["final_color"]
+        # NEW: Style & Symbol
         style = row_first["final_style"]
         symbol = row_first["final_symbol"]
 
+        # 1. Main Plot
         fig.add_trace(
             go.Scatter(
                 x=group["target_load"],
@@ -508,8 +290,10 @@ def create_single_phase_figure(
             col=1,
         )
 
+        # 2. Secondary Plot (only if not single row)
         if not is_single_row:
             if bottom_mode == "Standardabweichung":
+                # Plot Std Dev as Bar
                 fig.add_trace(
                     go.Bar(
                         x=group["target_load"],
@@ -522,6 +306,7 @@ def create_single_phase_figure(
                     col=1,
                 )
             elif bottom_mode == "Messwert (Absolut)":
+                # Plot Absolute Measure as Line
                 fig.add_trace(
                     go.Scatter(
                         x=group["target_load"],
@@ -548,11 +333,13 @@ def create_single_phase_figure(
             x=0.5,
             xanchor="center",
             bgcolor="rgba(255,255,255,0.8)",
-            font=dict(size=16),
+            font=dict(size=16),  # Legenden-Schriftgröße
         ),
         margin=dict(l=60, r=30, t=80, b=120),
     )
+
     fig.update_yaxes(range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1)
+
     if not is_single_row:
         if bottom_mode == "Standardabweichung":
             fig.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
@@ -561,6 +348,7 @@ def create_single_phase_figure(
         fig.update_xaxes(title_text="Strom [% In]", row=2, col=1)
     else:
         fig.update_xaxes(title_text="Strom [% In]", row=1, col=1)
+
     return fig
 
 
@@ -578,8 +366,8 @@ try
     hex2rgb = @(hex) sscanf(hex(2:end),'%2x%2x%2x',[1 3])/255;
     x_lims = [1, 5, 20, 100, 120];
     if limits_class == 0.2; y_lims = [0.75, 0.35, 0.2, 0.2, 0.2];
-    elif limits_class == 0.5; y_lims = [1.5, 1.5, 0.75, 0.5, 0.5];
-    elif limits_class == 1.0; y_lims = [3.0, 1.5, 1.0, 1.0, 1.0];
+    elseif limits_class == 0.5; y_lims = [1.5, 1.5, 0.75, 0.5, 0.5];
+    elseif limits_class == 1.0; y_lims = [3.0, 1.5, 1.0, 1.0, 1.0];
     else; y_lims = [1.5, 1.5, 0.75, 0.5, 0.5]; end
 
     for i = 1:length(phases)
@@ -684,23 +472,11 @@ def ensure_working_dir():
     return os.path.abspath(WORK_DIR)
 
 
-# =============================================================================
-# APP START
-# =============================================================================
+# --- APP START ---
 st.set_page_config(page_title="Wandler Dashboard", layout="wide", page_icon="📈")
-
-# --- SIDEBAR: UPDATE-FUNKTION (NEU) ---
-with st.sidebar.expander("🔧 Datenbank & Update", expanded=True):
-    st.write("Berechnet die Statistik neu aus den CSV-Dateien.")
-    if st.button(
-        "🔄 Datenbank aktualisieren", type="secondary", use_container_width=True
-    ):
-        if run_db_update():
-            st.rerun()
-
 df = load_data()
 if df is None:
-    st.error(f"⚠️ Datei '{DATA_FILE}' fehlt. Bitte 'Datenbank aktualisieren' klicken.")
+    st.error(f"⚠️ Datei '{DATA_FILE}' fehlt.")
     st.stop()
 
 # --- SIDEBAR: CONFIG ---
@@ -717,6 +493,7 @@ with st.sidebar.expander("Laden & Speichern", expanded=True):
         if st.button("📂 Laden", use_container_width=True):
             if sel_config_load != "-- Neu / Leer --":
                 data = all_configs[sel_config_load]
+                # Filter Values
                 st.session_state["k_current"] = data.get("current", [])
                 st.session_state["k_geos"] = data.get("geos", [])
                 st.session_state["k_wandlers"] = data.get("wandlers", [])
@@ -724,17 +501,22 @@ with st.sidebar.expander("Laden & Speichern", expanded=True):
                 st.session_state["k_comp"] = data.get(
                     "comp_mode", "Messgerät (z.B. PAC1)"
                 )
+                # Design
                 st.session_state["k_sync"] = data.get("sync_axes", True)
                 st.session_state["k_ylim"] = data.get("y_limit", 1.5)
                 st.session_state["k_class"] = data.get("acc_class", 0.2)
+
                 saved_err_bool = data.get("show_err_bars", True)
                 default_mode = "Standardabweichung" if saved_err_bool else "Ausblenden"
                 st.session_state["k_bottom_mode"] = data.get(
                     "bottom_plot_mode", default_mode
                 )
+
+                # Eco
                 st.session_state["k_eco_x"] = data.get("eco_x", "Preis (€)")
                 st.session_state["k_eco_y"] = data.get("eco_y", ["Fehler Nennstrom"])
                 st.session_state["k_eco_type"] = data.get("eco_type", "Scatter")
+                # Custom
                 st.session_state["loaded_colors"] = data.get("custom_colors", {})
                 st.session_state["loaded_legends"] = data.get("custom_legends", {})
                 st.session_state["loaded_titles"] = data.get("custom_titles", {})
@@ -781,9 +563,11 @@ if not sel_currents:
     st.warning("Bitte mindestens einen Nennstrom auswählen.")
     st.stop()
 
+# 1. Schritt: Daten nach Strom filtern
 df_curr = df[df["nennstrom"].isin(sel_currents)]
 available_geos = sorted(df_curr["Geometrie"].astype(str).unique())
 
+# Sanitize Geos
 saved_geos = st.session_state.get("k_geos", available_geos)
 valid_geos = [g for g in saved_geos if g in available_geos]
 if not valid_geos and available_geos:
@@ -796,9 +580,11 @@ sel_geos = st.sidebar.multiselect(
 if not sel_geos:
     st.stop()
 
+# 2. Schritt: Daten nach Geometrie filtern
 df_geo_filtered = df_curr[df_curr["Geometrie"].isin(sel_geos)]
 available_wandlers = sorted(df_geo_filtered["wandler_key"].unique())
 
+# Sanitize Wandler
 saved_wandlers = st.session_state.get("k_wandlers", available_wandlers)
 valid_wandlers = [w for w in saved_wandlers if w in available_wandlers]
 if not valid_wandlers and available_wandlers:
@@ -814,9 +600,11 @@ sel_wandlers = st.sidebar.multiselect(
 if not sel_wandlers:
     st.stop()
 
+# 3. Schritt: Daten nach Wandler filtern
 df_wandler_subset = df_geo_filtered[df_geo_filtered["wandler_key"].isin(sel_wandlers)]
 available_duts = sorted(df_wandler_subset["dut_name"].unique())
 
+# Sanitize DUTs
 saved_duts = st.session_state.get("k_duts", available_duts)
 valid_duts = [d for d in saved_duts if d in available_duts]
 if not valid_duts and available_duts:
@@ -836,6 +624,7 @@ comp_mode_disp = st.sidebar.radio(
 )
 comp_mode_val = "device_ref" if "Messgerät" in comp_mode_disp else "nominal_ref"
 
+# Finaler Filter
 mask = (
     (df["nennstrom"].isin(sel_currents))
     & (df["Geometrie"].isin(sel_geos))
@@ -883,22 +672,26 @@ acc_class = st.sidebar.selectbox(
     key="k_class",
 )
 
+# NEUE AUSWAHL FÜR UNTERES DIAGRAMM
 bottom_plot_options = ["Standardabweichung", "Messwert (Absolut)", "Ausblenden"]
 try:
     saved_mode = st.session_state.get("k_bottom_mode", "Standardabweichung")
     b_idx = bottom_plot_options.index(saved_mode)
 except:
     b_idx = 0
+
 bottom_plot_mode = st.sidebar.selectbox(
     "Unteres Diagramm:", bottom_plot_options, index=b_idx, key="k_bottom_mode"
 )
 use_single_row = bottom_plot_mode == "Ausblenden"
 
-# --- CUSTOMIZATION ---
+
+# --- CUSTOMIZATION: FARBEN, NAMEN, STILE ---
 with st.sidebar.expander("Farben & Namen bearbeiten", expanded=False):
     unique_curves = df_sub[
         ["unique_id", "wandler_key", "folder", "dut_name", "Kommentar", "nennstrom"]
     ].drop_duplicates()
+
     loaded_colors = st.session_state.get("loaded_colors", {})
     loaded_legends = st.session_state.get("loaded_legends", {})
     loaded_styles = st.session_state.get("loaded_styles", {})
@@ -920,13 +713,18 @@ with st.sidebar.expander("Farben & Namen bearbeiten", expanded=False):
             col = OTHERS[x_idx % len(OTHERS)]
             x_idx += 1
 
+        cur_legend = loaded_legends.get(uid, auto_name)
+        cur_color = loaded_colors.get(uid, col)
+        cur_style = loaded_styles.get(uid, "solid")
+        cur_symbol = loaded_symbols.get(uid, "circle")
+
         config_data.append(
             {
                 "ID": uid,
-                "Legende": loaded_legends.get(uid, auto_name),
-                "Farbe": loaded_colors.get(uid, col),
-                "Linie": loaded_styles.get(uid, "solid"),
-                "Marker": loaded_symbols.get(uid, "circle"),
+                "Legende": cur_legend,
+                "Farbe": cur_color,
+                "Linie": cur_style,
+                "Marker": cur_symbol,
             }
         )
 
@@ -965,10 +763,11 @@ df_sub["final_symbol"] = df_sub["unique_id"].map(map_symbol)
 
 with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
     loaded_titles = st.session_state.get("loaded_titles", {})
+
     default_titles_data = [
         {
             "Typ": "Gesamtübersicht (Tab 1)",
-            "Default": f"{current_title_str} | Fehlerkurve |  | Phasen-Vergleich",
+            "Default": f"{current_title_str} | Fehlerkurve |  | Phasen-Vergleich",
         },
         {
             "Typ": "Scatter-Plot",
@@ -986,11 +785,13 @@ with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
         {"Typ": "Pareto", "Default": f"{current_title_str} | Pareto | Fehler-Ursachen"},
         {"Typ": "Radar", "Default": f"{current_title_str} | Radar | Multi-Kriteriell"},
     ]
+
     merged_titles = []
     for item in default_titles_data:
         t_type = item["Typ"]
         val = loaded_titles.get(t_type, item["Default"])
         merged_titles.append({"Typ": t_type, "Titel": val})
+
     edited_titles_df = st.data_editor(
         pd.DataFrame(merged_titles),
         column_config={
@@ -1057,12 +858,13 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
     if not export_selection:
         st.error("Bitte mindestens ein Diagramm auswählen.")
     else:
-        current_config_name = (
-            sel_config_load
-            if sel_config_load and sel_config_load != "-- Neu / Leer --"
-            else "Unbenannt"
-        )
+        # Ermittle Konfigurationsnamen für Dateinamen
+        current_config_name = "Unbenannt"
+        if sel_config_load and sel_config_load != "-- Neu / Leer --":
+            current_config_name = sel_config_load
+
         safe_conf_name = sanitize_filename(current_config_name)
+
         zip_buffer = io.BytesIO()
         has_eco_request = any("Ökonomie" in s for s in export_selection)
         if has_eco_request:
@@ -1140,24 +942,29 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
 
                 with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED) as zf:
                     if "Ökonomie: Performance-Index" in export_selection:
+                        title_str = TITLES_MAP.get(
+                            "Performance-Index", "Performance Index"
+                        )
+                        df_sorted = df_err_exp.sort_values(
+                            "total_score", ascending=True
+                        )
+                        df_long = df_sorted.melt(
+                            id_vars=["legend_name"],
+                            value_vars=[
+                                "Norm: Preis",
+                                "Norm: Volumen",
+                                "Norm: Nennstrom",
+                            ],
+                            var_name="Kategorie",
+                            value_name="Anteil (%)",
+                        )
                         fig_perf = px.bar(
-                            df_err_exp.sort_values("total_score", ascending=True).melt(
-                                id_vars=["legend_name"],
-                                value_vars=[
-                                    "Norm: Preis",
-                                    "Norm: Volumen",
-                                    "Norm: Nennstrom",
-                                ],
-                                var_name="Kategorie",
-                                value_name="Anteil (%)",
-                            ),
+                            df_long,
                             y="legend_name",
                             x="Anteil (%)",
                             color="Kategorie",
                             orientation="h",
-                            title=TITLES_MAP.get(
-                                "Performance-Index", "Performance Index"
-                            ),
+                            title=title_str,
                             color_discrete_map={
                                 "Norm: Preis": "#1f77b4",
                                 "Norm: Volumen": "#aec7e8",
@@ -1183,6 +990,9 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             fig_perf.to_image(format="pdf"),
                         )
                     if "Ökonomie: Scatter-Plot" in export_selection:
+                        title_str = TITLES_MAP.get(
+                            "Scatter-Plot", "Kosten-Nutzen-Analyse"
+                        )
                         fig_scat = px.scatter(
                             df_err_exp,
                             x="preis",
@@ -1190,9 +1000,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             color="legend_name",
                             size=[20] * len(df_err_exp),
                             color_discrete_map=color_map_dict,
-                            title=TITLES_MAP.get(
-                                "Scatter-Plot", "Kosten-Nutzen-Analyse"
-                            ),
+                            title=title_str,
                         )
                         fig_scat.update_layout(
                             template="plotly_white",
@@ -1212,18 +1020,20 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             fig_scat.to_image(format="pdf"),
                         )
                     if "Ökonomie: Heatmap" in export_selection:
+                        title_str = TITLES_MAP.get("Heatmap", "Fehler-Heatmap")
+                        df_hm = df_err_exp.melt(
+                            id_vars=["legend_name"],
+                            value_vars=["err_nieder", "err_nom", "err_high"],
+                            var_name="Bereich",
+                            value_name="Fehler",
+                        )
                         fig_hm = px.density_heatmap(
-                            df_err_exp.melt(
-                                id_vars=["legend_name"],
-                                value_vars=["err_nieder", "err_nom", "err_high"],
-                                var_name="Bereich",
-                                value_name="Fehler",
-                            ),
+                            df_hm,
                             x="legend_name",
                             y="Bereich",
                             z="Fehler",
                             color_continuous_scale="Blues",
-                            title=TITLES_MAP.get("Heatmap", "Fehler-Heatmap"),
+                            title=title_str,
                         )
                         fig_hm.update_layout(
                             template="plotly_white",
@@ -1236,19 +1046,21 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             fig_hm.to_image(format="pdf"),
                         )
                     if "Ökonomie: Boxplot" in export_selection:
+                        title_str = TITLES_MAP.get(
+                            "Boxplot", "Fehlerverteilung (Boxplot)"
+                        )
+                        df_box = df_err_exp.melt(
+                            id_vars=["legend_name"],
+                            value_vars=["err_nieder", "err_nom", "err_high"],
+                            var_name="Bereich",
+                            value_name="Fehler",
+                        )
                         fig_box = px.box(
-                            df_err_exp.melt(
-                                id_vars=["legend_name"],
-                                value_vars=["err_nieder", "err_nom", "err_high"],
-                                var_name="Bereich",
-                                value_name="Fehler",
-                            ),
+                            df_box,
                             x="legend_name",
                             y="Fehler",
                             color="Bereich",
-                            title=TITLES_MAP.get(
-                                "Boxplot", "Fehlerverteilung (Boxplot)"
-                            ),
+                            title=title_str,
                         )
                         fig_box.update_layout(
                             template="plotly_white",
@@ -1268,6 +1080,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             fig_box.to_image(format="pdf"),
                         )
                     if "Ökonomie: Pareto" in export_selection:
+                        title_str = TITLES_MAP.get("Pareto", "Pareto-Analyse")
                         df_par = df_err_exp.sort_values(by="err_nom", ascending=False)
                         df_par["cum_pct"] = (
                             df_par["err_nom"].cumsum() / df_par["err_nom"].sum() * 100
@@ -1293,7 +1106,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             secondary_y=True,
                         )
                         fig_par.update_layout(
-                            title=TITLES_MAP.get("Pareto", "Pareto-Analyse"),
+                            title=title_str,
                             template="plotly_white",
                             width=1123,
                             height=794,
@@ -1311,26 +1124,28 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             fig_par.to_image(format="pdf"),
                         )
                     if "Ökonomie: Radar" in export_selection:
+                        title_str = TITLES_MAP.get("Radar", "Radar-Profil")
                         fig_rad = go.Figure()
+                        cats = [
+                            "Preis",
+                            "Volumen",
+                            "Err Nieder",
+                            "Err Nenn",
+                            "Err High",
+                        ]
                         for i, row in df_err_exp.iterrows():
+                            vals = [
+                                row["Norm: Preis"] / 100,
+                                row["Norm: Volumen"] / 100,
+                                row["Norm: Niederstrom"] / 100,
+                                row["Norm: Nennstrom"] / 100,
+                                row["Norm: Überstrom"] / 100,
+                                row["Norm: Preis"] / 100,
+                            ]
                             fig_rad.add_trace(
                                 go.Scatterpolar(
-                                    r=[
-                                        row["Norm: Preis"] / 100,
-                                        row["Norm: Volumen"] / 100,
-                                        row["Norm: Niederstrom"] / 100,
-                                        row["Norm: Nennstrom"] / 100,
-                                        row["Norm: Überstrom"] / 100,
-                                        row["Norm: Preis"] / 100,
-                                    ],
-                                    theta=[
-                                        "Preis",
-                                        "Volumen",
-                                        "Err Nieder",
-                                        "Err Nenn",
-                                        "Err High",
-                                        "Preis",
-                                    ],
+                                    r=vals,
+                                    theta=cats + [cats[0]],
                                     fill="toself",
                                     name=row["legend_name"],
                                     line_color=row["color_hex"],
@@ -1338,7 +1153,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             )
                         fig_rad.update_layout(
                             polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
-                            title=TITLES_MAP.get("Radar", "Radar-Profil"),
+                            title=title_str,
                             template="plotly_white",
                             width=1123,
                             height=794,
@@ -1358,11 +1173,13 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
             except Exception as e:
                 st.error(f"Fehler bei Ökonomie-Export: {e}")
 
+        # GESAMT EXPORT
         if "Gesamtübersicht (Tab 1)" in export_selection:
             with st.spinner("Generiere Gesamtübersicht..."):
                 main_title_export = TITLES_MAP.get(
                     "Gesamtübersicht (Tab 1)", f"Gesamtübersicht: {current_title_str}"
                 )
+
                 if use_single_row:
                     fig_ex = make_subplots(
                         rows=1, cols=3, shared_xaxes=True, subplot_titles=PHASES
@@ -1377,6 +1194,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                         row_heights=[0.65, 0.35],
                         subplot_titles=PHASES,
                     )
+
                 lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
                 for c_idx, ph in enumerate(PHASES, 1):
                     fig_ex.add_trace(
@@ -1402,11 +1220,14 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                         row=1,
                         col=c_idx,
                     )
-                    for uid, group in df_sub[df_sub["phase"] == ph].groupby(
-                        "unique_id"
-                    ):
+                    phase_data = df_sub[df_sub["phase"] == ph]
+                    for uid, group in phase_data.groupby("unique_id"):
                         group = group.sort_values("target_load")
                         row_first = group.iloc[0]
+                        # NEW: Access Style & Symbol
+                        style = row_first["final_style"]
+                        symbol = row_first["final_symbol"]
+
                         fig_ex.add_trace(
                             go.Scatter(
                                 x=group["target_load"],
@@ -1416,15 +1237,16 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 line=dict(
                                     color=row_first["final_color"],
                                     width=2.5,
-                                    dash=row_first["final_style"],
+                                    dash=style,
                                 ),
-                                marker=dict(size=8, symbol=row_first["final_symbol"]),
+                                marker=dict(size=8, symbol=symbol),
                                 legendgroup=row_first["final_legend"],
                                 showlegend=(c_idx == 1),
                             ),
                             row=1,
                             col=c_idx,
                         )
+                        # Optional Bottom Plot in Export
                         if not use_single_row:
                             if bottom_plot_mode == "Standardabweichung":
                                 fig_ex.add_trace(
@@ -1456,6 +1278,7 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                     row=2,
                                     col=c_idx,
                                 )
+
                 fig_ex.update_layout(
                     title=dict(text=main_title_export, font=dict(size=18)),
                     template="plotly_white",
@@ -1471,17 +1294,20 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                     ),
                 )
                 fig_ex.update_yaxes(range=[-y_limit, y_limit], row=1)
+
                 if not use_single_row:
                     if bottom_plot_mode == "Standardabweichung":
                         fig_ex.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
                     else:
                         fig_ex.update_yaxes(title_text="Strom [A]", row=2, col=1)
+
                 with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED) as zf:
                     zf.writestr(
                         f"{safe_conf_name}-Zusammenfassung_MultiCurrent.pdf",
                         fig_ex.to_image(format="pdf", width=1123, height=794),
                     )
 
+        # DETAIL EXPORT
         if "Detail-Phasen (Tab 1)" in export_selection:
             if "MATLAB" in engine_mode:
                 if not os.path.exists(matlab_exe):
@@ -1518,17 +1344,17 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 cwd=work_dir_abs,
                                 check=True,
                             )
-                            with zipfile.ZipFile(
-                                zip_buffer, "a", zipfile.ZIP_DEFLATED
-                            ) as zf:
-                                [
-                                    zf.write(
-                                        os.path.join(work_dir_abs, f),
-                                        f"{safe_conf_name}-{f}",
-                                    )
-                                    for f in os.listdir(work_dir_abs)
-                                    if f.endswith(".pdf")
-                                ]
+                            # Dateien mit Prefix in die Zip packen
+                            [
+                                zipfile.ZipFile(
+                                    zip_buffer, "a", zipfile.ZIP_DEFLATED
+                                ).write(
+                                    os.path.join(work_dir_abs, f),
+                                    f"{safe_conf_name}-{f}",
+                                )
+                                for f in os.listdir(work_dir_abs)
+                                if f.endswith(".pdf")
+                            ]
                             st.success("✅ Details exportiert")
                         except Exception as e:
                             st.error(f"MATLAB Fehler: {e}")
@@ -1541,14 +1367,15 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 ph,
                                 acc_class,
                                 y_limit,
-                                bottom_plot_mode,
+                                bottom_plot_mode,  # pass selected mode
                                 title_prefix=f"{current_title_str}",
                             )
                             zf.writestr(
                                 f"{safe_conf_name}-Detail_{ph}_MultiCurrent.pdf",
                                 fig_s.to_image(format="pdf", width=1123, height=794),
                             )
-                st.success("✅ Details exportiert")
+                    st.success("✅ Details exportiert")
+
         st.session_state["zip_data"] = zip_buffer.getvalue()
         st.session_state["zip_name"] = f"{safe_conf_name}.zip"
 
@@ -1571,9 +1398,13 @@ with tab1:
     custom_title_tab1 = TITLES_MAP.get(
         "Gesamtübersicht (Tab 1)", f"Gesamtübersicht: {current_title_str}"
     )
+
     if use_single_row:
         fig_main = make_subplots(
-            rows=1, cols=3, shared_xaxes=True, subplot_titles=PHASES
+            rows=1,
+            cols=3,
+            shared_xaxes=True,
+            subplot_titles=PHASES,
         )
     else:
         fig_main = make_subplots(
@@ -1609,27 +1440,30 @@ with tab1:
             row=1,
             col=col_idx,
         )
-        for uid, group in df_sub[df_sub["phase"] == phase].groupby("unique_id"):
+        phase_data = df_sub[df_sub["phase"] == phase]
+        for uid, group in phase_data.groupby("unique_id"):
             group = group.sort_values("target_load")
             row_first = group.iloc[0]
+            # NEW: Access Style & Symbol
+            style = row_first["final_style"]
+            symbol = row_first["final_symbol"]
+
+            # MAIN PLOT
             fig_main.add_trace(
                 go.Scatter(
                     x=group["target_load"],
                     y=group["err_ratio"],
                     mode="lines+markers",
                     name=row_first["final_legend"],
-                    line=dict(
-                        color=row_first["final_color"],
-                        width=2,
-                        dash=row_first["final_style"],
-                    ),
-                    marker=dict(size=8, symbol=row_first["final_symbol"]),
+                    line=dict(color=row_first["final_color"], width=2, dash=style),
+                    marker=dict(size=8, symbol=symbol),
                     legendgroup=row_first["final_legend"],
                     showlegend=(col_idx == 1),
                 ),
                 row=1,
                 col=col_idx,
             )
+            # SECONDARY PLOT (if active)
             if not use_single_row:
                 if bottom_plot_mode == "Standardabweichung":
                     fig_main.add_trace(
@@ -1665,15 +1499,21 @@ with tab1:
         template="plotly_white",
         height=800,
         legend=dict(
-            orientation="h", y=-0.15, x=0.5, xanchor="center", font=dict(size=16)
+            orientation="h",
+            y=-0.15,
+            x=0.5,
+            xanchor="center",
+            font=dict(size=16),  # Legenden-Schriftgröße
         ),
         font=dict(family="Serif", size=14, color="black"),
     )
     if sync_axes:
         fig_main.update_yaxes(matches="y", row=1)
+
     fig_main.update_yaxes(
         range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1
     )
+
     if not use_single_row:
         if bottom_plot_mode == "Standardabweichung":
             fig_main.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
@@ -1682,6 +1522,7 @@ with tab1:
         fig_main.update_xaxes(title_text="Last [% In]", row=2, col=2)
     else:
         fig_main.update_xaxes(title_text="Last [% In]", row=1, col=2)
+
     st.plotly_chart(fig_main, use_container_width=True)
 
 with tab2:
@@ -1775,10 +1616,12 @@ with tab2:
             chart_type = st.radio("Diagramm-Typ:", types, index=t_idx, key="k_eco_type")
 
         color_map_dict = dict(zip(df_err["legend_name"], df_err["color_hex"]))
+
         if not y_cols_selected:
             st.warning("Bitte wähle mindestens einen Wert für die Y-Achse aus.")
         else:
             if chart_type == "Scatter":
+                title_str = TITLES_MAP.get("Scatter-Plot", f"{x_sel} vs. Auswahl")
                 df_long = df_err.melt(
                     id_vars=["unique_id", "legend_name", x_col, "color_hex"],
                     value_vars=y_cols_selected,
@@ -1794,7 +1637,7 @@ with tab2:
                     symbol="Metrik",
                     size=[15] * len(df_long),
                     color_discrete_map=color_map_dict,
-                    title=TITLES_MAP.get("Scatter-Plot", f"{x_sel} vs. Auswahl"),
+                    title=title_str,
                 )
                 fig_eco.update_layout(
                     legend=dict(
@@ -1807,27 +1650,31 @@ with tab2:
                 )
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Performance-Index":
+                title_str = TITLES_MAP.get("Performance-Index", "Performance Index")
                 norm_cols = []
                 df_err["total_score"] = 0.0
                 for label in y_selection:
                     raw_col = Y_OPTIONS_MAP[label]
                     mx_val = df_err[raw_col].abs().max()
-                    mx_val = 1.0 if mx_val == 0 else mx_val
+                    if mx_val == 0:
+                        mx_val = 1.0
                     df_err[label] = (df_err[raw_col].abs() / mx_val) * 100
                     df_err["total_score"] += df_err[label]
                     norm_cols.append(label)
+                df_sorted = df_err.sort_values("total_score", ascending=True)
+                df_long = df_sorted.melt(
+                    id_vars=["legend_name"],
+                    value_vars=norm_cols,
+                    var_name="Kategorie",
+                    value_name="Normalisierter Anteil (%)",
+                )
                 fig_eco = px.bar(
-                    df_err.sort_values("total_score", ascending=True).melt(
-                        id_vars=["legend_name"],
-                        value_vars=norm_cols,
-                        var_name="Kategorie",
-                        value_name="Normalisierter Anteil (%)",
-                    ),
+                    df_long,
                     y="legend_name",
                     x="Normalisierter Anteil (%)",
                     color="Kategorie",
                     orientation="h",
-                    title=TITLES_MAP.get("Performance-Index", "Performance Index"),
+                    title=title_str,
                 )
                 fig_eco.update_layout(
                     yaxis=dict(autorange="reversed"),
@@ -1841,6 +1688,7 @@ with tab2:
                 )
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Heatmap":
+                title_str = TITLES_MAP.get("Heatmap", "Heatmap der Auswahl")
                 df_long = df_err.melt(
                     id_vars=["legend_name"],
                     value_vars=y_cols_selected,
@@ -1848,18 +1696,19 @@ with tab2:
                     value_name="Wert",
                 )
                 df_long["Kategorie"] = df_long["Kategorie_Intern"].map(REVERSE_Y_MAP)
-                st.plotly_chart(
-                    px.density_heatmap(
-                        df_long,
-                        x="legend_name",
-                        y="Kategorie",
-                        z="Wert",
-                        color_continuous_scale="Blues",
-                        title=TITLES_MAP.get("Heatmap", "Heatmap der Auswahl"),
-                    ),
-                    use_container_width=True,
+                fig_eco = px.density_heatmap(
+                    df_long,
+                    x="legend_name",
+                    y="Kategorie",
+                    z="Wert",
+                    color_continuous_scale="Blues",
+                    title=title_str,
                 )
+                st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Boxplot":
+                title_str = TITLES_MAP.get(
+                    "Boxplot", f"Verteilung: {', '.join(y_selection)}"
+                )
                 df_long = df_err.melt(
                     id_vars=["legend_name"],
                     value_vars=y_cols_selected,
@@ -1872,9 +1721,7 @@ with tab2:
                     x="legend_name",
                     y="Wert",
                     color="Kategorie",
-                    title=TITLES_MAP.get(
-                        "Boxplot", f"Verteilung: {', '.join(y_selection)}"
-                    ),
+                    title=title_str,
                 )
                 fig_eco.update_layout(
                     legend=dict(
@@ -1887,7 +1734,9 @@ with tab2:
                 )
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Pareto":
+                title_str = TITLES_MAP.get("Pareto", "Pareto-Analyse")
                 target_y = y_cols_selected[0]
+                target_label = y_selection[0]
                 df_sorted = df_err.sort_values(by=target_y, ascending=False)
                 df_sorted["cum_pct"] = (
                     df_sorted[target_y].cumsum() / df_sorted[target_y].sum() * 100
@@ -1897,7 +1746,7 @@ with tab2:
                     go.Bar(
                         x=df_sorted["legend_name"],
                         y=df_sorted[target_y],
-                        name=y_selection[0],
+                        name=target_label,
                         marker_color=df_sorted["color_hex"],
                     ),
                     secondary_y=False,
@@ -1913,7 +1762,7 @@ with tab2:
                     secondary_y=True,
                 )
                 fig_par.update_layout(
-                    title=TITLES_MAP.get("Pareto", "Pareto-Analyse"),
+                    title=title_str,
                     legend=dict(
                         orientation="h",
                         y=-0.2,
@@ -1924,17 +1773,25 @@ with tab2:
                 )
                 st.plotly_chart(fig_par, use_container_width=True)
             elif chart_type == "Radar":
+                title_str = TITLES_MAP.get("Radar", "Radar-Vergleich")
                 fig_r = go.Figure()
+                categories = y_selection
                 max_vals = {}
                 for col_name in y_cols_selected:
                     m = df_err[col_name].max()
                     max_vals[col_name] = m if m != 0 else 1
                 for i, row in df_err.iterrows():
+                    r_vals = []
+                    for col_name in y_cols_selected:
+                        val = row[col_name]
+                        norm_val = val / max_vals[col_name]
+                        r_vals.append(norm_val)
+                    r_vals.append(r_vals[0])
+                    theta_vals = categories + [categories[0]]
                     fig_r.add_trace(
                         go.Scatterpolar(
-                            r=[row[c] / max_vals[c] for c in y_cols_selected]
-                            + [row[y_cols_selected[0]] / max_vals[y_cols_selected[0]]],
-                            theta=y_selection + [y_selection[0]],
+                            r=r_vals,
+                            theta=theta_vals,
                             fill="toself",
                             name=row["legend_name"],
                             line_color=row["color_hex"],
@@ -1942,7 +1799,7 @@ with tab2:
                     )
                 fig_r.update_layout(
                     polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
-                    title=TITLES_MAP.get("Radar", "Radar-Vergleich"),
+                    title=title_str,
                     legend=dict(
                         orientation="h",
                         y=-0.2,
@@ -1955,6 +1812,7 @@ with tab2:
 
 with tab3:
     st.markdown("### ⚙️ Stammdaten pro Messdatei")
+
     col_info, col_btn = st.columns([2, 1])
     with col_info:
         st.info("Die Datenbank ist die Hauptquelle.")
@@ -1975,15 +1833,17 @@ with tab3:
                 st.success("Aktualisiert!")
                 st.rerun()
 
+    # --- CHECKBOX FÜR ALLE DATEIEN ---
     show_all_files = st.checkbox(
         "Alle Dateien der gewählten Nennströme anzeigen (ignoriert Filter für Geometrie/Wandler/DUT)",
         value=True,
     )
-    df_editor_source = (
-        df[df["nennstrom"].isin(sel_currents)].copy()
-        if show_all_files
-        else df_sub.copy()
-    )
+
+    if show_all_files:
+        df_editor_source = df[df["nennstrom"].isin(sel_currents)].copy()
+    else:
+        df_editor_source = df_sub.copy()
+
     df_editor_view = (
         df_editor_source[META_COLS]
         .drop_duplicates(subset=["raw_file"])
@@ -2001,6 +1861,7 @@ with tab3:
         changes = edited_df.to_dict(orient="index")
         df_to_save = df.copy()
         count = 0
+
         for fname, attrs in changes.items():
             mask = df_to_save["raw_file"] == str(fname).strip()
             if mask.any():
@@ -2008,6 +1869,7 @@ with tab3:
                 for c in META_COLS_EDIT:
                     if c in attrs:
                         df_to_save.loc[mask, c] = attrs[c]
+
         if count > 0:
             save_db(df_to_save)
             st.success(f"✅ {count} Dateien gespeichert!")

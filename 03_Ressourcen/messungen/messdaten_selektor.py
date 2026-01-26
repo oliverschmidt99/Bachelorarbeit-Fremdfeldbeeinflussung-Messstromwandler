@@ -26,7 +26,6 @@ for level in TARGET_LEVELS:
 
 # --- CONFIG JSON HANDLING ---
 def load_config(filename):
-    """Lädt gespeicherte Bereiche aus der JSON"""
     if os.path.exists(CONFIG_JSON):
         try:
             with open(CONFIG_JSON, "r") as f:
@@ -38,7 +37,6 @@ def load_config(filename):
 
 
 def save_config(filename, ranges_map):
-    """Speichert Bereiche in die JSON"""
     data = {}
     if os.path.exists(CONFIG_JSON):
         try:
@@ -52,48 +50,26 @@ def save_config(filename, ranges_map):
         json.dump(data, f, indent=4)
 
 
-# --- SMART RECOVERY (DATEN WIEDERFINDEN) ---
+# --- SMART RECOVERY ---
 def find_subsequence(full_series, sub_series, tolerance=1e-2):
-    """
-    Sucht eine Teil-Sequenz (sub_series) innerhalb einer vollen Serie (full_series).
-    Gibt den Start-Index zurück oder None.
-    Nutzt numpy für Geschwindigkeit.
-    """
     if len(sub_series) > len(full_series) or len(sub_series) == 0:
         return None
-
-    # Wir suchen anhand der ersten 10 Punkte (Signatur), um Zeit zu sparen
     signature_len = min(50, len(sub_series))
     signature = sub_series[:signature_len]
-
-    # Numpy Arrays
     full_arr = full_series.to_numpy()
     sig_arr = signature.to_numpy()
-
-    # Wir iterieren nicht stumpf, das ist zu langsam.
-    # Wir suchen nach Kandidaten für den ersten Wert.
     first_val = sig_arr[0]
-
-    # Toleranz-Check für den ersten Wert (Float Vergleich ist tricky)
     candidates = np.where(
         np.isclose(full_arr[: -len(sub_series) + 1], first_val, atol=tolerance)
     )[0]
-
     for idx in candidates:
-        # Prüfen ob der Rest der Signatur passt
         check_slice = full_arr[idx : idx + signature_len]
         if np.allclose(check_slice, sig_arr, atol=tolerance):
-            # Wenn Signatur passt, prüfen wir die Länge, um sicher zu sein
-            # (Optional: ganze Länge prüfen, aber meist reicht die Signatur)
             return idx
-
     return None
 
 
 def try_recover_from_sorted_file(original_path, full_data_l1, dev_name):
-    """
-    Versucht, die sortierte Datei zu laden und die Bereiche im Original wiederzufinden.
-    """
     orig_p = Path(original_path)
     target_dir = Path(OUTPUT_ROOT_DIR) / orig_p.parent
     sorted_filename = f"{orig_p.stem}_sortiert.csv"
@@ -103,26 +79,22 @@ def try_recover_from_sorted_file(original_path, full_data_l1, dev_name):
         return False, "Keine sortierte Datei gefunden."
 
     try:
-        # CSV laden
         df_sorted = pd.read_csv(sorted_path, sep=";", decimal=".", engine="python")
-        # Falls decimal="," war, checken wir kurz
         if df_sorted.shape[1] < 2:
             df_sorted = pd.read_csv(sorted_path, sep=";", decimal=",", engine="python")
 
         recovered_count = 0
-
-        # Iteriere über Levels
         for level in TARGET_LEVELS:
-            # Wir suchen nach Spalte: XX_L1_Gerätename_I
-            # Wir müssen den Spaltennamen erraten/konstruieren
-            # Da wir mehrere Geräte haben, nehmen wir das, das wir im Plot sehen (dev_name)
-            col_name = f"{level:02d}_L1_{dev_name}_I"
+            col_name_new = f"{level:02d}_L1_I_{dev_name}"
+            col_name_old = f"{level:02d}_L1_{dev_name}_I"
+            col_name = (
+                col_name_new if col_name_new in df_sorted.columns else col_name_old
+            )
 
             if col_name in df_sorted.columns:
                 sub_data = df_sorted[col_name].dropna()
                 if len(sub_data) > 0:
                     start_idx = find_subsequence(full_data_l1, sub_data)
-
                     if start_idx is not None:
                         end_idx = start_idx + len(sub_data)
                         st.session_state[f"s_{level}"] = int(start_idx)
@@ -132,11 +104,7 @@ def try_recover_from_sorted_file(original_path, full_data_l1, dev_name):
         if recovered_count > 0:
             return True, f"{recovered_count} Bereiche wiederhergestellt!"
         else:
-            return (
-                False,
-                "Datenformat passt, aber keine Positionen im Original gefunden (Werteabweichung?).",
-            )
-
+            return False, "Datenformat passt, aber keine Positionen gefunden."
     except Exception as e:
         return False, f"Fehler beim Lesen: {e}"
 
@@ -146,28 +114,19 @@ def update_start_callback(lvl):
     end_key = f"e_{lvl}"
     start_key = f"s_{lvl}"
     current_end = st.session_state[end_key]
-    # Nur Default setzen, wenn Start noch 0 ist (verhindert Überschreiben beim Laden)
     if st.session_state[start_key] == 0:
-        # HIER GEÄNDERT: Von 500 auf 180
-        new_start = max(0, current_end - 180)
+        # Hier ist der Default 600, wie du wolltest
+        new_start = max(0, current_end - 600)
         st.session_state[start_key] = new_start
 
 
-def on_file_change():
-    """Wird aufgerufen, wenn neue Datei gewählt wird"""
-    # 1. Reset
+def on_select_change():
     for level in TARGET_LEVELS:
         st.session_state[f"s_{level}"] = 0
         st.session_state[f"e_{level}"] = 0
 
-    # 2. Versuch aus JSON zu laden
-    # Dateiname holen (etwas hacky, da wir hier nicht direkt access auf den selectbox value haben,
-    # aber wir holen ihn gleich im Main loop.
-    # Besser: Wir machen das Laden direkt nach dem selectbox call im Main Flow.
-    pass
 
-
-# --- HELFER: GERÄTE ERKENNUNG & DATEN ---
+# --- DATA LOADING ---
 def identify_devices(df):
     df.columns = [c.strip().strip('"').strip("'") for c in df.columns]
     val_cols = [c for c in df.columns if "ValueY" in c]
@@ -193,6 +152,7 @@ def get_files():
                 f.lower().endswith(".csv")
                 and "manuelle_ergebnisse" not in f
                 and "_sortiert" not in f
+                and "plot_data" not in f
             ):
                 files.append(os.path.join(root, f))
     return sorted(files)
@@ -254,12 +214,10 @@ def load_all_data(filepath, all_devices):
             continue
     if df is None:
         return None, None
-
     df.columns = [c.strip().strip('"').strip("'") for c in df.columns]
     val_cols = [c for c in df.columns if "ValueY" in c]
     full_data = {dev: {} for dev in all_devices}
     t = []
-
     for device in all_devices:
         for phase in PHASES:
             target_col = None
@@ -294,7 +252,13 @@ def save_tracking_status(base_name, status):
 
 
 def save_sorted_raw_data(
-    original_filepath, full_data, start_end_map, all_devices, clean_filename
+    original_filepath,
+    full_data,
+    start_end_map,
+    export_devices,
+    ref_device,
+    clean_filename,
+    skip_n_start=0,
 ):
     orig_path = Path(original_filepath)
     target_dir = Path(OUTPUT_ROOT_DIR) / orig_path.parent
@@ -302,29 +266,37 @@ def save_sorted_raw_data(
     new_filename = f"{base_name}_sortiert.csv"
     output_path = target_dir / new_filename
 
+    remaining_devices = sorted([d for d in export_devices if d != ref_device])
+    sorted_devices = (
+        [ref_device] + remaining_devices
+        if ref_device in export_devices
+        else remaining_devices
+    )
+
     df_export = pd.DataFrame()
+
     try:
         target_dir.mkdir(parents=True, exist_ok=True)
         for level in TARGET_LEVELS:
             s, e = start_end_map.get(level, (0, 0))
-            if s > 0 and e > s:
-                for device in sorted(all_devices):
-                    for phase in PHASES:
+            adjusted_s = s + skip_n_start
+
+            if adjusted_s > 0 and e > adjusted_s:
+                for phase in PHASES:
+                    for device in sorted_devices:
                         vals = full_data[device][phase]
                         if vals is not None and e <= len(vals):
-                            slice_data = vals.iloc[s:e].reset_index(drop=True)
-                            col_t = f"{level:02d}_{phase}_{device}_t"
-                            col_I = f"{level:02d}_{phase}_{device}_I"
+                            slice_data = vals.iloc[adjusted_s:e].reset_index(drop=True)
+                            col_t = f"{level:02d}_{phase}_t_{device}"
+                            col_I = f"{level:02d}_{phase}_I_{device}"
                             df_export[col_t] = pd.Series(range(len(slice_data)))
                             df_export[col_I] = slice_data
 
         df_export.to_csv(output_path, index=False, sep=";")
-
-        # --- JSON SPEICHERN ---
         save_config(clean_filename, start_end_map)
-
         return str(output_path)
     except Exception as e:
+        st.error(f"Save Error: {e}")
         return None
 
 
@@ -352,18 +324,62 @@ if not files_options:
     st.warning("Keine CSV-Dateien gefunden.")
     st.stop()
 
-# Wir nutzen einen Key für die Selectbox, um Reset zu triggern
 if "selected_file_idx" not in st.session_state:
     st.session_state.selected_file_idx = 0
 
+# --- NAVIGATION LOGIK (NEU: VOR/ZURÜCK + NÄCHSTE OFFENE) ---
 
-def on_select_change():
-    # Reset values bei Dateiewechsel
-    for level in TARGET_LEVELS:
-        st.session_state[f"s_{level}"] = 0
-        st.session_state[f"e_{level}"] = 0
+# 1. Bestimme aktuellen Index
+current_key = st.session_state.get(
+    "file_selector", files_options[0] if files_options else None
+)
+current_idx = 0
+if current_key in files_options:
+    current_idx = files_options.index(current_key)
 
+col_prev, col_next = st.sidebar.columns(2)
 
+# VOR / ZURÜCK BUTTONS
+if col_prev.button("⬅️ Zurück", use_container_width=True):
+    new_idx = (current_idx - 1) % len(files_options)
+    st.session_state["file_selector"] = files_options[new_idx]
+    on_select_change()
+    st.rerun()
+
+if col_next.button("Weiter ➡️", use_container_width=True):
+    new_idx = (current_idx + 1) % len(files_options)
+    st.session_state["file_selector"] = files_options[new_idx]
+    on_select_change()
+    st.rerun()
+
+# NÄCHSTE OFFENE BUTTON
+if st.sidebar.button(
+    "⏩ Nächste offene Messung", type="primary", use_container_width=True
+):
+    # Suche ab nächstem Index
+    start_idx = (current_idx + 1) % len(files_options)
+    search_list = files_options[start_idx:] + files_options[:start_idx]
+
+    found_next = False
+    for display_str in search_list:
+        f_path = file_map[display_str]
+        name, _ = extract_metadata(f_path)
+
+        current_status = "NONE"
+        if name in df_status.index:
+            current_status = df_status.loc[name, "Status"]
+
+        if current_status != "OK":
+            st.session_state["file_selector"] = display_str
+            on_select_change()
+            found_next = True
+            st.rerun()
+            break
+
+    if not found_next:
+        st.sidebar.success("🎉 Alles erledigt! Keine offenen Messungen gefunden.")
+
+# DATEI AUSWAHL BOX
 selected_display = st.sidebar.selectbox(
     "Datei wählen:", files_options, key="file_selector", on_change=on_select_change
 )
@@ -373,10 +389,7 @@ selected_file_path = file_map[selected_display]
 if selected_file_path:
     wandler_name, nennstrom = extract_metadata(selected_file_path)
 
-    # 1. VERSUCH ZU LADEN (JSON)
     saved_ranges = load_config(wandler_name)
-
-    # Session State initial befüllen
     all_zero = all(st.session_state[f"s_{l}"] == 0 for l in TARGET_LEVELS)
     if all_zero and saved_ranges:
         for lvl_str, (s, e) in saved_ranges.items():
@@ -415,9 +428,8 @@ if selected_file_path:
         st.error("Fehler beim Laden der Daten.")
         st.stop()
 
-    # --- RECOVERY BUTTON ---
+    # Recovery Button
     has_active_ranges = any(st.session_state[f"e_{l}"] > 0 for l in TARGET_LEVELS)
-
     if not has_active_ranges:
         st.markdown("---")
         col_rec1, col_rec2 = st.columns([1, 4])
@@ -438,7 +450,7 @@ if selected_file_path:
                 "Versucht, bereits sortierte Daten (falls vorhanden) im Original wiederzufinden."
             )
 
-    # --- PLOT ---
+    # Plot
     ref_l1 = full_data[ref_device_for_plot]["L1"]
     if ref_l1 is not None:
         ref_pct = (ref_l1 / nennstrom) * 100
@@ -479,14 +491,11 @@ if selected_file_path:
         )
         st.plotly_chart(fig, width="stretch")
 
-    # --- INPUT ---
+    # Inputs
     st.markdown("### ✂️ Bereiche definieren")
-
-    # Status laden
     current_status = "OK"
     if wandler_name in df_status.index:
         current_status = df_status.loc[wandler_name, "Status"]
-
     status_idx = 0 if current_status == "OK" else 1
     status_selection = st.radio(
         "Status:", ["OK", "Problem (⚠️)"], index=status_idx, horizontal=True
@@ -501,7 +510,6 @@ if selected_file_path:
         cols_head = st.columns(4)
         for i, level in enumerate(batch):
             cols_head[i].markdown(f"**{level}%**")
-
         cols_ende = st.columns(4)
         for i, level in enumerate(batch):
             cols_ende[i].number_input(
@@ -513,7 +521,6 @@ if selected_file_path:
                 args=(level,),
                 label_visibility="collapsed",
             )
-
         cols_start = st.columns(4)
         for i, level in enumerate(batch):
             cols_start[i].number_input(
@@ -527,18 +534,52 @@ if selected_file_path:
 
     st.markdown("---")
 
-    if st.button("🚀 Rohdaten Exportieren (Alle Geräte)", type="primary"):
-        start_end_map = {}
-        for level in TARGET_LEVELS:
-            s_val = st.session_state[f"s_{level}"]
-            e_val = st.session_state[f"e_{level}"]
-            start_end_map[level] = (s_val, e_val)
+    # --- EXPORT EINSTELLUNGEN ---
+    col_sel, col_skip = st.columns([2, 1])
 
-        new_file_path = save_sorted_raw_data(
-            selected_file_path, full_data, start_end_map, detected_devices, wandler_name
+    with col_sel:
+        # Multiselect für Geräte
+        selected_export_devices = st.multiselect(
+            "Geräte für Export auswählen:", detected_devices, default=detected_devices
+        )
+        if ref_device_for_plot in selected_export_devices:
+            st.caption(f"ℹ️ '{ref_device_for_plot}' wird als erstes exportiert.")
+        else:
+            st.warning(f"⚠️ Referenz '{ref_device_for_plot}' ist nicht ausgewählt!")
+
+    with col_skip:
+        skip_n = st.number_input(
+            "🛡️ Einschwingen ignorieren (Werte):",
+            min_value=0,
+            value=0,
+            help="Anzahl der Messwerte, die am Anfang des gewählten Bereichs abgeschnitten werden.",
         )
 
-        if new_file_path:
-            status_code = "WARNING" if "Problem" in status_selection else "OK"
-            save_tracking_status(wandler_name, status_code)
-            st.success(f"Gespeichert & Config gesichert!\nPfad: `{new_file_path}`")
+    st.markdown("")
+
+    if st.button("🚀 Rohdaten Exportieren (Gewählte Geräte)", type="primary"):
+        if not selected_export_devices:
+            st.error("Bitte mindestens ein Gerät auswählen.")
+        else:
+            start_end_map = {}
+            for level in TARGET_LEVELS:
+                s_val = st.session_state[f"s_{level}"]
+                e_val = st.session_state[f"e_{level}"]
+                start_end_map[level] = (s_val, e_val)
+
+            new_file_path = save_sorted_raw_data(
+                selected_file_path,
+                full_data,
+                start_end_map,
+                selected_export_devices,
+                ref_device_for_plot,
+                wandler_name,
+                skip_n_start=skip_n,
+            )
+
+            if new_file_path:
+                status_code = "WARNING" if "Problem" in status_selection else "OK"
+                save_tracking_status(wandler_name, status_code)
+                st.success(
+                    f"Gespeichert!\nGeräte: {', '.join(selected_export_devices)}\nPfad: `{new_file_path}`"
+                )
