@@ -11,9 +11,13 @@ import re
 import json
 
 # --- KONFIGURATION ---
-DATA_FILE = "messdaten_db.parquet"
-CONFIG_FILE = "saved_configs.json"
-WORK_DIR = "matlab_working_dir"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "daten")  # Verweis auf Unterordner
+
+DATA_FILE = os.path.join(DATA_DIR, "messdaten_db.parquet")
+CONFIG_FILE = os.path.join(DATA_DIR, "saved_configs.json")
+WORK_DIR = os.path.join(BASE_DIR, "matlab_working_dir")
+
 DEFAULT_MATLAB_PATH = r"C:\Program Files\MATLAB\R2025a\bin\matlab.exe"
 
 PHASES = ["L1", "L2", "L3"]
@@ -81,6 +85,10 @@ OTHERS = [
     "#d4d65a",
     "#6fd6e5",
 ]
+
+# Plotly Optionen
+LINE_STYLES = ["solid", "dash", "dot", "dashdot", "longdash"]
+MARKER_SYMBOLS = ["circle", "square", "diamond", "cross", "x", "triangle-up", "star"]
 
 
 # --- HELPER: CONFIG MANAGEMENT ---
@@ -206,16 +214,33 @@ def parse_filename_info(filename_str):
 
 
 def create_single_phase_figure(
-    df_sub, phase, acc_class, y_limit, show_err_bars, title_prefix=""
+    df_sub, phase, acc_class, y_limit, bottom_mode, show_err_bars, title_prefix=""
 ):
-    fig = make_subplots(
-        rows=2,
-        cols=1,
-        shared_xaxes=True,
-        vertical_spacing=0.1,
-        row_heights=[0.65, 0.35],
-        subplot_titles=(f"Fehlerverlauf {phase}", f"Standardabweichung {phase}"),
-    )
+    """
+    bottom_mode: 'Standardabweichung', 'Messwert (Absolut)', 'Ausblenden'
+    """
+    is_single_row = bottom_mode == "Ausblenden"
+    
+    if is_single_row:
+        # Nur 1 Zeile -> Der Plot nutzt 100% der Höhe
+        fig = make_subplots(
+            rows=1,
+            cols=1,
+            subplot_titles=[f"Fehlerverlauf {phase}"],
+        )
+    else:
+        # 2 Zeilen mit Aufteilung 70% / 30%
+        sec_title = "Standardabweichung" if bottom_mode == "Standardabweichung" else "Messwert (Absolut)"
+        fig = make_subplots(
+            rows=2,
+            cols=1,
+            shared_xaxes=True,
+            vertical_spacing=0.1,
+            row_heights=[0.7, 0.3],
+            subplot_titles=(f"Fehlerverlauf {phase}", f"{sec_title} {phase}"),
+        )
+
+    # --- Plotting Main Error (Row 1) ---
     lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
     fig.add_trace(
         go.Scatter(
@@ -239,38 +264,69 @@ def create_single_phase_figure(
         row=1,
         col=1,
     )
+    
     phase_data = df_sub[df_sub["phase"] == phase]
     for uid, group in phase_data.groupby("unique_id"):
         group = group.sort_values("target_load")
         row_first = group.iloc[0]
+        
+        # NEU: Check Visibility
+        if not row_first["final_visible"]:
+            continue
+
         leg_name = row_first["final_legend"]
         color = row_first["final_color"]
+        style = row_first["final_style"]
+        symbol = row_first["final_symbol"]
+        width = row_first["final_width"]
+        size_val = row_first["final_size"]
+        
+        # 1. Main Plot
         fig.add_trace(
             go.Scatter(
                 x=group["target_load"],
                 y=group["err_ratio"],
                 mode="lines+markers",
                 name=leg_name,
-                line=dict(color=color, width=2.5),
-                marker=dict(size=7),
+                line=dict(color=color, width=width, dash=style),
+                marker=dict(size=size_val, symbol=symbol), 
                 legendgroup=leg_name,
                 showlegend=True,
             ),
             row=1,
             col=1,
         )
-        if show_err_bars:
-            fig.add_trace(
-                go.Bar(
-                    x=group["target_load"],
-                    y=group["err_std"],
-                    marker_color=color,
-                    legendgroup=leg_name,
-                    showlegend=False,
-                ),
-                row=2,
-                col=1,
-            )
+        
+        # 2. Secondary Plot (nur wenn NICHT ausgeblendet)
+        if not is_single_row:
+            if bottom_mode == "Standardabweichung":
+                if show_err_bars: # Berücksichtigt Checkbox, falls relevant
+                    fig.add_trace(
+                        go.Bar(
+                            x=group["target_load"],
+                            y=group["err_std"],
+                            marker_color=color,
+                            legendgroup=leg_name,
+                            showlegend=False,
+                        ),
+                        row=2,
+                        col=1,
+                    )
+            elif bottom_mode == "Messwert (Absolut)":
+                fig.add_trace(
+                    go.Scatter(
+                        x=group["target_load"],
+                        y=group["val_dut_mean"],
+                        mode="lines+markers",
+                        line=dict(color=color, width=1.5, dash="dot"),
+                        marker=dict(symbol="x", size=size_val),
+                        legendgroup=leg_name,
+                        showlegend=False,
+                    ),
+                    row=2,
+                    col=1,
+                )
+
     fig.update_layout(
         title=dict(text=f"{title_prefix} - Phase {phase}", font=dict(size=18)),
         template="plotly_white",
@@ -279,16 +335,27 @@ def create_single_phase_figure(
         font=dict(family="Serif", size=14, color="black"),
         legend=dict(
             orientation="h", 
-            y=-0.15, 
+            y=-0.15, # Legende unter das Diagramm
             x=0.5, 
             xanchor="center", 
-            bgcolor="rgba(255,255,255,0.8)"
+            bgcolor="rgba(255,255,255,0.8)",
+            font=dict(size=16)
         ),
         margin=dict(l=60, r=30, t=80, b=120),
     )
+    
     fig.update_yaxes(range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1)
-    fig.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
-    fig.update_xaxes(title_text="Strom [% In]", row=2, col=1)
+    
+    if not is_single_row:
+        if bottom_mode == "Standardabweichung":
+            fig.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
+        else:
+            fig.update_yaxes(title_text="Strom [A]", row=2, col=1)
+        fig.update_xaxes(title_text="Strom [% In]", row=2, col=1)
+    else:
+        # X-Achsen-Label an Row 1, da Row 2 nicht existiert
+        fig.update_xaxes(title_text="Strom [% In]", row=1, col=1)
+        
     return fig
 
 
@@ -391,6 +458,8 @@ def load_data():
         df["Kommentar"] = (
             df["Kommentar"].astype(str).replace("nan", "").replace("None", "")
         )
+    if "val_dut_mean" not in df.columns:
+        df["val_dut_mean"] = 0.0
     return df
 
 
@@ -412,6 +481,21 @@ def ensure_working_dir():
 
 # --- APP START ---
 st.set_page_config(page_title="Wandler Dashboard", layout="wide", page_icon="📈")
+
+# --- HIER EINFÜGEN: CSS FÜR BREITERE SIDEBAR ---
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"] {
+        min-width: 600px;
+        max-width: 900px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+# -----------------------------------------------
+
 df = load_data()
 if df is None:
     st.error(f"⚠️ Datei '{DATA_FILE}' fehlt.")
@@ -443,7 +527,18 @@ with st.sidebar.expander("Laden & Speichern", expanded=True):
                 st.session_state["k_sync"] = data.get("sync_axes", True)
                 st.session_state["k_ylim"] = data.get("y_limit", 1.5)
                 st.session_state["k_class"] = data.get("acc_class", 0.2)
-                st.session_state["k_errbars"] = data.get("show_err_bars", True)
+                
+                saved_err_bool = data.get("show_err_bars", True)
+                
+                # Bottom Plot logic
+                saved_mode = data.get("bottom_plot_mode", "Standardabweichung")
+                if not saved_err_bool and saved_mode == "Standardabweichung":
+                    # Fallback für alte Configs wo es nur checkbox gab
+                    pass 
+                
+                st.session_state["k_bottom_mode"] = saved_mode
+                st.session_state["k_errbars"] = saved_err_bool
+                
                 # Eco
                 st.session_state["k_eco_x"] = data.get("eco_x", "Preis (€)")
                 st.session_state["k_eco_y"] = data.get("eco_y", ["Fehler Nennstrom"])
@@ -452,6 +547,11 @@ with st.sidebar.expander("Laden & Speichern", expanded=True):
                 st.session_state["loaded_colors"] = data.get("custom_colors", {})
                 st.session_state["loaded_legends"] = data.get("custom_legends", {})
                 st.session_state["loaded_titles"] = data.get("custom_titles", {})
+                st.session_state["loaded_styles"] = data.get("custom_styles", {})
+                st.session_state["loaded_symbols"] = data.get("custom_symbols", {})
+                st.session_state["loaded_widths"] = data.get("custom_widths", {})
+                st.session_state["loaded_visible"] = data.get("custom_visible", {})
+                st.session_state["loaded_sizes"] = data.get("custom_sizes", {})
                 st.success(f"'{sel_config_load}' geladen!")
                 st.rerun()
     with col_del:
@@ -479,10 +579,12 @@ if not isinstance(default_curr, list):
     default_curr = [default_curr]
 default_curr = [c for c in default_curr if c in available_currents]
 
+if "k_current" not in st.session_state:
+    st.session_state["k_current"] = default_curr
+
 sel_currents = st.sidebar.multiselect(
     "1. Nennstrom (Mehrfachauswahl):",
     available_currents,
-    default=default_curr,
     format_func=lambda x: f"{int(x)} A",
     key="k_current",
 )
@@ -512,7 +614,7 @@ if not sel_geos:
 df_geo_filtered = df_curr[df_curr["Geometrie"].isin(sel_geos)]
 available_wandlers = sorted(df_geo_filtered["wandler_key"].unique())
 
-# Sanitize Wandler (Fix für den Fehler)
+# Sanitize Wandler
 saved_wandlers = st.session_state.get("k_wandlers", available_wandlers)
 valid_wandlers = [w for w in saved_wandlers if w in available_wandlers]
 if not valid_wandlers and available_wandlers:
@@ -599,19 +701,48 @@ acc_class = st.sidebar.selectbox(
     index=[0.2, 0.5, 1.0, 3.0].index(st.session_state.get("k_class", 0.2)),
     key="k_class",
 )
+
+# NEUE AUSWAHL FÜR UNTERES DIAGRAMM
+bottom_plot_options = ["Standardabweichung", "Messwert (Absolut)", "Ausblenden"]
+try:
+    saved_mode = st.session_state.get("k_bottom_mode", "Standardabweichung")
+    b_idx = bottom_plot_options.index(saved_mode)
+except:
+    b_idx = 0
+
+bottom_plot_mode = st.sidebar.selectbox(
+    "Unteres Diagramm:",
+    bottom_plot_options,
+    index=b_idx,
+    key="k_bottom_mode"
+)
+
+# WICHTIG: DIESE VARIABLE STEUERT DAS LAYOUT
+use_single_row = (bottom_plot_mode == "Ausblenden")
+
+
 show_err_bars = st.sidebar.checkbox(
     "Fehlerbalken (StdAbw)",
     value=st.session_state.get("k_errbars", True),
     key="k_errbars",
 )
 
-# --- CUSTOMIZATION ---
+
+# --- CUSTOMIZATION: FARBEN, NAMEN, STILE, SICHTBARKEIT, GRÖSSE ---
+# --- CUSTOMIZATION: FARBEN, NAMEN, STILE, SICHTBARKEIT, GRÖSSE ---
 with st.sidebar.expander("Farben & Namen bearbeiten", expanded=False):
+    # 1. "Geometrie" zur Liste hinzufügen
     unique_curves = df_sub[
-        ["unique_id", "wandler_key", "folder", "dut_name", "Kommentar", "nennstrom"]
+        ["unique_id", "wandler_key", "folder", "dut_name", "Kommentar", "nennstrom", "Geometrie"]
     ].drop_duplicates()
+    
     loaded_colors = st.session_state.get("loaded_colors", {})
     loaded_legends = st.session_state.get("loaded_legends", {})
+    loaded_styles = st.session_state.get("loaded_styles", {})
+    loaded_symbols = st.session_state.get("loaded_symbols", {})
+    loaded_widths = st.session_state.get("loaded_widths", {})
+    loaded_visible = st.session_state.get("loaded_visible", {})
+    loaded_sizes = st.session_state.get("loaded_sizes", {})
 
     config_data = []
     b_idx, o_idx, x_idx = 0, 0, 0
@@ -631,7 +762,27 @@ with st.sidebar.expander("Farben & Namen bearbeiten", expanded=False):
 
         cur_legend = loaded_legends.get(uid, auto_name)
         cur_color = loaded_colors.get(uid, col)
-        config_data.append({"ID": uid, "Legende": cur_legend, "Farbe": cur_color})
+        cur_style = loaded_styles.get(uid, "solid")
+        cur_symbol = loaded_symbols.get(uid, "circle")
+        cur_width = loaded_widths.get(uid, 2.5)
+        cur_visible = loaded_visible.get(uid, True)
+        cur_size = loaded_sizes.get(uid, 8)
+        
+        # --- HIER IST DIE FEHLENDE ZEILE ---
+        cur_geo = str(row["Geometrie"]) 
+        # -----------------------------------
+
+        config_data.append({
+            "ID": uid, 
+            "Anzeigen": cur_visible,
+            "Legende": cur_legend, 
+            "Geometrie": cur_geo,   # Jetzt ist cur_geo bekannt
+            "Farbe": cur_color,
+            "Linie": cur_style,
+            "Breite": cur_width,
+            "Marker": cur_symbol,
+            "Größe": cur_size
+        })
 
     if hasattr(st.column_config, "ColorColumn"):
         color_col_config = st.column_config.ColorColumn("Farbe")
@@ -640,27 +791,48 @@ with st.sidebar.expander("Farben & Namen bearbeiten", expanded=False):
 
     edited_config = st.data_editor(
         pd.DataFrame(config_data),
-        column_config={"ID": None, "Legende": "Legende", "Farbe": color_col_config},
-        disabled=["ID"],
+        column_config={
+            "ID": None, 
+            "Anzeigen": st.column_config.CheckboxColumn("Anzeigen", default=True),
+            "Legende": "Legende", 
+            "Geometrie": st.column_config.TextColumn("Geometrie", disabled=True), # Nicht editierbar
+            "Farbe": color_col_config,
+            "Linie": st.column_config.SelectboxColumn("Linienstil", options=LINE_STYLES, required=True),
+            "Marker": st.column_config.SelectboxColumn("Symbol", options=MARKER_SYMBOLS, required=True),
+            "Breite": st.column_config.NumberColumn("Dicke", min_value=0.5, max_value=10.0, step=0.5),
+            "Größe": st.column_config.NumberColumn("Sym.Größe", min_value=1, max_value=30, step=1)
+        },
+        disabled=["ID", "Geometrie"], 
         hide_index=True,
         key="design_editor",
+        use_container_width=True
     )
 
-map_legend = dict(zip(edited_config["ID"], edited_config["Legende"]))
-map_color = dict(zip(edited_config["ID"], edited_config["Farbe"]))
-df_sub["final_legend"] = df_sub["unique_id"].map(map_legend)
-df_sub["final_color"] = df_sub["unique_id"].map(map_color)
+    # Mapping erstellen
+    map_legend = dict(zip(edited_config["ID"], edited_config["Legende"]))
+    map_color = dict(zip(edited_config["ID"], edited_config["Farbe"]))
+    map_style = dict(zip(edited_config["ID"], edited_config["Linie"]))
+    map_symbol = dict(zip(edited_config["ID"], edited_config["Marker"]))
+    map_width = dict(zip(edited_config["ID"], edited_config["Breite"]))
+    map_visible = dict(zip(edited_config["ID"], edited_config["Anzeigen"]))
+    map_size = dict(zip(edited_config["ID"], edited_config["Größe"]))
+
+    # Zuweisung an den DataFrame
+    df_sub["final_legend"] = df_sub["unique_id"].map(map_legend)
+    df_sub["final_color"] = df_sub["unique_id"].map(map_color)
+    df_sub["final_style"] = df_sub["unique_id"].map(map_style)
+    df_sub["final_symbol"] = df_sub["unique_id"].map(map_symbol)
+    df_sub["final_width"] = df_sub["unique_id"].map(map_width)
+    df_sub["final_visible"] = df_sub["unique_id"].map(map_visible)
+    df_sub["final_size"] = df_sub["unique_id"].map(map_size)
 
 with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
     loaded_titles = st.session_state.get("loaded_titles", {})
     
-    # Hier wird das Schema: Nennstrom | Typ | Freiertext angewendet
-    # current_title_str enthält z.B. "2000 A" oder "100, 200 A"
-    
     default_titles_data = [
         {
             "Typ": "Gesamtübersicht (Tab 1)",
-            "Default": f"{current_title_str} | Fehlerkurve |  | Phasen-Vergleich",
+            "Default": f"{current_title_str} | Fehlerkurve |  | Phasen-Vergleich",
         },
         {
             "Typ": "Scatter-Plot", 
@@ -691,7 +863,6 @@ with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
     merged_titles = []
     for item in default_titles_data:
         t_type = item["Typ"]
-        # Wenn bereits ein Titel geladen/gespeichert wurde, nimm diesen, sonst den neuen Default
         val = loaded_titles.get(t_type, item["Default"])
         merged_titles.append({"Typ": t_type, "Titel": val})
         
@@ -705,6 +876,7 @@ with st.sidebar.expander("Diagramm-Titel bearbeiten", expanded=False):
         key="titles_editor",
     )
     TITLES_MAP = dict(zip(edited_titles_df["Typ"], edited_titles_df["Titel"]))
+
 if st.session_state.get("trigger_save", False):
     snapshot_data = {
         "current": sel_currents,
@@ -716,8 +888,14 @@ if st.session_state.get("trigger_save", False):
         "y_limit": y_limit,
         "acc_class": acc_class,
         "show_err_bars": show_err_bars,
+        "bottom_plot_mode": bottom_plot_mode, # Save this!
         "custom_colors": map_color,
         "custom_legends": map_legend,
+        "custom_styles": map_style,
+        "custom_symbols": map_symbol,
+        "custom_widths": map_width,
+        "custom_visible": map_visible,  # NEU
+        "custom_sizes": map_size,       # NEU
         "custom_titles": TITLES_MAP,
         "eco_x": st.session_state.get("k_eco_x", "Preis (€)"),
         "eco_y": st.session_state.get("k_eco_y", ["Fehler Nennstrom"]),
@@ -878,7 +1056,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
                             legend=dict(
-                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                                orientation="h", y=-0.2, x=0.5, xanchor="center",
+                                font=dict(size=16)
                             ),
                         )
                         zf.writestr(
@@ -904,7 +1083,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
                             legend=dict(
-                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                                orientation="h", y=-0.2, x=0.5, xanchor="center",
+                                font=dict(size=16)
                             ),
                         )
                         zf.writestr(
@@ -958,7 +1138,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
                             legend=dict(
-                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                                orientation="h", y=-0.2, x=0.5, xanchor="center",
+                                font=dict(size=16)
                             ),
                         )
                         zf.writestr(
@@ -997,7 +1178,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
                             legend=dict(
-                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                                orientation="h", y=-0.2, x=0.5, xanchor="center",
+                                font=dict(size=16)
                             ),
                         )
                         zf.writestr(
@@ -1039,7 +1221,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                             height=794,
                             font=dict(family="Serif", size=14, color="black"),
                             legend=dict(
-                                orientation="h", y=-0.2, x=0.5, xanchor="center"
+                                orientation="h", y=-0.2, x=0.5, xanchor="center",
+                                font=dict(size=16)
                             ),
                         )
                         zf.writestr(
@@ -1054,15 +1237,30 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                 main_title_export = TITLES_MAP.get(
                     "Gesamtübersicht (Tab 1)", f"Gesamtübersicht: {current_title_str}"
                 )
-                fig_ex = make_subplots(
-                    rows=2,
-                    cols=3,
-                    shared_xaxes=True,
-                    vertical_spacing=0.1,
-                    horizontal_spacing=0.05,
-                    row_heights=[0.65, 0.35],
-                    subplot_titles=PHASES,
-                )
+                
+                # Layout-Konfiguration basierend auf Modus
+                if use_single_row:
+                    # MODUS: NUR FEHLERKURVE (Volle Höhe)
+                    fig_ex = make_subplots(
+                        rows=1,
+                        cols=3,
+                        shared_xaxes=True,
+                        subplot_titles=PHASES,
+                        horizontal_spacing=0.05
+                        # WICHTIG: Keine row_heights, damit Plotly den Platz füllt
+                    )
+                else:
+                    # MODUS: MIT UNTERDIAGRAMM (Geteilte Höhe)
+                    fig_ex = make_subplots(
+                        rows=2,
+                        cols=3,
+                        shared_xaxes=True,
+                        vertical_spacing=0.1,
+                        horizontal_spacing=0.05,
+                        row_heights=[0.7, 0.3], # 70% oben, 30% unten
+                        subplot_titles=PHASES,
+                    )
+                    
                 lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
                 for c_idx, ph in enumerate(PHASES, 1):
                     fig_ex.add_trace(
@@ -1092,40 +1290,80 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                     for uid, group in phase_data.groupby("unique_id"):
                         group = group.sort_values("target_load")
                         row_first = group.iloc[0]
+                        
+                        # NEU: Check Visibility
+                        if not row_first["final_visible"]:
+                            continue
+
+                        # NEW: Access Style & Symbol & Width
+                        style = row_first["final_style"]
+                        symbol = row_first["final_symbol"]
+                        width = row_first["final_width"]
+                        size_val = row_first["final_size"]
+                        
                         fig_ex.add_trace(
                             go.Scatter(
                                 x=group["target_load"],
                                 y=group["err_ratio"],
                                 mode="lines+markers",
                                 name=row_first["final_legend"],
-                                line=dict(color=row_first["final_color"], width=2.5),
+                                line=dict(color=row_first["final_color"], width=width, dash=style),
+                                marker=dict(size=size_val, symbol=symbol),
                                 legendgroup=row_first["final_legend"],
                                 showlegend=(c_idx == 1),
                             ),
                             row=1,
                             col=c_idx,
                         )
-                        if show_err_bars:
-                            fig_ex.add_trace(
-                                go.Bar(
-                                    x=group["target_load"],
-                                    y=group["err_std"],
-                                    marker_color=row_first["final_color"],
-                                    legendgroup=row_first["final_legend"],
-                                    showlegend=False,
-                                ),
-                                row=2,
-                                col=c_idx,
-                            )
+                        
+                        if not use_single_row:
+                            if bottom_plot_mode == "Standardabweichung":
+                                if show_err_bars:
+                                    fig_ex.add_trace(
+                                        go.Bar(
+                                            x=group["target_load"],
+                                            y=group["err_std"],
+                                            marker_color=row_first["final_color"],
+                                            legendgroup=row_first["final_legend"],
+                                            showlegend=False,
+                                        ),
+                                        row=2,
+                                        col=c_idx,
+                                    )
+                            elif bottom_plot_mode == "Messwert (Absolut)":
+                                fig_ex.add_trace(
+                                    go.Scatter(
+                                        x=group["target_load"],
+                                        y=group["val_dut_mean"],
+                                        mode="lines+markers",
+                                        line=dict(color=row_first["final_color"], width=1.5, dash="dot"),
+                                        marker=dict(symbol="x", size=size_val),
+                                        legendgroup=row_first["final_legend"],
+                                        showlegend=False,
+                                    ),
+                                    row=2,
+                                    col=c_idx,
+                                )
+
                 fig_ex.update_layout(
                     title=dict(text=main_title_export, font=dict(size=18)),
                     template="plotly_white",
                     width=1123,
                     height=794,
                     font=dict(family="Serif", size=14, color="black"),
-                    legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center"),
+                    legend=dict(
+                        orientation="h", y=-0.15, x=0.5, xanchor="center",
+                        font=dict(size=16)
+                    ),
                 )
                 fig_ex.update_yaxes(range=[-y_limit, y_limit], row=1)
+                
+                if not use_single_row:
+                    if bottom_plot_mode == "Standardabweichung":
+                        fig_ex.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
+                    else:
+                        fig_ex.update_yaxes(title_text="Strom [A]", row=2, col=1)
+                
                 with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED) as zf:
                     zf.writestr(
                         f"{safe_conf_name}-Zusammenfassung_MultiCurrent.pdf",
@@ -1189,7 +1427,8 @@ if st.sidebar.button("🔄 Export starten", type="primary"):
                                 ph,
                                 acc_class,
                                 y_limit,
-                                show_err_bars,
+                                bottom_plot_mode, # pass selected mode
+                                show_err_bars,    # pass check box
                                 title_prefix=f"{current_title_str}",
                             )
                             zf.writestr(
@@ -1217,16 +1456,33 @@ with tab1:
     custom_title_tab1 = TITLES_MAP.get(
         "Gesamtübersicht (Tab 1)", f"Gesamtübersicht: {current_title_str}"
     )
-    fig_main = make_subplots(
-        rows=2,
-        cols=3,
-        shared_xaxes=True,
-        vertical_spacing=0.08,
-        row_heights=[0.7, 0.3],
-        subplot_titles=PHASES,
-    )
+    
+    # Layout-Konfiguration basierend auf Modus
+    if use_single_row:
+        # MODUS: NUR FEHLERKURVE (Volle Höhe)
+        fig_main = make_subplots(
+            rows=1,
+            cols=3,
+            shared_xaxes=True,
+            subplot_titles=PHASES,
+            horizontal_spacing=0.05
+            # WICHTIG: Keine row_heights, damit Plotly den Platz füllt
+        )
+    else:
+        # MODUS: MIT UNTERDIAGRAMM (Geteilte Höhe)
+        fig_main = make_subplots(
+            rows=2,
+            cols=3,
+            shared_xaxes=True,
+            vertical_spacing=0.08,
+            horizontal_spacing=0.05,
+            row_heights=[0.7, 0.3], # 70% oben, 30% unten
+            subplot_titles=PHASES,
+        )
+
     lim_x, lim_y_p, lim_y_n = get_trumpet_limits(acc_class)
     for col_idx, phase in enumerate(PHASES, start=1):
+        # --- Klassengrenzen ---
         fig_main.add_trace(
             go.Scatter(
                 x=lim_x,
@@ -1249,48 +1505,99 @@ with tab1:
             row=1,
             col=col_idx,
         )
+        
+        # --- Daten-Kurven ---
         phase_data = df_sub[df_sub["phase"] == phase]
         for uid, group in phase_data.groupby("unique_id"):
             group = group.sort_values("target_load")
             row_first = group.iloc[0]
+            
+            # NEU: Check Visibility
+            if not row_first["final_visible"]:
+                continue
+
+            # NEW: Access Style & Symbol & Width
+            style = row_first["final_style"]
+            symbol = row_first["final_symbol"]
+            width = row_first["final_width"]
+            size_val = row_first["final_size"]
+            
+            # HAUPT-PLOT (Immer Zeile 1)
             fig_main.add_trace(
                 go.Scatter(
                     x=group["target_load"],
                     y=group["err_ratio"],
                     mode="lines+markers",
                     name=row_first["final_legend"],
-                    line=dict(color=row_first["final_color"], width=2),
+                    line=dict(color=row_first["final_color"], width=width, dash=style),
+                    marker=dict(size=size_val, symbol=symbol),
                     legendgroup=row_first["final_legend"],
                     showlegend=(col_idx == 1),
                 ),
                 row=1,
                 col=col_idx,
             )
-            if show_err_bars:
-                fig_main.add_trace(
-                    go.Bar(
-                        x=group["target_load"],
-                        y=group["err_std"],
-                        marker_color=row_first["final_color"],
-                        legendgroup=row_first["final_legend"],
-                        showlegend=False,
-                    ),
-                    row=2,
-                    col=col_idx,
-                )
+            
+            # UNTERES DIAGRAMM (Nur wenn nicht 'Ausblenden')
+            if not use_single_row:
+                if bottom_plot_mode == "Standardabweichung":
+                    if show_err_bars:
+                        fig_main.add_trace(
+                            go.Bar(
+                                x=group["target_load"],
+                                y=group["err_std"],
+                                marker_color=row_first["final_color"],
+                                legendgroup=row_first["final_legend"],
+                                showlegend=False,
+                            ),
+                            row=2,
+                            col=col_idx,
+                        )
+                elif bottom_plot_mode == "Messwert (Absolut)":
+                    fig_main.add_trace(
+                        go.Scatter(
+                            x=group["target_load"],
+                            y=group["val_dut_mean"],
+                            mode="lines+markers",
+                            line=dict(color=row_first["final_color"], width=1.5, dash="dot"),
+                            marker=dict(symbol="x", size=size_val),
+                            legendgroup=row_first["final_legend"],
+                            showlegend=False,
+                        ),
+                        row=2,
+                        col=col_idx,
+                    )
+
     fig_main.update_layout(
         title=custom_title_tab1,
         template="plotly_white",
-        height=800,
-        legend=dict(orientation="h", y=-0.15, x=0.5, xanchor="center"),
+        height=800, # Fixe Gesamthöhe - bei Single Row wird diese voll genutzt
+        legend=dict(
+            orientation="h", y=-0.15, x=0.5, xanchor="center",
+            font=dict(size=16)
+        ),
+        font=dict(family="Serif", size=14, color="black"),
     )
+    
+    # Y-Achsen Sync für Zeile 1
     if sync_axes:
         fig_main.update_yaxes(matches="y", row=1)
+        
     fig_main.update_yaxes(
         range=[-y_limit, y_limit], title_text="Fehler [%]", row=1, col=1
     )
-    fig_main.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
-    fig_main.update_xaxes(title_text="Last [% In]", row=2, col=2)
+    
+    # Achsenbeschriftungen anpassen je nach Modus
+    if not use_single_row:
+        if bottom_plot_mode == "Standardabweichung":
+            fig_main.update_yaxes(title_text="StdAbw [%]", row=2, col=1)
+        else:
+            fig_main.update_yaxes(title_text="Strom [A]", row=2, col=1)
+        fig_main.update_xaxes(title_text="Last [% In]", row=2, col=2)
+    else:
+        # Wenn nur 1 Zeile, muss das Label an die x-Achse der 1. Zeile
+        fig_main.update_xaxes(title_text="Last [% In]", row=1, col=2)
+        
     st.plotly_chart(fig_main, use_container_width=True)
 
 with tab2:
@@ -1407,7 +1714,10 @@ with tab2:
                     color_discrete_map=color_map_dict,
                     title=title_str,
                 )
-                fig_eco.update_layout(legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
+                fig_eco.update_layout(legend=dict(
+                    orientation="h", y=-0.2, x=0.5, xanchor="center",
+                    font=dict(size=16)
+                ))
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Performance-Index":
                 title_str = TITLES_MAP.get("Performance-Index", "Performance Index")
@@ -1438,7 +1748,10 @@ with tab2:
                 )
                 fig_eco.update_layout(
                     yaxis=dict(autorange="reversed"),
-                    legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"),
+                    legend=dict(
+                        orientation="h", y=-0.2, x=0.5, xanchor="center",
+                        font=dict(size=16)
+                    ),
                 )
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Heatmap":
@@ -1477,7 +1790,10 @@ with tab2:
                     color="Kategorie",
                     title=title_str,
                 )
-                fig_eco.update_layout(legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
+                fig_eco.update_layout(legend=dict(
+                    orientation="h", y=-0.2, x=0.5, xanchor="center",
+                    font=dict(size=16)
+                ))
                 st.plotly_chart(fig_eco, use_container_width=True)
             elif chart_type == "Pareto":
                 title_str = TITLES_MAP.get("Pareto", "Pareto-Analyse")
@@ -1507,7 +1823,10 @@ with tab2:
                     ),
                     secondary_y=True,
                 )
-                fig_par.update_layout(title=title_str, legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"))
+                fig_par.update_layout(title=title_str, legend=dict(
+                    orientation="h", y=-0.2, x=0.5, xanchor="center",
+                    font=dict(size=16)
+                ))
                 st.plotly_chart(fig_par, use_container_width=True)
             elif chart_type == "Radar":
                 title_str = TITLES_MAP.get("Radar", "Radar-Vergleich")
@@ -1537,7 +1856,10 @@ with tab2:
                 fig_r.update_layout(
                     polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
                     title=title_str,
-                    legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center"),
+                    legend=dict(
+                        orientation="h", y=-0.2, x=0.5, xanchor="center",
+                        font=dict(size=16)
+                    ),
                 )
                 st.plotly_chart(fig_r, use_container_width=True)
 

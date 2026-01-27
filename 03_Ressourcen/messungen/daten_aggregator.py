@@ -5,10 +5,21 @@ import os
 import glob
 
 # --- KONFIGURATION ---
-OUTPUT_FILE = "messdaten_db.parquet"
+import os
+# ... andere imports ...
+
+# --- KONFIGURATION ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "daten")
+
+OUTPUT_FILE = os.path.join(DATA_DIR, "messdaten_db.parquet")
 SEARCH_DIR = "messungen_sortiert"
+
 TARGET_LEVELS = [5, 20, 50, 80, 90, 100, 120]
 PHASES = ["L1", "L2", "L3"]
+
+
+
 
 # Priorität für Referenz: PAC1 steht ganz oben!
 REF_KEYWORDS = ["pac1", "einspeisung", "ref", "source", "norm"]

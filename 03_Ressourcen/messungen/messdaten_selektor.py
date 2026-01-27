@@ -6,10 +6,20 @@ import re
 from pathlib import Path
 
 # --- KONFIGURATION ---
-TRACKING_CSV = "manuelle_ergebnisse.csv"
+# --- KONFIGURATION ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "daten")
+
+TRACKING_CSV = os.path.join(DATA_DIR, "manuelle_ergebnisse.csv")
+CONFIG_JSON = os.path.join(DATA_DIR, "saved_configs.json")
+OUTPUT_ROOT_DIR = "messungen_sortiert" # Bleibt im Root, da Ordner existiert
+
+
 TARGET_LEVELS = [5, 20, 50, 80, 90, 100, 120]
 PHASES = ["L1", "L2", "L3"]
 OUTPUT_ROOT_DIR = "messungen_sortiert"
+
+
 
 st.set_page_config(layout="wide", page_title="Manueller Rohdaten-Export (Multi-Device)")
 
