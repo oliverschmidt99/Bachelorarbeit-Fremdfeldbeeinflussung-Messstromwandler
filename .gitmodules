@@ -1,0 +1,3 @@
+[submodule "03_Ressourcen/messungen"]
+	path = 03_Ressourcen/messungen
+	url = https://github.com/oliverschmidt99/messungen-bachelorarbeit.git
