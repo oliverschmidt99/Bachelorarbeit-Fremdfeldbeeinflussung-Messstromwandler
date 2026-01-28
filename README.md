@@ -2,12 +2,17 @@
 
 ![Status](https://img.shields.io/badge/Status-In_Bearbeitung-yellow)
 ![Fachbereich](https://img.shields.io/badge/Bereich-Elektrotechnik-blue)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://messungen-bachelorarbeit-g42pdwwuhus3o9qz4gfo8s.streamlit.app/)
 
 ## 📄 Projektübersicht
 
 Im Rahmen dieser Bachelorarbeit wird die Messgenauigkeit von Stromwandlern in Niederspannungsschaltanlagen untersucht. Ein besonderer Fokus liegt auf der **magnetischen Kopplung** zwischen benachbarten Phasen bzw. externen Stromschienen. Diese Fremdfelder wurden in Voruntersuchungen als signifikante Störgröße identifiziert, die zu relevanten Messabweichungen führen.
 
 Das Projekt umfasst sowohl die **experimentelle Quantifizierung** dieser Fehler am Hochstrom-Prüfstand als auch die **technische Optimierung** der Messkette (Retrofit durch digitale Messtechnik und SPS-Automatisierung).
+
+### 🚀 Interaktive Ergebnisse
+Die Auswertung der Messreihen und die Visualisierung der Fehlerkurven sind in einem interaktiven Dashboard verfügbar:
+👉 **[Zum Dashboard (Live-Demo)](https://messungen-bachelorarbeit-tjjqshzjfbnj2soadxq3vt.streamlit.app/)**
 
 ## 📅 Zeitplan & Projektmanagement
 
@@ -37,7 +42,7 @@ gantt
 
 
     %% ==============================================================================
-    %% PRÜFEN (Reviews immer 2 TagProgrammierunge VOR dem Meilenstein/Meeting)
+    %% PRÜFEN (Reviews immer 2 Tage VOR dem Meilenstein/Meeting)
     %% ==============================================================================
     section Prüfen
     %% ZK1 ist am 15.12 (Mo) -> Prüfung am Do/Fr davor
@@ -90,20 +95,3 @@ gantt
     Regelmäßiges Meeting 4              :meeting_4, 2026-01-12, 1d
     Regelmäßiges Meeting 5              :meeting_5, 2026-01-26, 1d
     Regelmäßiges Meeting 6              :meeting_6, 2026-02-09, 1d
-```
-
-# Autor
-
-Oliver Schmidt Student Elektrotechnik
-
-# Lizenz & Rechtliche Hinweise
-
-![Status](https://img.shields.io/badge/Status-Propriet%C3%A4r%2FGeschlossen-red)
-
-Dieses Projekt, einschließlich aller Daten, Quellcodes und Dokumentationen, ist urheberrechtlich geschützt und enthält vertrauliche Informationen des Kooperationspartners.
-
-**Copyright © 2025 Oliver Schmidt & Rolf Janssen GmbH Elektrotechnische Werke**
-
-- Alle Rechte vorbehalten.
-- Die Inhalte sind ausschließlich zur Vorlage bei der prüfenden Hochschule bestimmt.
-- Jede Art der Vervielfältigung, Verbreitung, Veröffentlichung oder Weitergabe an Dritte ist ohne ausdrückliche schriftliche Genehmigung der Rechteinhaber streng untersagt.
