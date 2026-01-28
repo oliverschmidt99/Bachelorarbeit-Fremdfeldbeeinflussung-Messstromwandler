@@ -44,23 +44,30 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
     \small
     \begin{tabular}{@{}l l l l l@{}}
         \toprule
-        \textbf{Komponente}      & \textbf{Typ}         & \textbf{Leistung / Bürde}
-              & \textbf{Primär / Input} & \textbf{Sekundär / Output}          \\ \midrule
-        Säulenstelltransformator & Ruhstrat             & \SI{90}{kVA}
-                    & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A}) \\
-        Festtransformator        & Janssen              & \SI{30}{kVA}
-                                & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})            \\
-        Stromwandler             & Celsa ICG            & \SI{5}{VA}
-                                                              & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                \\
+        \textbf{Komponente}      & \textbf{Typ}            & \textbf{Leistung / Bürde}
 
-   Messumformer (K-3)       & 3-K Elektrik         & --                                                                          & \SI{0}{A}--\SI{5}{A} AC &
-\SI{0}{mA}--\SI{20}{mA} \gls{dc}    \\ \midrule
-        \textbf{Leittechnik}     & \textbf{Typ}         & \multicolumn{3}{l}{\textbf{Beschreibung}}
-                              \\ \cmidrule(r){1-2}
-        Steuerung                & Siemens \gls{et200s} & \multicolumn{3}{l}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}
-                          \\
-        Visualisierung           & Siemens \gls{wincc}  & \multicolumn{3}{l}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}
-                      \\ \bottomrule
+                                 & \textbf{Primär / Input} & \textbf{Sekundär / Output}                                                                                \\ \midrule
+        Säulenstelltransformator & Ruhstrat                & \SI{90}{kVA}
+
+                                 & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A})                                                                       \\
+        Festtransformator        & Janssen                 & \SI{30}{kVA}
+
+                                 & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})                                                                                  \\
+        Stromwandler             & Celsa ICG               & \SI{5}{VA}
+
+                                 & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                                                                                      \\
+        
+        Messumformer (K-3)       & 3-K Elektrik            & --                                                                          & \SI{0}{A}--\SI{5}{A} AC & 
+        \SI{0}{mA}--\SI{20}{mA} \gls{dc}                                                                                                                               \\ \midrule
+        \textbf{Leittechnik}     & \textbf{Typ}            & \multicolumn{3}{l}{\textbf{Beschreibung}}
+
+        \\ \cmidrule(r){1-2}
+        Steuerung                & Siemens \gls{et200s}    & \multicolumn{3}{l}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}
+
+        \\
+        Visualisierung           & Siemens \gls{wincc}     & \multicolumn{3}{l}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}
+
+        \\ \bottomrule
     \end{tabular}
 \end{table}
 
@@ -193,6 +200,7 @@ Um die segmentierten Messreihen vergleichbar zu machen, erfolgt im Anschluss die
 Dieses Modul durchläuft automatisiert die sortierten Dateien und führt die statistischen Berechnungen durch.
 Dabei werden für jede Messreihe verschiedene Vergleichsoperationen durchgeführt, um die Güte der Versuchsführung sowie die Genauigkeit des Prüflings zu bewerten.
 Tabelle~\ref{tab:berechnungsmodi} gibt eine Übersicht über die implementierten Berechnungsmodi und deren Zielsetzung.
+
 \begin{table}[H]
     \centering
     \caption{Übersicht der Berechnungsmodi im Daten-Aggregator}
@@ -201,16 +209,13 @@ Tabelle~\ref{tab:berechnungsmodi} gibt eine Übersicht über die implementierten
     \begin{tabular}{@{}l l l p{5cm}@{}}
         \toprule
         \textbf{Modus} & \textbf{Referenzwert ($I_{ref}$)} & \textbf{Messwert ($I_{ist}$)} & \textbf{Untersuchungsziel} \\ \midrule
-        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat.
-\\ \addlinespace
-        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung).
-\\ \addlinespace
-        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S).
-\\ \bottomrule
+        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat. \\ \addlinespace
+        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung). \\ \addlinespace
+        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S). \\ \bottomrule
     \end{tabular}
 \end{table}
 
-Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt für alle Modi gemäß der Formel:
+Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt analog zu den in Abschnitt \ref{sec:messabweichung_fehlerfortpflanzung} (Gleichung \ref{eq:messabweichung_epsilon}) dargelegten Grundlagen. Für die automatisierte Auswertung wird folgende Berechnungsvorschrift angewendet:
 
 \begin{equation}
     \label{eq:messabweichung_allg}
@@ -230,26 +235,7 @@ Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien ein
 Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}).
 Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu.
 Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
-Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt für alle Modi gemäß der Formel:
 
-\begin{equation}
-    \label{eq:messabweichung_allg}
-    \varepsilon = \frac{I_{ist} - I_{ref}}{I_{ref}} \cdot 100\,\%
-\end{equation}
-
-Hierbei beschreibt $I_{ist}$ den arithmetischen Mittelwert der gemessenen Stromstärke des Prüflings über das stabile Zeitfenster, während $I_{ref}$ den entsprechenden Referenzwert darstellt.
-Zusätzlich wird für jeden Lastpunkt die Standardabweichung $\sigma$ berechnet, um die Signalstabilität zu quantifizieren:
-
-\begin{equation}
-    \label{eq:standardabweichung}
-    \sigma = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})^2}
-\end{equation}
-
-Die resultierenden Datensätze, bestehend aus Mittelwerten ($\bar{x}$), Standardabweichungen ($\sigma$) und berechneten Fehlern ($\varepsilon$), werden abschließend in einer Datenbank im Apache-Parquet-Format (\texttt{messdaten\_db.parquet}) persistiert.
-Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien eine höhere Lese-Performance für die nachgelagerte Visualisierung.
-Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}).
-Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu.
-Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
 
 \subsubsection{Auswertung der neuen Messstrecke}
 \label{sec:auswertung_messstrecke}
@@ -304,43 +290,43 @@ Für die konstruktive Bewertung in Schaltanlagen ist diese Betrachtungsweise jed
             S@{}}
         \toprule
         \textbf{Hersteller}
-            &
-        \textbf{Typ}                                 &
-        \textbf{Technologie}                         &
+                                                     & 
+        \textbf{Typ}                                 & 
+        \textbf{Technologie}                         & 
         {\textbf{$I_n$ [\si{\ampere}]}}
-            &
-        {\textbf{$S_n$ [\si{\volt\ampere}]}}         &
-        {\textbf{Volumen [\si{\centi\meter\cubed}]}} &
+                                                     & 
+        {\textbf{$S_n$ [\si{\volt\ampere}]}}         & 
+        {\textbf{Volumen [\si{\centi\meter\cubed}]}} & 
         \textbf{Preis [\euro]}
-                                     \\
+        \\
         \midrule
         Celsa                                        & ALO 10030
- & Standard    & 2000 & 2,5  & 634,3  & 45,50  \\
-        Celsa                                        & ALO 8030 K    & Kompensiert & 2000 & 10,0 & 710,2  & 95,95  \\
+                                                     & Standard      & 2000        & 2,5  & 634,3 & 45,50           \\
+        Celsa                                        & ALO 8030 K    & Kompensiert & 2000 & 10,0  & 710,2  & 95,95  \\
         Celsa
-                                & ALO 10030     & Standard    & 2500 & 2,5  & 634,3  & 45,50  \\
+                                                     & ALO 10030     & Standard    & 2500 & 2,5   & 634,3  & 45,50  \\
         Celsa
-   & ALO 10050 K   & Kompensiert & 2500 & 5,0  & 1027,0 & 104,20 \\
-        Celsa                                        & ALO 12070     & Standard    & 3000 & 15,0 & 1520,0 & 71,51  \\
+                                                     & ALO 10050 K   & Kompensiert & 2500 & 5,0   & 1027,0 & 104,20 \\
+        Celsa                                        & ALO 12070     & Standard    & 3000 & 15,0  & 1520,0 & 71,51  \\
         Celsa
-                                     & ALO 12070 K   & Kompensiert & 3000 & 15,0 & 1520,0 & 346,06 \\
+                                                     & ALO 12070 K   & Kompensiert & 3000 & 15,0  & 1520,0 & 346,06 \\
         Celsa
-& ALO 12070     & Standard    & 4000 & 15,0 & 1520,0 & 71,51  \\
-        Celsa                                        & ALO 12070 K   & Kompensiert & 4000 & 15,0 & 1520,0 & 401,91 \\
+                                                     & ALO 12070     & Standard    & 4000 & 15,0  & 1520,0 & 71,51  \\
+        Celsa                                        & ALO 12070 K   & Kompensiert & 4000 & 15,0  & 1520,0 & 401,91 \\
         Celsa
-                                  & ALO 20060     & Standard    & 5000 & 40,0 & 1989,0 & 124,76 \\
+                                                     & ALO 20060     & Standard    & 5000 & 40,0  & 1989,0 & 124,76 \\
         Celsa
-  & ALO E 16050 K & Kompensiert & 5000 & 40,0 & 1903,0 & 414,56 \\
+                                                     & ALO E 16050 K & Kompensiert & 5000 & 40,0  & 1903,0 & 414,56 \\
         \addlinespace
-        MBS                                          & ASK 101.4     & Standard    & 2000 & 10,0 & 733,2  & 141,90 \\
-
-    MBS                                          & ASK 129.10    & Standard    & 5000 & 15,0 & 6175,0 & 303,10 \\
+        MBS                                          & ASK 101.4     & Standard    & 2000 & 10,0  & 733,2  & 141,90 \\
+        
+        MBS                                          & ASK 129.10    & Standard    & 5000 & 15,0  & 6175,0 & 303,10 \\
         \addlinespace
         Redur
-                     & 13A1030.3ffp  & FFP         & 2000 & 10,0 & 778,7  & ??
-\\
-        Redur                                        & 20A1456.5vffp & VFFP        & 5000 & 15,0 & 1600,0 & ??
-\\
+                                                     & 13A1030.3ffp  & FFP         & 2000 & 10,0  & 778,7  & ??
+        \\
+        Redur                                        & 20A1456.5vffp & VFFP        & 5000 & 15,0  & 1600,0 & ??
+        \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -373,37 +359,40 @@ Da der verfügbare Bauraum in diesem Bereich begrenzt ist, stellt die Realisieru
 \begin{table}[htbp]
     \centering
     \caption{Geometrische Parameter der Schienenanordnung (Phasenmittelabstände)}
-    \label{tab:schienenquerschnitte}
+    \label{tab:versuchs_geometrie}
     \small % Schrift etwas kleiner, damit die breite Tabelle gut passt
     \begin{tabular}{@{}l ccc ccc ccc@{}}
         \toprule
                                      & \multicolumn{9}{c}{\textbf{Phasenmittelabstand}}
-            \\
+
+        \\
         \cmidrule(l){2-10}
                                      & \multicolumn{3}{c}{\textbf{A}}                   & \multicolumn{3}{c}{\textbf{B}} & \multicolumn{3}{c}{\textbf{C}}
-                                            \\
+
+        \\
         \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(l){8-10}
         \textbf{Konfiguration}       & {L1-L2}
-            & {L2-L3}                        & {Gesamt}                       & {L1-L2} & {L2-L3} & {Gesamt} & {L1-L2} & {L2-L3} & {Gesamt} \\
-        \midrule
-        \textbf{Kupferquerschnitt 1} &
-                                          &                                &
-      &         &         &          &         &         &          \\
-        Wandler A (z.B.
- Celsa)       & ...                                              & ...                            & ...
-             & ...     & ...     & ...      & ...     & ...     & ...      \\
-        Wandler G (z.B. Redur)       & ...
-                & ...                            & ...                            & ...     & ...     & ...      & ...     & ...
-     & ...      \\
-        \addlinespace
-        \textbf{Kupferquerschnitt 2} &                                                  &
-            &                                &         &         &          &         &         &          \\
 
+                                     & {L2-L3}                                          & {Gesamt}                       & {L1-L2}                        & {L2-L3} & {Gesamt} & {L1-L2} & {L2-L3} & {Gesamt} \\
+        \midrule
+        \textbf{Kupferquerschnitt 1} & 
+                                     &                                                  & 
+                                     &                                                  &                                &                                &         &          &                              \\
+        Wandler A (z.B.
+        Celsa)                       & ...                                              & ...                            & ...
+                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...                          \\
+        Wandler G (z.B. Redur)       & ...
+                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...     & ...
+                                     & ...                                                                                                                                                                    \\
+        \addlinespace
+        \textbf{Kupferquerschnitt 2} &                                                  & 
+                                     &                                                  &                                &                                &         &          &         &                    \\
+        
         Wandler A                    & ...                                              & ...
-     & ...                            & ...     & ...     & ...      & ...     & ...     & ...      \\
+                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...     & ...                \\
         Wandler G
- & ...                                              & ...                            & ...
-      & ...     & ...     & ...      & ...     & ...     & ...      \\
+                                     & ...                                              & ...                            & ...
+                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...                          \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -415,7 +404,7 @@ Dies ermöglicht den direkten Vergleich zwischen der konventionellen Parallelano
 \textbf{Parallelanordnung}
 
 Die Ausgangssituation bildet die planare Anordnung der drei Phasenleiter L1, L2 und L3 in einer Ebene.
-Abbildung~\ref{pic:kupferschienen_parallel} zeigt diesen Aufbau im Prüfstand. Der Phasenmittenabstand wurde dabei analog zu den realen Bedingungen in Siemens SIVACON S8 Schaltfeldern gewählt (siehe Tabelle~\ref{tab:schienenquerschnitte}).
+Abbildung~\ref{pic:kupferschienen_parallel} zeigt diesen Aufbau im Prüfstand. Der Phasenmittenabstand wurde dabei analog zu den realen Bedingungen in Siemens SIVACON S8 Schaltfeldern gewählt (siehe Tabelle~\ref{tab:versuchs_geometrie}).
 In dieser Konfiguration ist der Prüfling, hier beispielhaft der Messstromwandler Redur 20A1456.5vffp (\SI{5000}{A}), den maximalen magnetischen Fremdfeldern der benachbarten Leiter ausgesetzt.
 
 \begin{figure}[H]
