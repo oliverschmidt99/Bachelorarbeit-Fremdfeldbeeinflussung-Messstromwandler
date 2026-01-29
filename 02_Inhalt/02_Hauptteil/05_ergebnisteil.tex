@@ -1,81 +1,86 @@
 % =============================================================================
-% KAPITEL 4: ERGEBNISSE (04_ergebnisteil.tex)
-% -----------------------------------------------------------------------------
-% In diesem Teil präsentierst du neutral und sachlich die Ergebnisse
-% deiner Untersuchung (z.B. Messdaten, Diagramme, Beobachtungen).
-% Eine Interpretation findet hier noch nicht statt.
+% KAPITEL 4: AUSWERTUNG UND DISKUSSION
 % =============================================================================
 
 \section{Auswertung und Diskussion}
 \label{chap:auswertung_diskussion}
 
+In diesem Kapitel werden die Auswirkungen unterschiedlicher Leitergeometrien auf die Messgenauigkeit der Stromwandler untersucht. Dabei wird zunächst die allgemeine Beeinflussung betrachtet, bevor eine detaillierte Analyse der einzelnen Außenleiter und eine ökonomische Bewertung erfolgt.
 
+\subsection{Einfluss der Leitergeometrie auf die Messgenauigkeit}
+\label{sec:vergleich_geometrie}
 
-\subsection{Messergebnisse: Einfluss der Leitergeometrie}
-\label{sec:einfluss_leitergeometrie}
+Der Vergleich zwischen der Parallel- und Dreiecksanordnung zeigt die grundsätzliche Empfindlichkeit der Wandler gegenüber Fremdfeldern.
 
-% Kombinierte Diagramme (Dreieck & Parallel) für den direkten Geometrievergleich
 \begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Vergleich der Leitergeometrien bei 2000\,A}
-    \label{dia:2000A_dreieck_parallel}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 2000\,A}
+    \label{dia:2000A_zusammenfassung}
 \end{diagram}
-
-\begin{diagram}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2500A_dreieck_parallel/dia_2500A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Vergleich der Leitergeometrien bei 2500\,A}
-    \label{dia:2500A_dreieck_parallel}
-\end{diagram}
-
-\begin{diagram}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_3000A_dreieck_parallel/dia_3000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Vergleich der Leitergeometrien bei 3000\,A}
-    \label{dia:3000A_dreieck_parallel}
-\end{diagram}
-
-% Hinweis: 4000A wurde entfernt, da der Ordner im Dateibaum nicht vorhanden ist.
 
 \begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Vergleich der Leitergeometrien bei 5000\,A}
-    \label{dia:5000A_dreieck_parallel}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 5000\,A}
+    \label{dia:5000A_zusammenfassung}
 \end{diagram}
 
-\subsection{Messergebnisse: Vergleich der Wandlertechnologien}
-\label{sec:vergleich_wandlertechnologien}
+\subsection{Detaillierte Analyse der Phasenbeeinflussung}
+\label{sec:detail_analyse_phasen}
 
-% Ranking-Diagramme zur Einordnung der Wandlertechnologien (Ökonomie/Performance)
-\begin{diagram}[H]
-    \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Oekonomie_Ranking.pdf}
-    \caption{Ranking der Wandlertechnologien bei 2000\,A}
-    \label{dia:2000A_ranking}
-\end{diagram}
+Um die lokale Einwirkung der Magnetfelder besser zu verstehen, wird die Messabweichung für die einzelnen Außenleiter betrachtet. Besonders der mittlere Leiter (L2) unterliegt bei der Parallelanordnung einer starken Beeinflussung.
 
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2500A_dreieck_parallel/dia_2500A_dreieck_parallel-Oekonomie_Ranking.pdf}
-    \caption{Ranking der Wandlertechnologien bei 2500\,A}
-    \label{dia:2500A_ranking}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Detail_L1_MultiCurrent.pdf}
+    \caption{Messabweichung am Außenleiter L1 bei 5000\,A}
+    \label{dia:5000A_detail_L1}
 \end{diagram}
 
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_3000A_dreieck_parallel/dia_3000A_dreieck_parallel-Oekonomie_Ranking.pdf}
-    \caption{Ranking der Wandlertechnologien bei 3000\,A}
-    \label{dia:3000A_ranking}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Detail_L2_MultiCurrent.pdf}
+    \caption{Messabweichung am Außenleiter L2 bei 5000\,A}
+    \label{dia:5000A_detail_L2}
 \end{diagram}
 
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Oekonomie_Ranking.pdf}
-    \caption{Ranking der Wandlertechnologien bei 5000\,A}
-    \label{dia:5000A_ranking}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Detail_L3_MultiCurrent.pdf}
+    \caption{Messabweichung am Außenleiter L3 bei 5000\,A}
+    \label{dia:5000A_detail_L3}
 \end{diagram}
 
-\subsection{Auswertung der Messergebnisse}
-\label{sec:auswertung_messergebnisse}
+\subsection{Ökonomische Evaluation und Technologie-Ranking}
+\label{sec:oekonomie_ranking}
+
+In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler korreliert.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 2000\,A}
+    \label{dia:2000A_ranking_plot}
+\end{diagram}
+
+\begin{table}[H]
+    \centering
+    \caption{Tabellarisches Ranking der Wandlertechnologien (2000\,A)}
+    \label{tab:2000A_ranking}
+    \input{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Oekonomie_Ranking.tex}
+\end{table}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Oekonomie_Pareto.pdf}
+    \caption{Pareto-Optimierung: Messgenauigkeit vs. Anschaffungskosten bei 2000\,A}
+    \label{dia:2000A_pareto}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Oekonomie_Pareto.pdf}
+    \caption{Pareto-Optimierung: Messgenauigkeit vs. Anschaffungskosten bei 5000\,A}
+    \label{dia:5000A_pareto}
+\end{diagram}
