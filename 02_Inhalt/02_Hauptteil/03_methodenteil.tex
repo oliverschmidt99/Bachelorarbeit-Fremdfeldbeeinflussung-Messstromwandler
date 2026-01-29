@@ -23,7 +23,7 @@ Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf ei
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}
     \caption{Blockschaltbild des Hochstrom-Prüfstandes mit Leistungs- und Signalpfaden}
     \label{pic:aufbau_hochstrom_pruefstand}
 \end{figure}
@@ -37,38 +37,61 @@ Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor de
 Um permanentes Nachregeln zu minimieren, die starke Stromspitzen erzeugen, ist eine Hysterese als Totband in den Regelalgorithmus integriert.
 Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe.
 Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
+
+
 \begin{table}[H]
     \centering
     \caption{Detaillierte Spezifikation der Komponenten}
     \label{tab:komponenten_hochstrom}
     \small
-    \begin{tabular}{@{}l l l l l@{}}
+    % Definition:
+    % X-Spalte am Ende für automatischen Umbruch bei langen Texten (wie 'Direct Current')
+    \begin{tabularx}{\textwidth}{@{}l l l l >{\raggedright\arraybackslash}X@{}}
         \toprule
-        \textbf{Komponente}      & \textbf{Typ}            & \textbf{Leistung / Bürde}
-
-                                 & \textbf{Primär / Input} & \textbf{Sekundär / Output}                                                                                \\ \midrule
-        Säulenstelltransformator & Ruhstrat                & \SI{90}{kVA}
-
-                                 & \SI{380}{V}             & \SI{0}{V}--\SI{380}{V} (\SI{70}{A})                                                                       \\
-        Festtransformator        & Janssen                 & \SI{30}{kVA}
-
-                                 & \SI{380}{V}             & \SI{6}{V} (\SI{5000}{A})                                                                                  \\
-        Stromwandler             & Celsa ICG               & \SI{5}{VA}
-
-                                 & \SI{6000}{A}            & \SI{5}{A} (Kl. 0,2S)                                                                                      \\
+        \textbf{Komponente}      & \textbf{Typ}                  & \textbf{\makecell[l]{Leistung /                                                                                \\ Bürde}}
         
-        Messumformer (K-3)       & 3-K Elektrik            & --                                                                          & \SI{0}{A}--\SI{5}{A} AC & 
-        \SI{0}{mA}--\SI{20}{mA} \gls{dc}                                                                                                                               \\ \midrule
-        \textbf{Leittechnik}     & \textbf{Typ}            & \multicolumn{3}{l}{\textbf{Beschreibung}}
+                                 & \textbf{\makecell[l]{Primär /                                                                                                                  \\ Input}} & \textbf{\makecell[l]{Sekundär /\\ Output}}                                                                                \\ \midrule
+        Säulenstelltransformator & Ruhstrat                      & \SI{90}{kVA}
 
+        
+        
+        
+                                 & \SI{380}{V}                   & \SI{0}{V}--\SI{380}{V} (\SI{70}{A})                                                                            \\
+        Festtransformator        & Janssen                       & \SI{30}{kVA}
+
+        
+        
+        
+                                 & \SI{380}{V}                   & \SI{6}{V} (\SI{5000}{A})                                                                                       \\
+        Stromwandler             & Celsa ICG                     & \SI{5}{VA}
+
+        
+        
+        
+                                 & \SI{6000}{A}                  & \SI{5}{A} (Kl. 0,2S)                                                                                           \\
+        
+        Messumformer (K-3)       & 3-K Elektrik                  & --                                                                               & \SI{0}{A}--\SI{5}{A} AC & 
+        \SI{0}{mA}--\SI{20}{mA} \gls{dc}                                                                                                                                          \\ \midrule
+        \textbf{Leittechnik}     & \textbf{Typ}                  & \multicolumn{3}{l}{\textbf{Beschreibung}}
+
+        
+        
+        
         \\ \cmidrule(r){1-2}
-        Steuerung                & Siemens \gls{et200s}    & \multicolumn{3}{l}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}
+        % p{9cm} sorgt hier für den Umbruch in der verbundenen Zelle, damit die Tabelle nicht gesprengt wird
+        Steuerung                & Siemens \gls{et200s}          & \multicolumn{3}{p{9cm}}{\gls{profinet}-Anbindung, Stromregelung, Analogeingänge}
 
+        
+        
+        
         \\
-        Visualisierung           & Siemens \gls{wincc}     & \multicolumn{3}{l}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}
+        Visualisierung           & Siemens \gls{wincc}           & \multicolumn{3}{p{9cm}}{\gls{hmi}-System, Prozessüberwachung, Datenlogging}
 
+        
+        
+        
         \\ \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 
@@ -77,7 +100,7 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}
     \caption{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}
     \label{pic:aufbau_messstrecke}
 \end{figure}
@@ -100,22 +123,22 @@ In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den pos
 In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa -2\,\%, wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen.
 Da die Verläufe der beiden Messsysteme voneinander abweichen, kann kein eindeutiger Referenzwert für den Primärstrom bestimmt werden.
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_alt/dia_messstrecke_alt-Zusammenfassung_MultiCurrent.pdf}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_alt/dia_messstrecke_alt-Zusammenfassung_MultiCurrent.pdf}
     \caption{Analyse der Messabweichung und Standardabweichung der Phasen L1, L2 und L3 im ursprünglichen Versuchsaufbau}
     \label{pic:dia_messstrecke_alt}
-\end{figure}
+\end{diagram}
 
 
 Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt, dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen.
 Dies ist darauf zurückzuführen, dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt, woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung.
 Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal. Dabei weisen die K-3-Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen.
 Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend.
-Im folgenden Abschnitt \ref{sec:optimierung} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
+Im folgenden Abschnitt \ref{sec:optimierung_messsystem} wird die Systemoptimierung erläutert, um eine präzisere Messwerterfassung zu realisieren.
 
 \subsection{Optimiertes Messsystem}
-\label{sec:optimierung}
+\label{sec:optimierung_messsystem}
 
 Wie im vorangegangenen Abschnitt dargelegt, erfüllte die ursprüngliche Messstrecke nicht die Anforderungen an eine präzise Genauigkeitsprüfung von Messstromwandlern.
 Aus diesem Grund wurde eine Optimierung des Hochstrom-Prüfstandes durchgeführt. Das primäre Ziel dieser Maßnahmen war die Steigerung der Messgenauigkeit sowie die Automatisierung des Prüfablaufs, um reproduzierbare und direkt vergleichbare Ergebnisse sicherzustellen.
@@ -127,7 +150,7 @@ Dadurch lassen sich parasitäre Effekte über lange Messleitungen minimieren. Di
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand_new.drawio.pdf}
     \caption{Schematischer Aufbau der optimierten Messstrecke mit Siemens SENTRON Messgeräten}
     \label{pic:aufbau_messstrecke_neu}
 \end{figure}
@@ -158,7 +181,7 @@ Dieser Zeitraum gewährleistet eine ausreichende thermische Sättigung des Wandl
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/pdf/step7_programm/strukto_fb1.pdf}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/pdf/step7_programm/strukto_fb1.pdf}
     \caption{Struktogramm der Schrittkette zur automatisierten Kennlinienaufnahme (\gls{fb}1)}
     \label{pic:strukto_fb1}
 \end{figure}
@@ -177,96 +200,111 @@ Abschließend werden der ermittelte Sollwert an den Regler ausgegeben und der Sc
 \subsubsection{Softwaregestützte Prozesskette zur Datenauswertung}
 \label{sec:datenaufbereitung_analyse}
 
-Die von der Visualisierung exportierten Rohdaten liegen im \gls{csv}-Format vor und enthalten die zeitlichen Verläufe der Ströme $I_{prim}$ (Referenz) und $I_{sek}$ (Prüfling).
-Angesichts des Umfangs der Untersuchung, die 31 Konfigurationen mit jeweils zwei Messgeräten und drei Phasen umfasst, ergaben sich insgesamt über 180 auszuwertende Einzelmessreihen.
-Eine manuelle Verarbeitung dieser Datenmenge mittels Tabellenkalkulation wäre zeitaufwendig und anfällig für Übertragungsfehler gewesen.
-Aus diesem Grund wurde eine mehrstufige Pipeline in der Programmiersprache Python entwickelt (unter Nutzung der Bibliothek \textit{pandas}), welche den Auswertungsprozess von der Rohdatenfilterung bis zur grafischen Darstellung automatisiert.
-Da die Schrittkette (siehe Abschnitt \ref{sec:integration_programmierung}) physikalisch bedingte Einschwingvorgänge beim Anfahren der Lastpunkte aufweist, ist zunächst eine Filterung der Rohdaten erforderlich.
-Ziel ist es, die stabilen Bereiche für die Genauigkeitsberechnung heranzuziehen. Zur Organisation wurde hierfür der \textit{Messdaten-Selektor} (Skript: \texttt{messdaten\_selektor.py}) entwickelt.
-Diese Software visualisiert die Zeitverläufe der Messungen und ermöglicht eine interaktive Bearbeitung.
-Der Anwender prüft visuell die Kennlinien und definiert manuell die zeitlichen Grenzen (Start- und Endzeitpunkt) der stabilen Lastplateaus über eine Eingabemaske.
+Die vom Prüfstand exportierten Rohdaten liegen im \gls{csv}-Format vor und enthalten die zeitlichen Verläufe der Ströme $I_{prim}$ (Referenz) und $I_{sek}$ (Prüfling). Angesichts des Umfangs der Untersuchung, die 31 Konfigurationen mit jeweils zwei Messgeräten und drei Phasen umfasst, ergaben sich insgesamt über 180 auszuwertende Einzelmessreihen. Eine manuelle Verarbeitung dieser Datenmenge mittels Tabellenkalkulation wäre zeitaufwendig und anfällig für Übertragungsfehler gewesen. Aus diesem Grund wurde eine spezialisierte Auswertungssoftware in Python entwickelt.
+
+\textbf{Extraktion und Filterung der Messdaten}
+
+Der erste Schritt der Auswertung erfolgt im Modul \textit{„Manueller Rohdaten-Export“} (siehe Abbildung \ref{pic:manual_tagger}). Da die Datenerfassung am Prüfstand mit einer Abtastrate von \SI{2}{Hz} (zwei Messwerte pro Sekunde) erfolgt, entstehen umfangreiche Zeitreihen. Die zentrale Funktion des Rohdaten-Selektors besteht darin, die aufgezeichneten Laststufen zu analysieren und die stationären Messbereiche zu isolieren. Hierbei werden die transienten Ein- und Ausschwingvorgänge aus dem Datensatz entfernt, sodass ausschließlich die stabilen Phasen in die weiterführende Genauigkeitsberechnung einfließen.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/pdf/manueller_rohdaten_export/gesamtansicht.png}
-    \caption{Benutzeroberfläche des manuellen Messdaten-Selektors}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/pdf/datenverarbeitung/rohdaten_export.png}
+    \caption{Benutzeroberfläche des manuellen Rohdaten-Exports zur Selektion stabiler Messbereiche}
     \label{pic:manual_tagger}
 \end{figure}
 
-Dies dient der Datenzuverlässigkeit, da instabile Randbereiche ausgeschlossen werden.
-Auf Basis dieser Benutzereingaben werden die definierten Bereiche extrahiert und in separate, sortierte \gls{csv}-Dateien für jede Messung überführt.
-Dieser Schritt der Segmentierung verringert den Zeitaufwand in der weiteren Verarbeitung und stellt eine einheitliche Datenbasis sicher.
-Um die segmentierten Messreihen vergleichbar zu machen, erfolgt im Anschluss die mathematische Weiterverarbeitung durch den \textit{Daten-Aggregator} (Skript: \texttt{daten\_aggregator.py}).
-Dieses Modul durchläuft automatisiert die sortierten Dateien und führt die statistischen Berechnungen durch.
-Dabei werden für jede Messreihe verschiedene Vergleichsoperationen durchgeführt, um die Güte der Versuchsführung sowie die Genauigkeit des Prüflings zu bewerten.
-Tabelle~\ref{tab:berechnungsmodi} gibt eine Übersicht über die implementierten Berechnungsmodi und deren Zielsetzung.
+Für die Berechnung werden pro Laststufe exakt 560 Messpunkte herangezogen, was einem Zeitfenster von 4 Minuten und 40 Sekunden entspricht. Dies gewährleistet, dass für alle Messreihen eine identische statistische Basis vorliegt. Die so selektierten Bereiche werden als sortierte Datensätze in der Datenbank für die Weiterverarbeitung gespeichert.
 
-\begin{table}[H]
-    \centering
-    \caption{Übersicht der Berechnungsmodi im Daten-Aggregator}
-    \label{tab:berechnungsmodi}
-    \renewcommand{\arraystretch}{1.2}
-    \begin{tabular}{@{}l l l p{5cm}@{}}
-        \toprule
-        \textbf{Modus} & \textbf{Referenzwert ($I_{ref}$)} & \textbf{Messwert ($I_{ist}$)} & \textbf{Untersuchungsziel} \\ \midrule
-        Regelgüte & Nennstrom ($I_{soll}$) & Einspeisung ($I_{prim}$) & Überprüfung, ob der Prüfstand den geforderten Arbeitspunkt eingeregelt hat. \\ \addlinespace
-        Nennwert-Fehler & Nennstrom ($I_{soll}$) & Prüfling ($I_{sek}$) & Abweichung des Wandlers vom theoretischen Sollwert (inkl. Regelabweichung). \\ \addlinespace
-        Wandler-Fehler & Einspeisung ($I_{prim}$) & Prüfling ($I_{sek}$) & \textbf{Messabweichung} des Prüflings relativ zur Referenzmessung (Klasse 0,2S). \\ \bottomrule
-    \end{tabular}
-\end{table}
+\textbf{Mathematische Berechnung}
 
-Die Berechnung der prozentualen Messabweichung $\varepsilon$ erfolgt analog zu den in Abschnitt \ref{sec:messabweichung_fehlerfortpflanzung} (Gleichung \ref{eq:messabweichung_epsilon}) dargelegten Grundlagen. Für die automatisierte Auswertung wird folgende Berechnungsvorschrift angewendet:
+Die mathematische Grundlage für die in der Software dargestellten Werte bildet die Berechnung der prozentualen Messabweichung $\varepsilon$ gemäß Abschnitt \ref{sec:messabweichung_fehlerfortpflanzung}.
+Für die automatisierte Auswertung werden zunächst die arithmetischen Mittelwerte der Ströme über das stabile Zeitfenster (560 Messpunkte) gebildet und anschließend verrechnet:
 
 \begin{equation}
     \label{eq:messabweichung_allg}
-    \varepsilon = \frac{I_{ist} - I_{ref}}{I_{ref}} \cdot 100\,\%
+    \varepsilon = \frac{\bar{I}_{ist} - \bar{I}_{ref}}{\bar{I}_{ref}} \cdot 100\,\%
 \end{equation}
 
-Hierbei beschreibt $I_{ist}$ den arithmetischen Mittelwert der gemessenen Stromstärke des Prüflings über das stabile Zeitfenster, während $I_{ref}$ den entsprechenden Referenzwert darstellt.
-Zusätzlich wird für jeden Lastpunkt die Standardabweichung $\sigma$ berechnet, um die Signalstabilität zu quantifizieren:
+Hierbei beschreibt $\bar{I}_{ist}$ den arithmetischen Mittelwert der gemessenen Stromstärke des Prüflings und $\bar{I}_{ref}$ den Mittelwert des Referenzmessgerätes im gleichen Zeitraum.
+Ergänzend hierzu berechnet die Software die Standardabweichung $\sigma$ auf Basis der Einzelmesswerte $x_i$, um die Signalstabilität (Rauschen) innerhalb des Plateaus zu quantifizieren:
 
 \begin{equation}
     \label{eq:standardabweichung}
     \sigma = \sqrt{\frac{1}{N-1} \sum_{i=1}^{N} (x_i - \bar{x})^2}
 \end{equation}
 
-Die resultierenden Datensätze, bestehend aus Mittelwerten ($\bar{x}$), Standardabweichungen ($\sigma$) und berechneten Fehlern ($\varepsilon$), werden abschließend in einer Datenbank im Apache-Parquet-Format (\texttt{messdaten\_db.parquet}) persistiert.
-Dieses spaltenorientierte Speicherformat bietet gegenüber \gls{csv}-Dateien eine höhere Lese-Performance für die nachgelagerte Visualisierung.
-Die grafische Aufbereitung der Ergebnisse erfolgt durch das \textit{Visualisierungs-Dashboard} (Skript: \texttt{visualisierungs\_dashboard.py}).
-Da die rechenintensiven Vorarbeiten bereits durch die Aggregation abgeschlossen sind, greift dieses Tool auf die Datenbank zu.
-Dies ermöglicht dem Anwender, über Filterfunktionen Diagramme zu erstellen. So können beispielsweise verschiedene Wandler übereinandergelegt oder der Einfluss der Leitergeometrie verglichen werden, ohne dass eine erneute Berechnung der Rohdaten erforderlich ist.
+Diese statistische Kenngröße dient als Indikator für die Güte der Regelung und die Ruhe des Messsignals.
+
+\textbf{Analyse und Visualisierung}
+
+Nachdem die Berechnungen abgeschlossen und in der Datenbank gespeichert sind, stehen die Ergebnisse in zwei spezialisierten Analyse-Tabs zur Verfügung.
+
+Der Reiter \textbf{„Gesamtgenauigkeit“} ermöglicht den detaillierten technischen Vergleich. Hier wird die prozentuale Messabweichung über dem Primärstrom aufgetragen. Die Darstellung ist frei konfigurierbar, sodass verschiedene Wandlertechnologien oder Messreihen direkt übereinandergelegt und visuell mit den normativen Fehlergrenzen (z.\,B. Klasse 1) verglichen werden können.
+
+Für eine bewertende Übersicht dient der Reiter \textbf{„Ökonomische Analyse“}. Um die Komplexität der Kennlinien für einen direkten Vergleich zu reduzieren, fasst die Software die Messabweichungen in drei signifikante Betriebsbereiche zusammen:
+
+\begin{itemize}
+    \item \textbf{Niederstrombereich:} Erfasst das Anlaufverhalten und die Genauigkeit bei geringer Last (z.\,B. 5\,\% und 20\,\% $I_n$).
+    \item \textbf{Nennstrombereich:} Bildet den Hauptarbeitsbereich um den Nennstrom ab (z.\,B. 50\,\% bis 100\,\% $I_n$).
+    \item \textbf{Überstrombereich:} Visualisiert das Verhalten bei Überlast (z.\,B. 120\,\% $I_n$).
+\end{itemize}
+
+Um für diese Bereiche einen einzelnen, vergleichbaren Gütefaktor zu erhalten, werden die prozentualen Messabweichungen $\varepsilon$ der zugehörigen Lastpunkte aggregiert. Hierfür wird der arithmetische Mittelwert der Absolutbeträge gebildet. Dies verhindert, dass sich positive und negative Abweichungen gegenseitig kompensieren (z.\,B. $+0,5\,\%$ und $-0,5\,\%$), und stellt die durchschnittliche Betragsabweichung des Wandlers in diesem Arbeitsbereich dar:
+
+\begin{equation}
+    \label{eq:fehler_bereich}
+    \bar{\varepsilon}_{Bereich} = \frac{1}{k} \sum_{j=1}^{k} |\varepsilon_j|
+\end{equation}
+
+Dabei ist $k$ die Anzahl der angefahrenen Lastpunkte innerhalb des definierten Bereichs und $|\varepsilon_j|$ der Betrag der Messabweichung am jeweiligen Prüfpunkt.
+
+In dieser Ansicht werden zudem konstruktive und wirtschaftliche Parameter, wie das Gehäusevolumen und der Preis der Wandler, den aggregierten Genauigkeitswerten gegenübergestellt. Dies ermöglicht eine multidimensionale Bewertung der Prüflinge hinsichtlich ihres Preis-Leistungs-Verhältnisses.
+
+
+Durch diese Auswahl an Visualisierungen kann der Anwender je nach Fragestellung – ob rein technisch, wirtschaftlich oder konstruktiv – die geeignete Darstellungsform wählen, um eine fundierte Auswahlentscheidung für den optimalen Stromwandler zu treffen.
 
 
 \subsubsection{Auswertung der neuen Messstrecke}
 \label{sec:auswertung_messstrecke}
 
-Die Validierung der optimierten Messstrecke belegt eine signifikante Steigerung der Messgüte im Vergleich zu den ursprünglichen Komponenten.
-In Abbildung \ref{pic:dia_messstrecke_neu} ist der Fehlerverlauf des neu installierten Energiemessgerätes PAC 4220 (magenta) im direkten Vergleich zum Messumformer K-3 (blau) und den Rogowskispulen (orange) dargestellt.
-Der magenta Kurvenverlauf verdeutlicht, dass das PAC 4220 über nahezu den gesamten Lastbereich innerhalb des normativen Toleranzbandes der Genauigkeitsklasse 0,2 verbleibt.
-Ab einer Last von 20\,\% des Nennstroms stabilisiert sich die Messabweichung nahe der Nulllinie.
-Lediglich im Bereich geringer Ströme (5\,\%) ist eine Abweichung außerhalb der Normgrenzen erkennbar.
-Wie bereits in Abschnitt \ref{sec:fehleranalyse} analysiert, resultiert dieser Effekt aus dem begrenzten Stellbereich des Säulenstelltransformators, der bei minimaler Auslenkung keine stabile Stromvorgabe ermöglicht.
-Durch die hohe Auflösung des PAC 4220 kann diese physikalische Grenze des Prüfstandes nun präzise messtechnisch erfasst werden.
+Die Validierung der optimierten Messstrecke belegt eine Steigerung der Messgüte im Vergleich zu den ursprünglichen Komponenten. In Abbildung \ref{dia:messstrecke_neu} ist der Fehlerverlauf des neu installierten Energiemessgerätes PAC 4220 (magenta) im direkten Vergleich zum Messumformer K-3 (grün) und den Rogowskispulen (blau) dargestellt. Der Kurvenverlauf verdeutlicht, dass das PAC 4220 über nahezu den gesamten Lastbereich innerhalb des normativen Toleranzbandes der Genauigkeitsklasse 0,2 verbleibt. Ab einer Last von 20\,\% des Nennstroms stabilisiert sich die Messabweichung nahe der Nulllinie.
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_neu/dia_messstrecke_neu-Zusammenfassung_MultiCurrent.pdf}
     \caption{Vergleichende Analyse der Messabweichung (oben) und Standardabweichung (unten) unter Einsatz des PAC 4220}
-    \label{pic:dia_messstrecke_neu}
-\end{figure}
+    \label{dia:messstrecke_neu}
+\end{diagram}
 
+Eine Abweichung außerhalb der Normgrenzen ist lediglich im Bereich geringer Ströme (5\,\%) erkennbar. Wie in Abschnitt \ref{sec:fehleranalyse} erläutert, resultiert dieser Effekt aus dem begrenzten Stellbereich des Säulenstelltransformators, der bei minimaler Auslenkung keine stabile Stromvorgabe ermöglicht. Durch die hohe Auflösung des PAC 4220 lässt sich diese physikalische Grenze des Prüfstandes messtechnisch präzise erfassen.
 
-Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_neu} visualisierte Standardabweichung verdeutlicht die Präzision der Messsysteme bezüglich der Streuung.
-Hierbei zeigt sich, dass das PAC 4220 und der Messumformer K-3 ein sehr ähnliches Verhalten mit einer vergleichbar geringen Streuung aufweisen.
-Ab einer Last von 50\,\% sinkt die Standardabweichung für beide Geräte auf ein Niveau von unter 0,5\,\%.
-Im Gegensatz dazu weisen die Rogowskispulen über den gesamten Messbereich eine deutlich höhere Streuung auf, was auf eine geringere Reproduzierbarkeit der Messwerte hindeutet.
-Obwohl die K-3-Umformer eine ähnlich geringe Streuung wie das PAC-Messgerät erzielen, verbleiben sie aufgrund ihrer hohen systematischen Abweichung außerhalb der geforderten Genauigkeitsklasse.
-Die Ergebnisse bestätigen somit, dass erst durch den Einsatz der digitalen PAC-Messgeräte eine valide Datenbasis geschaffen wurde, die sowohl eine geringe Streuung als auch eine normgerechte Genauigkeit für die Charakterisierung der Stromwandler vereint.
+Die im unteren Teil der Abbildung \ref{dia:messstrecke_neu} visualisierte Standardabweichung dient als Maß für die Präzision und Reproduzierbarkeit der Messsysteme. Hierbei weisen das PAC 4220 und der Messumformer K-3 ein ähnliches Verhalten mit einer geringen Streuung auf. Ab einer Last von 50\,\% sinkt die Standardabweichung für beide Geräte auf ein Niveau von unter 0,5\,\%. Im Gegensatz dazu zeigen die Rogowskispulen über den gesamten Messbereich eine höhere Streuung. Obwohl die K-3-Umformer eine vergleichbare Präzision wie das PAC-Messgerät erzielen, verbleiben sie aufgrund ihrer hohen systematischen Abweichung außerhalb der geforderten Genauigkeitsklasse.
 
-\subsection{Versuchsaufbau der Messobjekte und Leiteranordnung}
-\label{sec:geometrie_kupferschienen}
+Ergänzend zur Analyse der Einzelabweichungen ermöglicht das Ökonomie-Ranking in Abbildung \ref{dia:oekonomie_ranking} eine zusammenfassende Bewertung der Messsysteme.
 
-Zusätzlich zur messtechnischen Optimierung wird die geometrische Anordnung des Primärleiters variiert, um deren Einfluss auf die Fremdfeldbeeinflussung zu untersuchen.
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_neu/dia_messstrecke_neu-Oekonomie_Ranking.pdf}
+    \caption{Kumulierter Vergleich der Fehleranteile (Ökonomie-Ranking) der verschiedenen Messsysteme über drei Lastbereiche}
+    \label{dia:oekonomie_ranking}
+\end{diagram}
+
+Hierbei werden die kumulierten Fehleranteile in den Bereichen Niederstrom (blau), Nennstrom (rot) und Überlast (gelb) gegenübergestellt. Zur quantitativen Bewertung dieser Anteile dient der in Tabelle \ref{tab:fehler_score_vergleich} ausgewiesene Fehler-Score.
+
+\begin{table}[H]
+    \centering
+    \caption{Vergleichende Übersicht der Fehleranteile und des resultierenden Fehler-Scores der Messsysteme.}
+    \label{tab:fehler_score_vergleich}
+    \begin{tabular}{lcccc}
+        \hline
+        \textbf{Messsystem} & \textbf{Niederstrom [\%]} & \textbf{Nennstrom [\%]} & \textbf{Überlast [\%]} & \textbf{Fehler-Score [\%]} \\ \hline
+        PAC 4220            & 13,10                     & 2,00                    & 0,96                   & 16,06                      \\
+        K-3                 & 100,00                    & 41,19                   & 15,36                  & 156,55                     \\
+        Rogowski-Spulen     & 84,50                     & 100,00                  & 100,00                 & 284,50                     \\ \hline
+    \end{tabular}
+\end{table}
+
+Dieser Score berechnet sich aus der Summe der Abweichungen über alle Lastbereiche, wobei ein niedriger Wert eine höhere Gesamtgenauigkeit indiziert. Im direkten Vergleich erreicht das PAC 4220 einen Fehler-Score von 16,06\,\%, während der Messumformer K-3 einen kumulierten Anteil von 156,55\,\% aufweist. Die Rogowski-Spulen markieren mit 284,50\,\% die größte Abweichung im Vergleich. Diese Ergebnisse bestätigen, dass erst durch den Einsatz der digitalen PAC-Messgeräte eine valide Datenbasis geschaffen wurde, die sowohl eine geringe Streuung als auch eine normgerechte Genauigkeit für die Charakterisierung der Stromwandler vereint.
 
 \subsubsection{Auswahl und Spezifikation der Messstromwandler}
 \label{sec:auswahl_wandler}
@@ -348,89 +386,59 @@ Die in der Tabelle aufgeführten Nennbürden sind so gewählt, dass sie die Anfo
 \subsubsection{Geometrische Anordnung der Primärleiter}
 \label{sec:layout_geometrie}
 
-
-
-
-In Niederspannungsschaltanlagen werden Kupferschienen überwiegend in paralleler Anordnung montiert.
-Diese Installationsweise wird bevorzugt, da sie platzsparend ist und sich durch eine geringe Montagekomplexität auszeichnet.
-Die Führung der Schienen ist dabei konstruktiv maßgeblich durch die Anschlüsse des Leistungsschalters vorbestimmt, weshalb Variationen der Geometrie im realen Anlagenbau nur eingeschränkt möglich sind.
-Die Messstromwandler werden üblicherweise dem Hauptschalter nachgelagert im Anschlussraum installiert.
-Da der verfügbare Bauraum in diesem Bereich begrenzt ist, stellt die Realisierung abweichender Leiteranordnungen – wie etwa einer Dreieckskonfiguration zur Reduktion von Fremdfeldern – eine konstruktive Herausforderung dar.
-\begin{table}[htbp]
-    \centering
-    \caption{Geometrische Parameter der Schienenanordnung (Phasenmittelabstände)}
-    \label{tab:versuchs_geometrie}
-    \small % Schrift etwas kleiner, damit die breite Tabelle gut passt
-    \begin{tabular}{@{}l ccc ccc ccc@{}}
-        \toprule
-                                     & \multicolumn{9}{c}{\textbf{Phasenmittelabstand}}
-
-        \\
-        \cmidrule(l){2-10}
-                                     & \multicolumn{3}{c}{\textbf{A}}                   & \multicolumn{3}{c}{\textbf{B}} & \multicolumn{3}{c}{\textbf{C}}
-
-        \\
-        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(l){8-10}
-        \textbf{Konfiguration}       & {L1-L2}
-
-                                     & {L2-L3}                                          & {Gesamt}                       & {L1-L2}                        & {L2-L3} & {Gesamt} & {L1-L2} & {L2-L3} & {Gesamt} \\
-        \midrule
-        \textbf{Kupferquerschnitt 1} & 
-                                     &                                                  & 
-                                     &                                                  &                                &                                &         &          &                              \\
-        Wandler A (z.B.
-        Celsa)                       & ...                                              & ...                            & ...
-                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...                          \\
-        Wandler G (z.B. Redur)       & ...
-                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...     & ...
-                                     & ...                                                                                                                                                                    \\
-        \addlinespace
-        \textbf{Kupferquerschnitt 2} &                                                  & 
-                                     &                                                  &                                &                                &         &          &         &                    \\
-        
-        Wandler A                    & ...                                              & ...
-                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...     & ...                \\
-        Wandler G
-                                     & ...                                              & ...                            & ...
-                                     & ...                                              & ...                            & ...                            & ...     & ...      & ...                          \\
-        \bottomrule
-    \end{tabular}
-\end{table}
-
-
-Um den Einfluss der Leitergeometrie experimentell zu untersuchen, wurde das Kupferschienensystem des Hochstromprüfstandes flexibel gestaltet.
-Dies ermöglicht den direkten Vergleich zwischen der konventionellen Parallelanordnung und einer optimierten Dreiecksanordnung bei identischen elektrischen Parametern.
-
-\textbf{Parallelanordnung}
-
-Die Ausgangssituation bildet die planare Anordnung der drei Phasenleiter L1, L2 und L3 in einer Ebene.
-Abbildung~\ref{pic:kupferschienen_parallel} zeigt diesen Aufbau im Prüfstand. Der Phasenmittenabstand wurde dabei analog zu den realen Bedingungen in Siemens SIVACON S8 Schaltfeldern gewählt (siehe Tabelle~\ref{tab:versuchs_geometrie}).
-In dieser Konfiguration ist der Prüfling, hier beispielhaft der Messstromwandler Redur 20A1456.5vffp (\SI{5000}{A}), den maximalen magnetischen Fremdfeldern der benachbarten Leiter ausgesetzt.
+In Niederspannungsschaltanlagen werden Kupferschienen vorwiegend parallel angeordnet. Diese Bauweise zeichnet sich durch Platzersparnis und eine geringe Montagekomplexität aus. Die Führung der Schienen wird konstruktiv maßgeblich durch die Anschlüsse des Leistungsschalters bestimmt. Daher sind Variationen der Geometrie im realen Anlagenbau nur eingeschränkt möglich. Die Messstromwandler werden üblicherweise dem Hauptschalter nachgelagert im Anschlussraum installiert. Aufgrund des begrenzten Bauraums stellt die Realisierung abweichender Leiteranordnungen wie etwa einer Dreieckskonfiguration zur Reduktion von Fremdfeldern eine konstruktive Herausforderung dar.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/Bilder/kupferschienen_parallel.jpg}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/Bilder/kupferschinen_gesamtaufbau.pdf}
+    \caption{Technische Zeichnung des Kupferschienensystems in paralleler und dreiecksförmiger Anordnung}
+    \label{pic:kupferschienen_layout}
+\end{figure}
+
+
+Abbildung \ref{pic:kupferschienen_layout} zeigt die konstruktive Umsetzung der untersuchten Geometrien. In der Frontalansicht ist die horizontale Führung der drei Außenleiter L1, L2 und L3 zu sehen. Die Abgangsschienen haben dabei unterschiedliche Phasenmittenabstände. Im linken Bereich (blaue Schine) beträgt der Abstand \SI{130}{mm} und im rechten Teil der Anlage (rote Schine) sind es \SI{210}{mm}. Die Seitenansicht zeigt die Umsetzung der Dreiecksanordnung. Hier ist erkennbar, dass die Schienen (grün) zur Kontaktierung der Anschlussebene zweifach gekröpft sind. Der vertikale Versatz von \SI{140}{mm} ermöglicht die räumliche Staffelung der Leiter für die Dreieckskonfiguration.
+
+
+Um den Einfluss der Leitergeometrie experimentell zu untersuchen, wurde das Kupferschienensystem des Hochstromprüfstandes auf Basis dieser Zeichnung flexibel gestaltet. Dies ermöglicht den direkten Vergleich zwischen der konventionellen Parallelanordnung und einer optimierten Dreiecksanordnung bei identischen elektrischen Parametern.
+
+
+
+Die im Versuchsaufbau gewählten Dimensionen orientieren sich an realen Industriestandards. Tabelle \ref{tab:schienen_konfiguration} gibt hierzu eine Übersicht der Phasenmittenabstände für die Leistungsschalter der Reihen 3WA12 und 3WA13, welche als Grundlage für die Konstruktion dienten.
+
+\begin{table}[H]
+    \centering
+    \caption{Übersicht der Schienenkonfigurationen und Phasenmittenabstände für die Leistungsschalter 3WA12 und 3WA13 gemäß Herstellervorgaben}
+    \label{tab:schienen_konfiguration}
+    \begin{tabular}{lccc}
+        \hline
+        \textbf{Modell} & \textbf{Nennstrom} & \textbf{Schienenkonfiguration} & \textbf{Phasenmittenabstand} \\
+                        & \textbf{[A]}       &                                & \textbf{[mm]}                \\ \hline
+        \textbf{3WA12}  & 2000               & 2x 80x10                       & 130                          \\
+                        & 2500               & 2x 100x10                      & 130                          \\ \hline
+        \textbf{3WA13}  & 3200               & 3x 100x10                      & 210                          \\
+                        & 4000               & 4x 100x10                      & 210                          \\
+                        & 5000               & 5x 120x10                      & 210                          \\ \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Parallelanordnung}
+
+Als Referenz fungiert die Parallelanordnung der drei Phasenleiter L1, L2 und L3 in einer Ebene. Dieser in Abbildung \ref{pic:kupferschienen_parallel} gezeigte Aufbau bildet die realen Bedingungen in Siemens SIVACON S8 Schaltfeldern nach. Die verwendeten Abstände entsprechen dabei den in Tabelle \ref{tab:schienen_konfiguration} aufgeführten Herstellervorgaben. In dieser Konfiguration ist der Prüfling, hier beispielhaft der Messstromwandler Redur 20A1456.5vffp (\SI{5000}{A}), den maximalen magnetischen Fremdfeldern der benachbarten Leiter ausgesetzt.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/Bilder/kupferschienen_parallel.jpg}
     \caption{Versuchsaufbau in paralleler Schienenanordnung mit montiertem Messstromwandler (Typ: Redur 20A1456.5vffp)}
     \label{pic:kupferschienen_parallel}
 \end{figure}
 
 \textbf{Dreieckskonfiguration}
 
-Zur Realisierung der Dreiecksanordnung wurde ein modifizierter Aufbau entwickelt, der in Abbildung~\ref{pic:kupferschienen_dreieck} dargestellt ist.
-Hierbei wird die mittlere Phase (L2) mithilfe eines speziell gefertigten Kupferadapters geometrisch aus der Ebene der Außenleiter herausgeführt.
-Der Adapter versetzt die Schiene L2 um \SI{0,1}{mm} nach vorne.
-
-\begin{aufgabenbox}
-    Ich muss den Realenabstand noch ermitteltn, wie weit L2 nach vorne verschoben ist.
-\end{aufgabenbox}
-
-Durch diesen Versatz spannen die Mittelpunkte der drei Leiter im Querschnitt ein Dreieck auf.
-Ziel dieser Anordnung ist es, die magnetische Kopplung zwischen den Phasen symmetrischer zu gestalten und die vektoriellen Anteile der Fremdfelder im Bereich des Wandlerkerns teilweise zu kompensieren.
-Auch in dieser Konfiguration wurde der \SI{5000}{A}-Wandler von Redur vermessen.
+Für die Realisierung der Dreiecksanordnung wurde der Aufbau gemäß Abbildung \ref{pic:kupferschienen_dreieck} modifiziert. Ein speziell gefertigter Kupferadapter führt hierbei die mittlere Phase L2 geometrisch aus der Ebene der Außenleiter heraus. Der Adapter versetzt die Schiene um \SI{140,0}{mm} nach vorne. Durch diesen Versatz spannen die Mittelpunkte der drei Leiter im Querschnitt ein Dreieck auf. Ziel dieser Anordnung ist eine symmetrischere Gestaltung der magnetischen Kopplung sowie die teilweise Kompensation der vektoriellen Anteile der Fremdfelder im Bereich des Wandlerkerns. Auch in dieser Konfiguration wurde der \SI{5000}{A}-Wandler von Redur vermessen.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/Bilder/kupferschienen_dreieck.jpg}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/Bilder/kupferschienen_dreieck.jpg}
     \caption{Modifizierter Versuchsaufbau in Dreieckskonfiguration durch räumlichen Versatz der Phase L2 mittels Kupferadapter}
     \label{pic:kupferschienen_dreieck}
 \end{figure}
