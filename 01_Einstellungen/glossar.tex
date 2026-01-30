@@ -9,7 +9,9 @@
 \newacronym{et200s}{ET 200S}{Dezentrales Peripheriesystem von Siemens}
 \newacronym{fb}{FB}{Funktionsbaustein}
 \newacronym{fc}{FC}{Funktion (STEP 7 Baustein)}
+\newacronym{ffp}{FFP}{Fremdfeld-Protektor (Schirmungstechnologie)}
 \newacronym{hmi}{HMI}{Human Machine Interface}
+\newacronym{pac}{PAC}{Power Monitoring Device (Siemens Energiemessgerät)}
 \newacronym{pid}{PID}{Proportional-Integral-Derivative (Regler)}
 \newacronym{profinet}{PROFINET}{Process Field Network}
 \newacronym{sps}{SPS}{Speicherprogrammierbare Steuerung}
@@ -18,7 +20,6 @@
 % --- FORMELZEICHEN (Symbols) ---
 % Diese landen im Hauptglossar ("main"), das wir später als 
 % Formelzeichenverzeichnis ausgeben.
-
 \newglossaryentry{sym:A}{
     name={$A$},
     description={Querschnittsfläche (z.\,B. des Eisenkerns)},
@@ -59,6 +60,12 @@
     name={$H$},
     description={Magnetische Feldstärke (Einheit: \si{\ampere\per\meter})},
     sort={H}
+}
+
+\newglossaryentry{sym:I_k}{
+    name={$I_{k}$},
+    description={Kurzschlussstrom},
+    sort={I_k}
 }
 
 \newglossaryentry{sym:I_n}{
@@ -115,10 +122,28 @@
     sort={phi_delta}
 }
 
+\newglossaryentry{sym:R}{
+    name={$R$},
+    description={Radius oder ohmscher Widerstand (kontextabhängig)},
+    sort={R}
+}
+
 \newglossaryentry{sym:Rm}{
     name={$R_m$},
     description={Magnetischer Widerstand},
     sort={R_m}
+}
+
+\newglossaryentry{sym:Sn}{
+    name={$S_n$},
+    description={Bemessungsleistung (Einheit: \si{\volt\ampere})},
+    sort={Sn}
+}
+
+\newglossaryentry{sym:sigma}{
+    name={$\sigma$},
+    description={Standardabweichung},
+    sort={sigma}
 }
 
 \newglossaryentry{sym:Theta}{
@@ -131,4 +156,10 @@
     name={$U_i$},
     description={Induzierte Spannung},
     sort={U_i}
+}
+
+\newglossaryentry{sym:W}{
+    name={$W$},
+    description={Breite des Leiters},
+    sort={W}
 }
