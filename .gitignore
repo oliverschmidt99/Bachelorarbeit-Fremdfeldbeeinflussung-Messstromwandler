@@ -329,3 +329,5 @@ TSWLatexianTemp*
 
 .vscode
 main.ist
+*.zip
+*.ist
