@@ -11,13 +11,26 @@
 
   "latex-workshop.latex.recipes": [
     {
-      "name": "💡PDFLaTeX ➞ Glossaries ➞ Biber ➞ PDFLaTeX x2",
+      "name": "💡 Vollständig: PDFLaTeX ➞ Glossar ➞ Biber",
       "tools": [
         "pdflatex",
         "makeglossaries",
         "biber",
         "pdflatex",
         "pdflatex"
+      ]
+    },
+    {
+      "name": "📄 Einfach: Nur PDFLaTeX (Kein Bib/Glossar)",
+      "tools": [
+        "pdflatex",
+        "pdflatex"
+      ]
+    },
+    {
+      "name": "🤖 Auto: Latexmk (Erkennt Bedarf selbst)",
+      "tools": [
+        "latexmk"
       ]
     }
   ],
@@ -44,6 +57,18 @@
       "command": "biber",
       "args": [
         "%DOCFILE%"
+      ]
+    },
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-pdf",
+        "-outdir=%OUTDIR%",
+        "%DOC%"
       ]
     }
   ]
