@@ -1,0 +1,286 @@
+\documentclass[a4paper,12pt]{scrartcl}
+
+% Pakete für deutsche Sprache und Umlaute
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+
+% Pakete für Grafiken, Tabellen und Einheiten
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{siunitx}
+\usepackage{eurosym} % Wichtig für das \euro Zeichen
+\usepackage{textcomp} % Unterstützung für Sonderzeichen
+\usepackage{tcolorbox} % Für die Hinweisbox
+\usepackage{hyperref} % Für klickbare Links
+
+% Link-Farben definieren
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+% Glossar-Paket laden, um den Build-Fehler zu vermeiden
+\usepackage{glossaries}
+\makeglossaries
+
+% Definition des Euro-Zeichens (€) für den Fall, dass es direkt im Text steht
+\DeclareUnicodeCharacter{20AC}{\euro}
+
+\sisetup{locale = DE}
+
+% Seitenränder anpassen
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% Definition der Diagramm-Umgebung
+\newfloat{diagram}{htbp}{loc}
+\floatname{diagram}{Diagramm}
+
+\begin{document}
+
+\title{Bericht zur Genauigkeit des neuen Prüfstandes und Analyse der Wandlermessabweichungen}
+\author{Oliver Schmidt}
+\date{\today}
+\maketitle
+
+\section{Optimierung des Hochstromprüfstands}
+\label{sec:hochstrompruefstand}
+
+Die Validierung der optimierten Messstrecke belegt eine Steigerung der Messgüte im Vergleich zu den ursprünglichen Komponenten. Das folgende Diagramm zeigt den Fehlerverlauf des neu installierten Energiemessgerätes PAC 4220 im direkten Vergleich zum Messumformer K3 und den Rogowskispulen.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_neu/dia_messstrecke_neu-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Vergleichende Analyse der Messabweichung und Standardabweichung unter Einsatz des PAC 4220}
+    \label{dia:messstrecke_neu}
+\end{diagram}
+
+Der Kurvenverlauf verdeutlicht die hohe Genauigkeit des PAC 4220. Das Gerät verbleibt über nahezu den gesamten Lastbereich innerhalb des normativen Toleranzbandes der Genauigkeitsklasse 0,2. Ab einer Last von 20 Prozent des Nennstroms stabilisiert sich die Messabweichung nahe der Nulllinie. Eine Abweichung außerhalb der Normgrenzen ist lediglich im Bereich geringer Ströme erkennbar. Dieser Effekt resultiert aus dem begrenzten Stellbereich des Säulenstelltransformators.
+
+Die im unteren Teil der Abbildung visualisierte Standardabweichung dient als Maß für die Präzision und Reproduzierbarkeit der Messsysteme. Das PAC 4220 und der Messumformer K3 weisen ein ähnliches Verhalten mit einer geringen Streuung auf. Die Rogowskispulen zeigen hingegen über den gesamten Messbereich eine höhere Streuung.
+
+Ergänzend zur Analyse der Einzelabweichungen ermöglicht das folgende Ökonomieranking eine zusammenfassende Bewertung der Messsysteme. Hierbei werden die kumulierten Fehleranteile in den Bereichen Niederstrom (blau), Nennstrom (rot) und Überlast (gelb) gegenübergestellt.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_neu/dia_messstrecke_neu-Oekonomie_Ranking.pdf}
+    \caption{Kumulierter Vergleich der Fehleranteile der verschiedenen Messsysteme über drei Lastbereiche}
+    \label{dia:oekonomie_ranking}
+\end{diagram}
+
+Zur quantitativen Bewertung dieser Anteile dient der in der folgenden Tabelle ausgewiesene Fehlerscore. Dieser Score berechnet sich aus der Summe der Abweichungen über alle Lastbereiche. Ein niedriger Wert indiziert eine höhere Gesamtgenauigkeit. Das PAC 4220 erreicht einen Fehlerscore von gut 16 Prozent und liefert damit deutlich bessere Ergebnisse als die Vergleichssysteme.
+
+\begin{table}[H]
+    \centering
+    \caption{Vergleichende Übersicht der Fehleranteile und des resultierenden Fehlerscores der Messsysteme}
+    \label{tab:fehler_score_vergleich}
+    \begin{tabular}{lcccc}
+        \hline
+        \textbf{Messsystem} & \textbf{Niederstrom [\%]} & \textbf{Nennstrom [\%]} & \textbf{Überlast [\%]} & \textbf{Fehler-Score [\%]} \\ \hline
+        PAC 4220            & 13,10                     & 2,00                    & 0,96                   & 16,06                      \\
+        K-3                 & 100,00                    & 41,19                   & 15,36                  & 156,55                     \\
+        Rogowski-Spulen     & 84,50                     & 100,00                  & 100,00                 & 284,50                     \\ \hline
+    \end{tabular}
+\end{table}
+
+\section{Messung der Wandler bei Dreieck und Parallel}
+\label{sec:messung_wandler}
+
+Dieser Abschnitt untersucht die Auswirkungen unterschiedlicher Leitergeometrien auf die Messgenauigkeit der Stromwandler. Ergänzend zu den statischen Darstellungen in diesem Bericht ermöglicht eine Webanwendung die interaktive Analyse der Messdaten.
+
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=Interaktive Datenanalyse]
+    Die Diagramme können unter dem folgenden Link detailliert betrachtet und individuell angepasst werden
+    
+    \begin{center}
+        \url{https://messungen-bachelorarbeit-tjjqshzjfbnj2soadxq3vt.streamlit.app/}
+    \end{center}
+    
+    \textbf{Hinweise zur Nutzung}
+    \begin{itemize}
+        \item Für eine optimale Darstellung bitte über das Zahnradsymbol oben rechts das Design auf \textit{Light} stellen
+        \item Die Diagramme sind interaktiv und erlauben das Zoomen sowie Verschieben der Ansicht
+        \item Durch Klicken auf die Legende lassen sich einzelne Kurvenverläufe ein oder ausblenden
+        \item Es können eigene Diagrammkonstellationen für spezifische Vergleiche erstellt werden
+    \end{itemize}
+\end{tcolorbox}
+
+Abbildung \ref{pic:kupferschienen_layout} zeigt die konstruktive Umsetzung der untersuchten Geometrien. In der Frontalansicht ist die horizontale Führung der drei Außenleiter L1, L2 und L3 zu sehen. Die Abgangsschienen haben dabei unterschiedliche Phasenmittenabstände. Im linken Bereich (blaue Schiene) beträgt der Abstand \SI{130}{mm} und im rechten Teil der Anlage (rote Schiene) sind es \SI{210}{mm}. Die Seitenansicht zeigt die Umsetzung der Dreiecksanordnung. Hier ist erkennbar dass die Schienen (grün) zur Kontaktierung der Anschlussebene zweifach gekröpft sind.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/Bilder/kupferschinen_gesamtaufbau.pdf}
+    \caption{Technische Zeichnung des Kupferschienensystems in paralleler und dreiecksförmiger Anordnung}
+    \label{pic:kupferschienen_layout}
+\end{figure}
+
+Die nachfolgenden Diagramme stellen die Messabweichungen der Stromwandler in Abhängigkeit vom Primärstrom und der Leiteranordnung dar. Ein Vergleich der Kurvenverläufe zeigt dass die Parallelanordnung aufgrund der asymmetrischen Feldverteilung häufig zu größeren Abweichungen führt als die Dreiecksanordnung. Besonders bei unkompensierten Wandlern ist dieser Effekt deutlich sichtbar.
+
+Tabelle \ref{tab:wandler_spezifikationen_erweitert} listet alle im Rahmen der Untersuchung gemessenen Wandler auf. Beim Modell Celsa ALO E 16050 K ist zu beachten dass eines der geprüften Exemplare während der Messung beschädigt wurde. Dies resultiert in einer Abweichung der Messwerte für diesen spezifischen Wandler wohingegen die anderen Exemplare dieses Typs intakt blieben.
+
+\begin{table}[H]
+    \centering
+    \caption{Erweiterte Spezifikationen und wirtschaftliche Kennwerte der Prüflinge}
+    \label{tab:wandler_spezifikationen_erweitert}
+    \footnotesize
+    \setlength{\tabcolsep}{4pt} 
+    \begin{tabular}{@{}lll
+            S[table-format=4.0]
+            S[table-format=2.1]
+            S[table-format=4.0]
+            S@{}}
+        \toprule
+        \textbf{Hersteller}
+                                                     &
+        \textbf{Typ}                                 &
+        \textbf{Technologie}                         &
+        {\textbf{$I_n$ [\si{\ampere}]}}
+                                                     &
+        {\textbf{$S_n$ [\si{\volt\ampere}]}}         &
+        {\textbf{Volumen [\si{\centi\meter\cubed}]}} &
+        {\textbf{Preis [\euro]}}
+        \\
+        \midrule
+        Celsa                                        & ALO 10030
+                                                     & Standard      & 2000        & 2,5  & 634,3 & 45,50           \\
+        Celsa                                        & ALO 8030 K    & Kompensiert & 2000 & 10,0  & 710,2  & 95,95  \\
+        Celsa
+                                                     & ALO 10030     & Standard    & 2500 & 2,5   & 634,3  & 45,50  \\
+        Celsa
+                                                     & ALO 10050 K   & Kompensiert & 2500 & 5,0   & 1027,0 & 104,20 \\
+        Celsa                                        & ALO 12070     & Standard    & 3000 & 15,0  & 1520,0 & 71,51  \\
+        Celsa
+                                                     & ALO 12070 K   & Kompensiert & 3000 & 15,0  & 1520,0 & 346,06 \\
+        Celsa
+                                                     & ALO 12070     & Standard    & 4000 & 15,0  & 1520,0 & 71,51  \\
+        Celsa                                        & ALO 12070 K   & Kompensiert & 4000 & 15,0  & 1520,0 & 401,91 \\
+        Celsa
+                                                     & ALO 20060     & Standard    & 5000 & 40,0  & 1989,0 & 124,76 \\
+        Celsa
+                                                     & ALO E 16050 K & Kompensiert & 5000 & 40,0  & 1903,0 & 414,56 \\
+        \addlinespace
+        MBS                                          & ASK 101.4     & Standard    & 2000 & 10,0  & 733,2  & 141,90 \\
+
+        MBS                                          & ASK 129.10    & Standard    & 5000 & 15,0  & 6175,0 & 303,10 \\
+        \addlinespace
+        Redur
+                                                     & 13A1030.3ffp  & FFP         & 2000 & 10,0  & 778,7  & {??}
+        \\
+        Redur                                        & 20A1456.5vffp & VFFP        & 5000 & 15,0  & 1600,0 & {??}
+        \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Zur visuellen Unterscheidung gelten folgende Konventionen in den Diagrammen:
+\begin{itemize}
+    \item \textbf{Parallelanordnung:} Durchgezogene Linie mit Kreissymbol
+    \item \textbf{Dreiecksanordnung:} Gepunktete oder gestrichelte Linie mit Dreieckssymbol
+    \item \textbf{Farbgebung:} Ein spezifisches Wandlermodell behält über beide Anordnungen hinweg dieselbe Farbe
+\end{itemize}
+
+In der folgenden Abbildung werden vier Wandlermodelle bei einem Nennstrom von 2000 A verglichen.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 2000\,A}
+    \label{dia:2000A_zusammenfassung}
+\end{diagram}
+
+Die weiteren Diagramme zeigen die Ergebnisse für die Nennströme 2500 A bis 5000 A.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2500A_kosten/dia_2500A_kosten-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 2500\,A}
+    \label{dia:2500A_zusammenfassung}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_3000A_kosten/dia_3000A_kosten-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 3000\,A}
+    \label{dia:3000A_zusammenfassung}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_4000A_kosten/dia_4000A_kosten-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 4000\,A}
+    \label{dia:4000A_zusammenfassung}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_kosten/dia_5000A_kosten-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Zusammenfassender Vergleich der Leitergeometrien bei 5000\,A}
+    \label{dia:5000A_zusammenfassung}
+\end{diagram}
+
+\subsection{Ökonomische Evaluation und Technologieranking}
+
+In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler korreliert. Dies ermöglicht eine Bewertung hinsichtlich des Preis Leistungs Verhältnisses.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 2000\,A}
+    \label{dia:2000A_ranking_plot}
+\end{diagram}
+
+Für den Bereich 2000 A wird zusätzlich ein Ranking unter Berücksichtigung des Volumens dargestellt.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking unter Berücksichtigung des Volumens bei 2000\,A}
+    \label{dia:2000A_ranking_volumen_plot}
+\end{diagram}
+
+Nachfolgend sind die wirtschaftlichen Rankings für die weiteren Stromstärken aufgeführt.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2500A_kosten/dia_2500A_kosten-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 2500\,A}
+    \label{dia:2500A_ranking_plot}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_3000A_kosten/dia_3000A_kosten-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 3000\,A}
+    \label{dia:3000A_ranking_plot}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_4000A_kosten/dia_4000A_kosten-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 4000\,A}
+    \label{dia:4000A_ranking_plot}
+\end{diagram}
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_kosten/dia_5000A_kosten-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking der Wandlertechnologien bei 5000\,A}
+    \label{dia:5000A_ranking_plot}
+\end{diagram}
+
+Abschließend folgt das Ranking unter Berücksichtigung des Volumens bei 5000 A.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_kosten_volumen/dia_5000A_kosten_volumen-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking unter Berücksichtigung des Volumens bei 5000\,A}
+    \label{dia:5000A_ranking_volumen_plot}
+\end{diagram}
+
+\section{Fazit}
+Die durchgeführten Untersuchungen am neuen Prüfstand bestätigen die hohe Genauigkeit der installierten Messstrecke mit dem PAC 4220. Bei der Wahl der Stromwandler zeigt sich dass die Geometrie der Stromschienen einen relevanten Einfluss auf die Messabweichung hat. Hierbei führt die Dreiecksanordnung ebenfalls zu einer Verbesserung der Messgenauigkeit. Für Anwendungen mit hohen Anforderungen an die Genauigkeit bieten kompensierte Wandler trotz höherer Kosten Vorteile gegenüber Standardwandlern. Die dargestellten Diagramme ermöglichen nun eine gezielte Auswahl basierend auf den spezifischen Anforderungen an Genauigkeit und Budget.
+
+\end{document}
