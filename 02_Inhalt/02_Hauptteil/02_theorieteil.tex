@@ -353,13 +353,15 @@ Da $\mu_r$ bei Ferromagnetika jedoch feldstärkeabhängig ist, führen starke Fe
 \begin{aufgabenbox}
     Wird später geschrieben!
 \end{aufgabenbox}
-
 \subsubsection{Störeinflüsse bei Messstromwandlern}
 \label{sec:stoerfelder_schaltanlagen}
 
 Die Genauigkeit von Messstromwandlern im Betrieb wird maßgeblich von externen und systembedingten Faktoren beeinflusst.
 Die wesentlichen Störeinflüsse gliedern sich in die drei Kategorien fehlerhafte Bürdenbeschaltung, Einwirkung externer magnetischer Fremdfelder sowie geometrische Positionierung des Primärleiters.
-\textbf{Einfluss der Bürde}
+
+% --- Paragraph 1 ---
+\paragraph{Einfluss der Bürde}
+\label{par:einfluss_buerde}
 
 Die Impedanz der Bürde bestimmt das Betriebsverhalten des Stromwandlers.
 Ein erhöhter Widerstand im Sekundärkreis durch Leitungswiderstände oder Messgeräte erfordert eine höhere induzierte Sekundärspannung zur Aufrechterhaltung des Stromflusses.
@@ -397,7 +399,10 @@ Durch Gleichsetzen von (\ref{equ:spannung_widerstand}) und (\ref{equ:trafo_haupt
 
 Aus dieser Beziehung geht hervor, dass ein Anstieg von $R_{\text{Komp}}$ bei eingeprägtem Strom $I_{sec}$ zu einer linearen Erhöhung des magnetischen Flusses $\Phi$ führt.
 Bei Überschreitung des Sättigungsflusses $\Phi_{\text{sat}}$ verlässt der Wandler den linearen Arbeitsbereich.
-\textbf{Magnetische Fremdfelder}
+
+% --- Paragraph 2 ---
+\paragraph{Magnetische Fremdfelder}
+\label{sec:theorie_fremdfelder} % <--- Hier ist das wichtige Label für den Verweis aus Kap 4
 
 Jeder stromdurchflossene Leiter ist von einem konzentrischen Magnetfeld umgeben.
 Befinden sich mehrere Leiter in unmittelbarer Nähe zueinander, überlagern sich deren magnetische Felder gemäß dem Superpositionsprinzip.
@@ -421,26 +426,21 @@ Diese berechnet explizit den zusätzlichen Anteil der Flussdichte \gls{sym:B_fre
     \label{equ:stray_flux_mbs}
 \end{equation}
 
-
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_abschätzung_fremdfeld.drawio.pdf}
-    \caption{}
+    \caption{Geometrische Parameter zur Berechnung des Fremdfeldeinflusses}
     \label{pic:aufbau_abschaetzung_fremdfeld}
 \end{figure}
 
-Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in T), Strom im Nachbarleiter $I_{pri}$ (in A), äußerer Radius $R$ (in m), Breite $W$ (in m), Querschnitt des Eisenkerns \gls{sym:A} (in m$^2$) und Außenphasenabstand \gls{sym:D} (in m).
-\begin{aufgabenbox}
-    Diagramm vorläufig – Anpassung möglich.
-    
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.8\textwidth]{03_Ressourcen/simulation/fremdfeld_ra_pfunder/Vergleich_Geometrie_und_Strom.pdf}
-        \caption{Einfluss von Kerngröße und Stromstärke auf den zusätzlichen Streufluss}
-        \label{pic:sim_streufluss_abhaengigkeit}
-    \end{figure}
-    
-\end{aufgabenbox}
+Die Variablen sind gemäß der MBS-Spezifikation definiert als zusätzlich induzierte magnetische Flussdichte im Kern $B_{\text{Fremd}}$ (in \unit{T}), Strom im Nachbarleiter $I_{pri}$ (in \unit{A}), äußerer Radius $R$ (in \unit{m}), Breite $W$ (in \unit{m}), Querschnitt des Eisenkerns \gls{sym:A} (in \unit{m^2}) und Außenphasenabstand \gls{sym:D} (in \unit{m}).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{03_Ressourcen/simulation/fremdfeld_ra_pfunder/Vergleich_Geometrie_und_Strom.pdf}
+    \caption{Einfluss von Kerngröße und Stromstärke auf den zusätzlichen Streufluss}
+    \label{pic:sim_streufluss_abhaengigkeit}
+\end{figure}
 
 Abbildung \ref{pic:sim_streufluss_abhaengigkeit} visualisiert den durch den benachbarten Leiter in den Kern eingekoppelten zusätzlichen magnetischen Fluss $\Phi_{\text{Fremd}}$.
 Es werden die zwei Szenarien eines kleinen Kerns (blau) und eines großen Kerns (rot) verglichen.
@@ -468,13 +468,17 @@ Dabei kürzt sich der Querschnitt $A$ heraus
 
 Diese Beziehung bestätigt, dass der reine Störfluss $\Phi_{\text{Fremd}}$ nur von der Geometrie ($R, W, D$) und dem Störstrom abhängt, nicht jedoch von der Kerntiefe und damit dem Querschnitt.
 Die Robustheit großer Kerne resultiert folglich nicht aus einer geringeren Einkopplung, sondern aus ihrer höheren Kapazität zur Aufnahme dieses Zusatzflusses.
-\textbf{Exzentrische Positionierung der Kupferschiene}
+
+
+% --- Paragraph 3 ---
+\paragraph{Exzentrische Positionierung der Kupferschiene}
+\label{par:exzentrische_positionierung}
 
 Wie bereits in Abschnitt \ref{sec:kompensationswicklungen} dargelegt, ist eine ideal zentrierte Installation der Primärleiter (Kupferschienen) in der Praxis konstruktionsbedingt oft nicht realisierbar.
 Eine Abweichung von der zentrischen Lage führt zu einer inhomogenen Feldverteilung im Eisenkern und begünstigt lokale Sättigungserscheinungen.
 Dieser Zusammenhang wird in Abbildung \ref{pic:sim_exzentrische_moniert} verdeutlicht.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{03_Ressourcen/simulation/wandler_mit_kupferschine/wandler_kupferschine_1p.pdf}
     \caption{Einfluss der Leiterpositionierung auf die Flussverteilung im Kern}
