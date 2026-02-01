@@ -27,12 +27,12 @@ Diese Darstellungsweise erlaubt die direkte Bewertung des Geometrieeinflusses au
 
 Die Untersuchung der Stromwandler bei einem Nennstrom von \SI{2000}{A} zeigt differenzierte Ergebnisse für die verschiedenen Modelle und Leiteranordnungen. Abbildung \ref{dia:2000A_zusammenfassung} stellt die Verläufe der vier Prüflinge gegenüber und verdeutlicht die Einhaltung der Genauigkeitsklasse 1 für den Großteil der Messpunkte. Der grafische Vergleich hebt hervor dass insbesondere zwei Konfigurationen deutliche Abweichungen aufweisen. Dies betrifft den Redur 13A1030.ffp in der Dreiecksanordnung sowie den Celsa ALO 10030 in der Parallelanordnung. Beide Wandler verlassen in diesen spezifischen Szenarien die vorgegebenen Toleranzbereiche.
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
     \caption{Zusammenfassender Vergleich der Leitergeometrien bei \SI{2000}{A}}
     \label{dia:2000A_zusammenfassung}
-\end{figure}
+\end{diagram}
 
 Eine bauliche Besonderheit weist der Redur 13A1030.ffp auf. Wie in Abbildung \ref{fig:wandler_fremdfeldprotektor} zu erkennen ist befinden sich die Fremdfeldprotektoren (\gls{ffp}) an den seitlichen Flanken des Gehäuses. Diese Positionierung schirmt den Eisenkern gegen magnetische Streufelder benachbarter Leiter ab sofern diese seitlich angeordnet sind. In der parallelen Leiterführung führt dies zu normkonformen Messergebnissen da die Beeinflussung durch die Nachbarphasen minimiert wird.
 
@@ -49,12 +49,12 @@ Ein gegenteiliges Verhalten zeigt sich beim Modell Celsa ALO 10030. Tabelle \ref
 
 Diese Abhängigkeit des Fehlers vom Primärstrom wird in Abbildung \ref{dia:2000A_celsa_zusammenfassung} grafisch aufbereitet. Das Diagramm veranschaulicht den steilen Abfall der Messkurven für die Parallelanordnung ab etwa \SI{20}{\%} des Nennstroms. Im Vergleich dazu verlaufen die Kurven der Dreiecksanordnung weitestgehend linear und verbleiben im Toleranzbereich.
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2000A_celsa_10030/dia_2000A_celsa_10030-Zusammenfassung_MultiCurrent.pdf}
     \caption{Messfehlerverlauf des Celsa ALO 10030 in Abhängigkeit vom Primärstrom}
     \label{dia:2000A_celsa_zusammenfassung}
-\end{figure}
+\end{diagram}
 
 Im Gegensatz zu den Abweichungen der vorangegangenen Modelle zeigen der Celsa ALO 8030 K und der MBS ASK101.4 eine hohe Stabilität gegenüber externen Feldern. Diese Unempfindlichkeit lässt sich beim Celsa ALO 8030 K auf die Bauweise als kompensierter Wandler zurückführen wie in Abschnitt \ref{sec:kompensationswicklungen} erläutert wird. Tabelle \ref{tab:messergebnisse_celsa8030_2000A} im Anhang fasst die Ergebnisse für dieses Modell zusammen. Selbst unter Volllast und Überstrom bleiben alle Phasen in beiden geometrischen Anordnungen sicher innerhalb der Klasse 1. Die maximale Abweichung tritt in der Parallelanordnung bei Phase L1 mit einem Wert von \SI{-0,4}{\%} auf.
 
@@ -66,12 +66,17 @@ Ein ähnlich robustes Verhalten bestätigt Tabelle \ref{tab:messergebnisse_mbs_2
 
 Die Analyse der Messreihe bei \SI{2500}{A} verdeutlicht den Einfluss der Leitergeometrie auf unterschiedliche Wandlertechnologien. Im Fokus steht der Vergleich zwischen dem kompensierten Wandler Celsa ALO 10050 K und dem Standardwandler Celsa ALO 10030 in Bezug auf ihre Stabilität in Parallel- und Dreiecksanordnungen.
 
-\begin{figure}[H]
+\begin{aufgabenbox}
+    Hier möchte ich noch eine Simulation machen.
+    Es sollen die Sättigungseffekte des Eisenkernes betrachet werden.
+\end{aufgabenbox}
+
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_2500A_dreieck_parallel/dia_2500A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
     \caption{Zusammenfassender Vergleich der Leitergeometrien bei \SI{2500}{A}}
     \label{dia:2500A_zusammenfassung}
-\end{figure}
+\end{diagram}
 
 Die Messergebnisse des kompensierten Wandlers Celsa ALO 10050 K belegen, dass dieser über den Großteil des Messbereichs eine hohe Genauigkeit aufweist (siehe Tabelle \ref{tab:messergebnisse_celsa10050_2500A_alle} im Anhang). In der Parallelanordnung bewegt sich der Wandler fast durchgehend innerhalb der Normvorgaben. Eine Ausnahme bildet die Phase L2 im Überlastbereich (\SI{120}{\%} $I_n$). Hier überschreitet der Wandler den Grenzwert mit einer Abweichung von \SI{-1,012}{\%} knapp, was einem absoluten Fehlstrom von rund \SI{30}{A} entspricht. In der Dreiecksanordnung reduziert sich dieser Messfehler auf \SI{-0,549}{\%}, wodurch die Norm wieder eingehalten wird. Dies zeigt, dass selbst ein kompensierter Wandler nicht vollständig immun gegen externe Magnetfelder ist, die Auswirkungen jedoch im Vergleich zu Standardwandlern gering bleiben. Da sich der Fehlerbetrag hierbei fast halbiert, führt die Dreiecksgeometrie in diesem kritischen Lastpunkt zu einer annähernden Verdopplung der Messgenauigkeit.
 
@@ -142,19 +147,26 @@ Der Celsa ALO 10050 K dient an dieser Stelle lediglich als geometrische Referenz
 
 % --- 3000 A ---
 
+
 \subsubsection{Einfluss von Geometrie und Bürde bei \SI{3000}{A}}
 \label{sec:analyse_messreihe_3000A}
 
-Die Messreihe bei einer Stromstärke von \SI{3000}{A} dient als detaillierte Fallstudie für das Verhalten der Wandler unter variierenden Betriebsbedingungen. Im Fokus steht der Vergleich zwischen dem Standardwandler Celsa ALO 12070 und der kompensierten Ausführung wie in Abbildung \ref{dia:3000A_zusammenfassung} dargestellt. Zusätzlich zur geometrischen Anordnung wird in diesem Lastpunkt der Einfluss des sekundären Bürdenwiderstands in der Parallelanordnung isoliert betrachtet.
+Die Messreihe bei einer Stromstärke von \SI{3000}{A} dient als zentrale Fallstudie um das Verhalten der Wandler im Grenzbereich ihrer Leistungsfähigkeit zu charakterisieren. Im Fokus steht primär der technologische Vergleich zwischen dem Standardwandler Celsa ALO 12070 und der kompensierten Ausführung ALO 12070 K unter dem Einfluss der Leitergeometrie. Ergänzend wird untersucht inwiefern eine Reduktion des sekundären Bürdenwiderstands die Sättigungseffekte in der kritischen Parallelanordnung abmildern kann.
 
-\begin{figure}[H]
+\paragraph{Vergleich der Wandlertechnologien und Geometrien}
+Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. Es zeigt sich deutlich dass die Leitergeometrie einen massiven Einfluss auf die Messstabilität des Standardwandlers hat.
+
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_3000A_dreieck_parallel/dia_3000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
     \caption{Vergleich von Geometrie und Bürdeneinfluss bei \SI{3000}{A}}
     \label{dia:3000A_zusammenfassung}
-\end{figure}
+\end{diagram}
 
-Zur Untersuchung des Einflusses der Bürde auf die Messgenauigkeit wurden drei unterschiedliche Szenarien betrachtet welche in Tabelle \ref{tab:buerden_konfigurationen_3000A} zusammengefasst sind. Im ersten Fall werden alle Wandler mit der Nennbürde belastet. Da der Wandler ALO 12070 3000/1 eine Nennleistung von \SI{15}{VA} aufweist wurde dieser im Referenzfall mit einem Widerstand von \SI{10,8}{\ohm} beschaltet. Die nächste Konfiguration untersucht den Wandler bei direktem Anschluss an das Messgerät ohne zusätzlichen Vorwiderstand. Bei der letzten Messung wurde am mittleren Leiter L2 der Bürdenwiderstand entfernt wohingegen die Außenleiter L1 und L3 weiterhin mit \SI{10,8}{\ohm} belastet wurden.
+
+
+\paragraph{Analyse der Bürdenabhängigkeit}
+Da der Standardwandler in der Parallelanordnung signifikante Sättigungserscheinungen zeigte wurde in einer vertiefenden Untersuchung analysiert ob eine Reduktion der sekundären Bürde diese Effekte kompensieren kann. Hierzu wurden drei Konfigurationen verglichen: die Nennbürde (Referenzlast), der Betrieb ohne Vorwiderstand (Minimallast) und eine asymmetrische Belastung bei der nur der kritische Leiter L2 entlastet wurde (siehe Tabelle \ref{tab:buerden_konfigurationen_3000A}).
 
 \begin{table}[H]
     \centering
@@ -173,14 +185,27 @@ Zur Untersuchung des Einflusses der Bürde auf die Messgenauigkeit wurden drei u
     \end{tabular}
 \end{table}
 
+Abbildung \ref{dia:3000A_buerde_verlauf} visualisiert die Ergebnisse dieser Variation. Für die Außenleiter L1 und L3 ist kaum eine Abhängigkeit von der Bürde festzustellen; ihre Abweichungen bleiben im Nieder- und Nennstrombereich konstant gering. Anders stellt sich die Situation beim mittleren Leiter L2 dar.
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{03_Ressourcen/dia_3000A_buerde/dia_3000A_buerde-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Vergleich von Geometrie und Bürdeneinfluss bei \SI{3000}{A}}
-    \label{dia:3000A_zusammenfassung}
-\end{figure}
+    \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_3000A_buerde/dia_3000A_buerde-Zusammenfassung_MultiCurrent.pdf}
+    \caption{Vergleich der Fehlerkurven bei variabler Bürde und \SI{3000}{A}}
+    \label{dia:3000A_buerde_verlauf}
+\end{diagram}
 
+Ein Vergleich zwischen der Referenzlast (Tabelle \ref{tab:messergebnisse_celsa12070_3000A_alle} im Anhang) und der asymmetrischen Last (Tabelle \ref{tab:messergebnisse_celsa12070_3000A_asym} im Anhang) zeigt bei L2 ein nahezu identisches Verhalten da beide Konfigurationen stark sättigen. Während die asymmetrische Last bei \SI{100}{\%} des Nennstromes bei \SI{-3,044}{\%} liegt weist die Referenzlast mit \SI{-2,924}{\%} eine fast gleiche Abweichung auf was einer Differenz von lediglich \SI{0,12}{\%} entspricht. Auch im Überlastbereich bei \SI{120}{\%} bleiben die Werte vergleichbar da die asymmetrische Last hier \SI{-5,683}{\%} und die Referenzlast \SI{-5,426}{\%} erreicht.
+
+Die Konfiguration der Minimallast (Tabelle \ref{tab:messergebnisse_celsa12070_3000A_min} im Anhang) erweist sich für den kritischen Leiter L2 als die stabilste Variante. Bei \SI{80}{\%} des Nennstromes liegt der Fehler von L2 hier bei nur \SI{-0,598}{\%} wohingegen die Referenzlast bereits auf \SI{-1,081}{\%} abfällt was eine Verbesserung von \SI{0,483}{\%} durch die minimale Bürde bedeutet. Dennoch reicht auch die Minimallast nicht aus um den Standardwandler in der Parallelanordnung bei Nennstrom in die Genauigkeitsklasse 1 zurückzuführen (\SI{-2,537}{\%} Abweichung).
+
+Der Performance Index in Abbildung \ref{dia:3000A_performance_buerde} fasst die Ergebnisse zusammen. Zwar erzielt die Messung mit der Minimallast über alle Strombereiche hinweg die besten Ergebnisse doch zeigt der Vergleich mit dem vorangegangenen Abschnitt dass die Wahl der Wandlertechnologie (Kompensation) und der Geometrie (Dreieck) einen weitaus größeren Einfluss auf die Messgüte hat als die Optimierung der Bürde. Die Reduktion des Widerstands zögert die Sättigung physikalisch bedingt zwar hinaus kann die systembedingten Schwächen der Parallelanordnung bei Standardwandlern jedoch nicht vollständig kompensieren.
+
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{03_Ressourcen/diagramme/dia_3000A_buerde/dia_3000A_buerde-Oekonomie_Ranking.pdf}
+    \caption{Ranking der Konfigurationen basierend auf dem Performance Index}
+    \label{dia:3000A_performance_buerde}
+\end{diagram}
 
 
 
@@ -191,24 +216,24 @@ Bei der Erhöhung des Primärstroms auf \SI{4000}{A} liegt der Fokus auf der Rep
 
 % --- 4000 A ---
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_4000A_dreieck_parallel/dia_4000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
     \caption{Zusammenfassender Vergleich der Leitergeometrien bei \SI{4000}{A}}
     \label{dia:4000A_zusammenfassung}
-\end{figure}
+\end{diagram}
 
 \subsubsection{Grenzbereich der Messgenauigkeit bei \SI{5000}{A}}
 \label{sec:analyse_messreihe_5000A}
 
 % --- 5000 A ---
 
-\begin{figure}[H]
+\begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
     \caption{Zusammenfassender Vergleich der Leitergeometrien bei \SI{5000}{A}}
     \label{dia:5000A_zusammenfassung}
-\end{figure}
+\end{diagram}
 
 
 
