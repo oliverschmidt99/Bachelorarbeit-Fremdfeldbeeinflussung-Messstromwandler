@@ -169,6 +169,7 @@ Zur Adressierung der SENTRON-Messgeräte wird jedem Gerät in der Hardware-Konfi
 Diese Zuweisung ist notwendig, um die Kommunikation der Teilnehmer innerhalb des \gls{profinet}-Netzwerks mit der \gls{sps} zu ermöglichen.
 Innerhalb des Hardware-Konfigurators werden die spezifischen Messwerte der Geräte auf die Eingangsadressen der \gls{sps} abgebildet.
 Die so bereitgestellten Rohwerte werden im Anwenderprogramm der Steuerung aus dem Peripheriebereich ausgelesen und in \gls{db}s übertragen.
+Der gesamte Quellcode der verwendeten Programmbausteine ist hierfür in Abschnitt \ref{chap:anhang_programm} aufgeführt.
 Für die Erfassung der Daten in \gls{wincc} wird im Variablenhaushalt des Visualisierungssystems eine Kommunikationsverbindung zur Steuerung projektiert.
 Die Variablen für die gemessenen Ströme werden direkt mit den entsprechenden Speicheradressen innerhalb der \gls{db}s verknüpft.
 Über diese Verbindung werden die Werte der Ströme in regelmäßigen Abständen vom System ausgelesen, auf dem \gls{hmi} angezeigt und für den späteren Export als \gls{csv}-Datei in der Datenbank gespeichert.
@@ -196,6 +197,8 @@ Ein Zeitglied T1 dient dabei der Entprellung beim Eintritt in das Fenster, währ
 Die eigentliche Messzeit wird durch den Timer T3 gesteuert, der nach Ablauf die Messung am aktuellen Punkt als abgeschlossen markiert.
 Die Weiterschaltlogik der Schrittkette wertet diesen Status aus: Im Ausgangszustand wird auf die Startbedingungen gewartet, während in den aktiven Prüfschritten der Übergang zum nächsten Pegel erst nach erfolgreichem Ablauf der Messzeit erfolgt.
 Abschließend werden der ermittelte Sollwert an den Regler ausgegeben und der Schrittstatus für den nächsten Zyklus aktualisiert.
+
+
 
 \subsubsection{Softwaregestützte Prozesskette zur Datenauswertung}
 \label{sec:datenaufbereitung_analyse}

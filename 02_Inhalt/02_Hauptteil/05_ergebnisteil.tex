@@ -154,7 +154,12 @@ Der Celsa ALO 10050 K dient an dieser Stelle lediglich als geometrische Referenz
 Die Messreihe bei einer Stromstärke von \SI{3000}{A} dient als zentrale Fallstudie um das Verhalten der Wandler im Grenzbereich ihrer Leistungsfähigkeit zu charakterisieren. Im Fokus steht primär der technologische Vergleich zwischen dem Standardwandler Celsa ALO 12070 und der kompensierten Ausführung ALO 12070 K unter dem Einfluss der Leitergeometrie. Ergänzend wird untersucht inwiefern eine Reduktion des sekundären Bürdenwiderstands die Sättigungseffekte in der kritischen Parallelanordnung abmildern kann.
 
 \paragraph{Vergleich der Wandlertechnologien und Geometrien}
-Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. Es zeigt sich deutlich dass die Leitergeometrie einen massiven Einfluss auf die Messstabilität des Standardwandlers hat.
+
+Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. Für diese Messreihe wurde der Phasenmittelabstand gemäß Tabelle \ref{tab:schienen_konfiguration} vergrößert.
+
+Die Untersuchung des Standardwandlers ALO 12070 in der Parallelanordnung offenbart dass der Leiter L2 als einziger die Genauigkeitsanforderungen nicht erfüllen kann. Wie in Tabelle \ref{tab:messergebnisse_celsa12070_3000A_alle} im Anhang ersichtlich fällt der Messwert bereits bei \SI{80}{\%} des Nennstromes mit \SI{-1,081}{\%} unter den Grenzwert. Dieser Fehler verstärkt sich linear bis in den Überlastbereich wo er bei \SI{120}{\%} Last einen Wert von \SI{-5,426}{\%} erreicht was einem absoluten Fehlstrom von \SI{195,33}{A} entspricht.
+
+Demgegenüber zeigt der kompensierte Typ ALO 12070 K dass die zusätzliche Wicklung die Erfassung bei L2 stabilisiert und die Normeinhaltung gewährleistet. Im Überlastbereich ist in der Parallelanordnung eine Abweichung in den positiven Bereich zu beobachten was auf Effekte ähnlich einer Unterbürdung durch Flussveränderungen im Kern schließen lässt. Die Außenleiter L1 und L3 weisen hingegen in beiden Konfigurationen ein nahezu identisches Verhalten auf. Der direkte Vergleich der Geometrien beim kompensierten Wandler verdeutlicht den Vorteil der Dreiecksanordnung bei Phase L2 massiv. Der Fehler reduziert sich von \SI{0,929}{\%} in der Parallelanordnung auf \SI{0,097}{\%} in der Dreiecksanordnung was einer Verbesserung um den Faktor zehn gleichkommt.
 
 \begin{diagram}[H]
     \centering
@@ -163,10 +168,9 @@ Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wand
     \label{dia:3000A_zusammenfassung}
 \end{diagram}
 
-
-
 \paragraph{Analyse der Bürdenabhängigkeit}
-Da der Standardwandler in der Parallelanordnung signifikante Sättigungserscheinungen zeigte wurde in einer vertiefenden Untersuchung analysiert ob eine Reduktion der sekundären Bürde diese Effekte kompensieren kann. Hierzu wurden drei Konfigurationen verglichen: die Nennbürde (Referenzlast), der Betrieb ohne Vorwiderstand (Minimallast) und eine asymmetrische Belastung bei der nur der kritische Leiter L2 entlastet wurde (siehe Tabelle \ref{tab:buerden_konfigurationen_3000A}).
+
+Da der Standardwandler in der Parallelanordnung signifikante Sättigungserscheinungen zeigte wurde in einer vertiefenden Untersuchung analysiert ob eine Reduktion der sekundären Bürde diese Effekte kompensieren kann. Hierzu wurden drei Konfigurationen verglichen: die Nennbürde (Referenzlast) der Betrieb ohne Vorwiderstand (Minimallast) und eine asymmetrische Belastung bei der nur der kritische Leiter L2 entlastet wurde (siehe Tabelle \ref{tab:buerden_konfigurationen_3000A}).
 
 \begin{table}[H]
     \centering
@@ -185,7 +189,7 @@ Da der Standardwandler in der Parallelanordnung signifikante Sättigungserschein
     \end{tabular}
 \end{table}
 
-Abbildung \ref{dia:3000A_buerde_verlauf} visualisiert die Ergebnisse dieser Variation. Für die Außenleiter L1 und L3 ist kaum eine Abhängigkeit von der Bürde festzustellen; ihre Abweichungen bleiben im Nieder- und Nennstrombereich konstant gering. Anders stellt sich die Situation beim mittleren Leiter L2 dar.
+Abbildung \ref{dia:3000A_buerde_verlauf} visualisiert die Ergebnisse dieser Variation. Für die Außenleiter L1 und L3 ist kaum eine Abhängigkeit von der Bürde festzustellen da ihre Abweichungen im Nieder- und Nennstrombereich konstant gering bleiben. Anders stellt sich die Situation beim mittleren Leiter L2 dar.
 
 \begin{diagram}[H]
     \centering
@@ -214,8 +218,9 @@ Der Performance Index in Abbildung \ref{dia:3000A_performance_buerde} fasst die 
 
 Bei der Erhöhung des Primärstroms auf \SI{4000}{A} liegt der Fokus auf der Reproduzierbarkeit der geometrischen Einflüsse bei gleicher Wandlerbauform. Untersucht werden erneut die Typen der Reihe ALO 12070 in Standardausführung sowie in der kompensierten Variante. Die Ergebnisse dienen dazu das Verhalten der Wandler bei weiter steigender Sättigung ohne den Einfluss variabler Bürdenwiderstände zu verifizieren.
 
-% --- 4000 A ---
+Abbildung \ref{dia:4000A_zusammenfassung} zeigt einen Verlauf der qualitativ stark den Beobachtungen aus Abschnitt \ref{sec:analyse_messreihe_3000A} ähnelt. Sowohl in der Parallelanordnung als auch in der Dreiecksanordnung stößt der Standardwandler Celsa ALO 12070 hier an seine Leistungsgrenzen wenngleich zu unterschiedlichen Zeitpunkten.
 
+% --- 4000 A ---
 \begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_4000A_dreieck_parallel/dia_4000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
@@ -223,11 +228,19 @@ Bei der Erhöhung des Primärstroms auf \SI{4000}{A} liegt der Fokus auf der Rep
     \label{dia:4000A_zusammenfassung}
 \end{diagram}
 
+Besonders deutlich wird dies in der Parallelanordnung. Wie die Werte in Tabelle \ref{tab:messergebnisse_celsa12070_4000A_alle} belegen bricht die Genauigkeit ab \SI{80}{\%} des Nennstroms ein. Bei \SI{3200}{A} weist der mittlere Leiter L2 bereits eine Abweichung von \SI{-0,945}{\%} auf und verlässt bei weiterer Lasterhöhung den Toleranzbereich. Bei Nennstrom (\SI{4000}{A}) liegt der Fehler bei \SI{-3,283}{\%}. Dieser Einbruch bei etwa \SI{3200}{A} korreliert mit den Sättigungseffekten der \SI{3000}{A}-Messreihe was darauf hindeutet dass die physikalische Sättigungsgrenze dieses Eisenkerns in der Parallelgeometrie in diesem Strombereich liegt. Dieses Verhalten spiegelt die Problematik wider welche bereits beim Typ ALO 10030 bei \SI{2000}{A} und \SI{2500}{A} beobachtet wurde wo die Parallelanordnung ebenfalls zu einer vorzeitigen Sättigung führte.
+
+Die Umstellung auf die Dreiecksanordnung bewirkt bei Nennstrom eine Verbesserung. Der Fehler der Phase L2 reduziert sich hierbei von \SI{-3,283}{\%} in der Parallelanordnung auf \SI{-0,151}{\%} in der Dreiecksanordnung womit die Genauigkeitsklasse 1 bei \SI{100}{\%} Last eingehalten wird. Allerdings zeigt sich im Überlastbereich bei \SI{120}{\%} dass auch die Dreiecksanordnung die Sättigung nicht vollständig verhindern kann da hier die Außenleiter L1 und L3 mit \SI{-1,489}{\%} beziehungsweise \SI{-1,713}{\%} die Klassengrenzen überschreiten.
+
+
+
+
+
+
 \subsubsection{Grenzbereich der Messgenauigkeit bei \SI{5000}{A}}
 \label{sec:analyse_messreihe_5000A}
 
 % --- 5000 A ---
-
 \begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
