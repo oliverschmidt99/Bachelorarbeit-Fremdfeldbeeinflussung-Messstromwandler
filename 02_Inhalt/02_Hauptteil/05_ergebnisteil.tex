@@ -152,7 +152,7 @@ Die Messreihe bei einer Stromstärke von \SI{3000}{A} fungiert als zentrale Fall
 
 \paragraph{Vergleich der Wandlertechnologien und Geometrien}
 
-Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. Für diese Messreihe wurde der Phasenmittelabstand gemäß Tabelle \ref{tab:schienen_konfiguration} vergrößert.
+Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. 
 
 Die Untersuchung des Standardwandlers ALO 12070 in der Parallelanordnung offenbart dass der Leiter L2 als einziger die Genauigkeitsanforderungen nicht erfüllen kann. Wie in Tabelle \ref{tab:messergebnisse_celsa12070_3000A_alle} im Anhang ersichtlich fällt der Messwert bereits bei \SI{80}{\%} des Nennstromes mit \SI{-1,1}{\%} unter den Grenzwert. Dieser Fehler verstärkt sich linear bis in den Überlastbereich wo er bei \SI{120}{\%} Last einen Wert von \SI{-5,4}{\%} erreicht was einem absoluten Fehlstrom von rund \SI{195,3}{A} entspricht.
 
@@ -212,7 +212,7 @@ Der Performance Index in Abbildung \ref{dia:3000A_performance_buerde} fasst die 
 
 \subsubsection{Skalierung der Geometrieeffekte bei \SI{4000}{A}}
 \label{sec:analyse_messreihe_4000A}
-
+Für diese Messreihe wurde der Phasenmittelabstand gemäß Tabelle \ref{tab:schienen_konfiguration} vergrößert.
 Mit der Steigerung des Primärstroms auf \SI{4000}{A} rückt die Reproduzierbarkeit der geometrischen Einflüsse bei gleicher Wandlerbauform in den Vordergrund. Betrachtet werden erneut die Typen der Reihe ALO 12070 in Standardausführung sowie in der kompensierten Variante. Die Ergebnisse dienen dazu das Verhalten der Wandler bei weiter steigender Sättigung ohne den Einfluss variabler Bürdenwiderstände zu verifizieren.
 
 Abbildung \ref{dia:4000A_zusammenfassung} skizziert einen Verlauf der qualitativ stark den Beobachtungen aus Abschnitt \ref{sec:analyse_messreihe_3000A} ähnelt. Sowohl in der Parallelanordnung als auch in der Dreiecksanordnung stößt der Standardwandler Celsa ALO 12070 hier an seine Leistungsgrenzen wenngleich zu unterschiedlichen Zeitpunkten.
@@ -236,10 +236,14 @@ Die Umstellung auf die Dreiecksanordnung bewirkt bei Nennstrom eine Verbesserung
 \subsubsection{Grenzbereich der Messgenauigkeit bei \SI{5000}{A}}
 \label{sec:analyse_messreihe_5000A}
 
-Diese Letzten Messungen befinden sich im Hochstrombereich von \SI{5000}{A} 
+Die abschließenden Untersuchungen widmen sich dem Hochstrombereich von \SI{5000}{A} in dem Standardwandler solchen mit Fremdfeldprotektoren gegenübergestellt werden. Der kompensierte Typ von Celsa (ALO E 16050 K) entfällt in dieser Betrachtung aufgrund eines technischen Defekts. Abbildung \ref{dia:5000A_zusammenfassung} gibt einen Überblick über die Fehlerverläufe aller untersuchten Typen in beiden Geometrien.
 
 
-% --- 5000 A ---
+\begin{aufgabenbox}
+    Ich kann nicht erklären warum die Messungen bei L1 so unterschiedlich sind zu andern Leitern.
+\end{aufgabenbox}
+
+% --- 5000 A Diagramm ---
 \begin{diagram}[H]
     \centering
     \includegraphics[width=1.0\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Zusammenfassung_MultiCurrent.pdf}
@@ -247,9 +251,41 @@ Diese Letzten Messungen befinden sich im Hochstrombereich von \SI{5000}{A}
     \label{dia:5000A_zusammenfassung}
 \end{diagram}
 
+Bei der Analyse des MBS ASK129.10 (Details in Tabelle \ref{tab:messergebnisse_mbs_5000A_mixed} im Anhang) offenbaren sich über alle drei Phasen hinweg Schwierigkeiten bei der Einhaltung der geforderten Messgenauigkeit was sich insbesondere in der Parallelanordnung zeigt. Während Phase L1 den Toleranzbereich bereits bei \SI{90}{\%} des Nennstroms mit einer Abweichung von \SI{-2,32}{\%} verlässt und im Überlastfall sogar auf \SI{-6,72}{\%} abfällt bricht die Genauigkeit der Phase L2 noch früher ein. Schon bei \SI{80}{\%} $I_n$ treten hier massive Messabweichungen von rund \SI{-5,5}{\%} auf. Im Kontrast dazu zeigt sich Phase L3 in der gleichen Anordnung deutlich robuster und hält die Vorgaben weitestgehend ein wobei der Nennpunkt mit \SI{-1,06}{\%} nur marginal die Norm verfehlt.
+
+Einen direkten technologischen Vergleich ermöglicht der Redur 20A1456.5vffp dessen Messwerte in Tabelle \ref{tab:messergebnisse_redur_5000A_mixed} (Anhang) dokumentiert sind. Zwar zeigt dieser Wandler in der Parallelanordnung ein qualitativ ähnliches Verhalten wie das Modell von MBS schneidet jedoch quantitativ präziser ab. Eine Anomalie offenbart sich jedoch beim Wechsel in die Dreiecksanordnung. Während die Phasen L2 und L3 wie erwartet signifikant an Genauigkeit gewinnen bleibt dieser Effekt bei L1 aus. Wie die Messwerte zeigen verschlechtert sich der Fehler bei L1 im Nennpunkt sogar leicht von \SI{-1,85}{\%} in der Parallelanordnung auf \SI{-2,00}{\%} im Dreieck. Dies deutet auf eine spezifische magnetische Asymmetrie oder eine Sättigungsgrenze hin die durch die Geometrieänderung allein nicht kompensiert werden kann.
+
+Als überraschend leistungsfähig erweist sich in diesem Hochstromszenario der Standardwandler Celsa ALO 20060 (Tabelle \ref{tab:messergebnisse_celsa20060_5000A_alle} im Anhang). Er übertrifft die beiden zuvor betrachteten Modelle deutlich. In der Parallelanordnung verbleiben die Außenleiter L1 und L3 über den gesamten Messbereich innerhalb der Genauigkeitsklasse 1. Lediglich der mittlere Leiter L2 zeigt ab \SI{50}{\%} des Nennstroms Sättigungstendenzen und fällt bei Nennlast auf \SI{-3,84}{\%} ab.
+Die Umstellung auf die Dreiecksanordnung eliminiert diese Schwäche vollständig und stabilisiert die Messwerte auf einem bemerkenswert hohen Niveau. So verbessert sich der Fehler bei L2 um den Faktor 14 auf \SI{-0,26}{\%} und auch L1 sowie L3 liefern mit \SI{-0,31}{\%} und \SI{-0,15}{\%} nahezu ideale Werte.
+
+Tabelle \ref{tab:verbesserungsfaktor_alle_5000a} fasst die Wirksamkeit der geometrischen Optimierung für alle drei Wandlertypen zusammen. Der Faktor beschreibt das Verhältnis des Fehlers in Parallelanordnung zum Fehler in Dreiecksanordnung (Werte $>1$ bedeuten eine Verbesserung).
+
+\begin{table}[H]
+    \centering
+    \caption{Verbesserungsfaktor der Messgenauigkeit (Parallel / Dreieck) bei \SI{5000}{A}}
+    \label{tab:verbesserungsfaktor_alle_5000a}
+    \begin{tabular}{llcccc}
+        \toprule
+        {Wandler} & {Phase} & \SI{80}{\%} & \SI{90}{\%} & \SI{100}{\%} & \SI{120}{\%} \\
+        \midrule
+        MBS ASK129.10 & L1 & 2,46 & 3,75 & 2,88 & 1,99 \\
+                      & L2 & 20,71 & 13,14 & 10,01 & 7,59 \\
+                      & L3 & 0,93 & 3,42 & 27,69 & 4,79 \\
+        \addlinespace
+        Redur 20A1456 & L1 & 0,79 & 0,77 & 0,93 & 1,12 \\
+                      & L2 & 9,51 & 6,68 & 5,06 & 3,69 \\
+                      & L3 & 1,36 & 1,26 & 0,94 & 2,48 \\
+        \addlinespace
+        Celsa ALO 20060 & L1 & 5,93 & 1,14 & 1,11 & 2,49 \\
+                        & L2 & 15,12 & 10,68 & 14,75 & 32,51 \\
+                        & L3 & 1,06 & 0,69 & 1,10 & 2,96 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 
 
+\clearpage
 \subsection{Ökonomische Evaluation und Technologie-Ranking}
 \label{sec:oekonomische_evaluation}
 
@@ -258,6 +294,8 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
 
 
 % === 2000 A ===
+
+
 
 \begin{diagram}[H]
     \centering
