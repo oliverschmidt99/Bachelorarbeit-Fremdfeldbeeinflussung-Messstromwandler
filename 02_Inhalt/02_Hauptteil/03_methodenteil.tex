@@ -408,19 +408,24 @@ Um den Einfluss der Leitergeometrie experimentell zu untersuchen, wurde das Kupf
 
 Die im Versuchsaufbau gewählten Dimensionen orientieren sich an realen Industriestandards. Tabelle \ref{tab:schienen_konfiguration} gibt hierzu eine Übersicht der Phasenmittenabstände für die Leistungsschalter der Reihen 3WA12 und 3WA13, welche als Grundlage für die Konstruktion dienten.
 
+
+
 \begin{table}[H]
     \centering
-    \caption{Übersicht der Schienenkonfigurationen und Phasenmittenabstände für die Leistungsschalter 3WA12 und 3WA13 gemäß Herstellervorgaben}
+    \caption{Übersicht der Schienenkonfigurationen und Phasenmittenabstände mit 4000 A bei 3WA13}
     \label{tab:schienen_konfiguration}
     \begin{tabular}{lccc}
-        \hline
+        \toprule
         \textbf{Modell} & \textbf{Nennstrom} & \textbf{Schienenkonfiguration} & \textbf{Phasenmittenabstand} \\
-                        & \textbf{[A]}       &                                & \textbf{[mm]}                \\ \hline
-        \textbf{3WA12}  & 2000               & 2x 80x10                       & 130                          \\
-                        & 2500               & 2x 100x10                      & 130                          \\ \hline
-        \textbf{3WA13}  & 3200               & 3x 100x10                      & 210                          \\
-                        & 4000               & 4x 100x10                      & 210                          \\
-                        & 5000               & 5x 120x10                      & 210                          \\ \hline
+                        & \textbf{[A]}       &                                & \textbf{[mm]}                \\ 
+        \midrule
+        \multirow{3}{*}{\textbf{3WA12}} & 2000               & 2x 80x10                       & \multirow{3}{*}{130}         \\
+                                        & 2500               & 2x 100x10                      &                              \\ 
+                                        & 3000               & 3x 100x10                      &                              \\
+        \midrule
+        \multirow{2}{*}{\textbf{3WA13}} & 4000               & 4x 100x10                      & \multirow{2}{*}{210}         \\ 
+                                        & 5000               & 5x 120x10                      &                              \\ 
+        \bottomrule
     \end{tabular}
 \end{table}
 
