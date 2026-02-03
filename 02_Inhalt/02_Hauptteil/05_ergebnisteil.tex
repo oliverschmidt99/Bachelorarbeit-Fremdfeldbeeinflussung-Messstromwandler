@@ -281,7 +281,14 @@ Tabelle \ref{tab:verbesserungsfaktor_alle_5000a} fasst die Wirksamkeit der geome
                         & L3 & 1,06 & 0,69 & 1,10 & 2,96 \\
         \bottomrule
     \end{tabular}
-\end{table}
+\end{table} Die Messreihe bei einem Nennstrom von \SI{5000}{A} stellt keinen Optimierungs- oder Vergleichsfall im engeren Sinne dar, sondern dient der Untersuchung des Grenzverhaltens der betrachteten Stromwandlerkonzepte unter extremen Betriebsbedingungen. Bereits bei Lastströmen deutlich unterhalb des Nennwertes verlassen mehrere Wandler die spezifizierte Genauigkeitsklasse, was auf eine systematische Überforderung der magnetischen Kerne hindeutet.
+
+Im Vergleich zu den Messreihen bei geringeren Nennströmen treten bei \SI{5000}{A} verstärkt nichtlineare Effekte auf, die sich in einer erhöhten Streuung der Messergebnisse sowie in einer ausgeprägten Phasenabhängigkeit äußern. Insbesondere die Abweichungen einzelner Phasen lassen sich nicht mehr allein durch die Leitergeometrie oder die Anordnung der Leiter erklären. Vielmehr ist davon auszugehen, dass im Hochstrombereich lokale Sättigungsphänomene auftreten, bei denen bereits geringe geometrische Asymmetrien, Fertigungstoleranzen oder Inhomogenitäten im Kernmaterial einen überproportionalen Einfluss auf das Messergebnis haben.
+
+Die Ergebnisse zeigen, dass bei dieser Stromstufe selbst konstruktiv robuste Wandlerkonzepte an ihre physikalischen Grenzen stoßen. Eine weitere Verbesserung der Messgenauigkeit wäre nur durch eine deutliche Vergrößerung des magnetischen Querschnitts, den Einsatz alternativer Kernmaterialien oder eine grundlegende Anpassung des Messkonzepts zu erwarten. Die Messreihe verdeutlicht somit, dass die Skalierung bestehender Wandlerlösungen auf sehr hohe Nennströme nicht beliebig möglich ist und ab einem bestimmten Stromniveau durch fundamentale magnetische Effekte begrenzt wird.
+
+
+
 
 
 
@@ -289,21 +296,20 @@ Tabelle \ref{tab:verbesserungsfaktor_alle_5000a} fasst die Wirksamkeit der geome
 \subsection{Ökonomische Evaluation und Technologie-Ranking}
 \label{sec:oekonomische_evaluation}
 
+In diesem Abschnitt werden die technischen Messergebnisse in Relation zu den Anschaffungskosten gesetzt, um eine ökonomische Bewertung der verschiedenen Wandlertechnologien vorzunehmen. Hierfür wurde ein \textit{Performance-Score} ermittelt, der sich aus der gewichteten Summe des absoluten Messfehlers und des Marktpreises zusammensetzt. Ziel ist die Identifikation des optimalen Preis-Leistungs-Verhältnisses für den jeweiligen Anwendungsfall.
 
-In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler korreliert.
+% --- Cluster 1: Standardbereich ---
+\subsubsection{Wirtschaftlichkeit im Nennstrombereich (\SI{2000}{A} bis \SI{2500}{A})}
 
+Im unteren untersuchten Strombereich zeigt sich ein starker Wettbewerb zwischen den Standardwandlern und den technologisch aufwendigeren Lösungen. Wie Abbildung \ref{dia:2000A_ranking_plot} für \SI{2000}{A} und Abbildung \ref{dia:2500A_ranking_plot} für \SI{2500}{A} illustrieren, bieten Standardwandler hier oft den günstigsten Einstiegspreis. Allerdings offenbart der Performance-Index, dass die vermeintlich günstigste Lösung in der Parallelanordnung aufgrund der hohen Fehleraufschläge im Ranking abrutscht. Die kompensierten Wandler positionieren sich hier als robuste Allrounder: Sie sind zwar teurer in der Anschaffung, kompensieren dies jedoch durch eine signifikant höhere Messstabilität.
 
 % === 2000 A ===
-
-
-
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_dreieck_parallel/dia_2000A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking der Wandlertechnologien bei \SI{2000}{A}}
     \label{dia:2000A_ranking_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
@@ -312,36 +318,13 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
     \input{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Oekonomie_Ranking.tex}
 \end{table}
 
-
-
-% Sonderfall Kosten/Volumen 2000A
-
-\begin{diagram}[H]
-    \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.pdf}
-    \caption{Wirtschaftliches Ranking unter Berücksichtigung des Volumens bei \SI{2000}{A}}
-    \label{dia:2000A_ranking_volumen_plot}
-\end{diagram}
-
-
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking nach Kosten/Volumen (\SI{2000}{A})}
-    \label{tab:2000A_ranking_volumen}
-    \input{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.tex}
-\end{table}
-
-
-
 % === 2500 A ===
-
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2500A_dreieck_parallel/dia_2500A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2500A_kosten/dia_2500A_kosten-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking der Wandlertechnologien bei \SI{2500}{A}}
     \label{dia:2500A_ranking_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
@@ -351,17 +334,20 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
 \end{table}
 
 
+% --- Cluster 2: Hochstrombereich ---
+\subsubsection{Verschiebung der Kosteneffizienz bei Hochstrom (\SI{3000}{A} bis \SI{5000}{A})}
 
+Mit steigendem Primärstrom verändern sich die ökonomischen Vorzeichen drastisch. Ab \SI{3000}{A} (siehe Abbildung \ref{dia:3000A_ranking_plot}) beginnen einfache Standardwandler in der Parallelanordnung physikalisch zu sättigen, wodurch ihr Fehler-Score explodiert. Das führt zu dem Paradoxon, dass das billigste Bauteil ökonomisch unbrauchbar wird, da die Messdaten nicht valide sind.
+
+In den Bereichen von \SI{4000}{A} und \SI{5000}{A} (Abbildungen \ref{dia:4000A_ranking_plot} und \ref{dia:5000A_ranking_plot}) kristallisiert sich heraus, dass eine Investition in Geometrie-Optimierung (Dreiecksanordnung) oft wirtschaftlicher ist als der Kauf teurer Spezialwandler. Besonders hervorzuheben ist bei \SI{5000}{A} der Standardwandler in Dreiecksanordnung: Er liefert Präzisionswerte, die sonst nur wesentlich teurere Wandler mit Fremdfeldprotektoren erreichen, kostet aber nur einen Bruchteil. Er ist damit der klare Gewinner im Preis-Leistungs-Ranking für Hochstromanwendungen, sofern die Verschienung eine Dreiecksanordnung zulässt.
 
 % === 3000 A ===
-
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_3000A_dreieck_parallel/dia_3000A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_3000A_kosten/dia_3000A_kosten-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking der Wandlertechnologien bei \SI{3000}{A}}
     \label{dia:3000A_ranking_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
@@ -370,17 +356,13 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
     \input{03_Ressourcen/diagramme/dia_3000A_kosten/dia_3000A_kosten-Oekonomie_Ranking.tex}
 \end{table}
 
-
-
 % === 4000 A ===
-
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_4000A_dreieck_parallel/dia_4000A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_4000A_kosten/dia_4000A_kosten-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking der Wandlertechnologien bei \SI{4000}{A}}
     \label{dia:4000A_ranking_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
@@ -389,17 +371,13 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
     \input{03_Ressourcen/diagramme/dia_4000A_kosten/dia_4000A_kosten-Oekonomie_Ranking.tex}
 \end{table}
 
-
-
 % === 5000 A ===
-
 \begin{diagram}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_dreieck_parallel/dia_5000A_dreieck_parallel-Oekonomie_Ranking.pdf}
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_kosten/dia_5000A_kosten-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking der Wandlertechnologien bei \SI{5000}{A}}
     \label{dia:5000A_ranking_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
@@ -409,17 +387,35 @@ In diesem Abschnitt werden die technischen Ergebnisse mit den Kosten der Wandler
 \end{table}
 
 
+% --- Cluster 3: Volumenbetrachtung ---
+\subsubsection{Einfluss des Bauvolumens auf die Gesamtwirtschaftlichkeit}
 
+Abschließend wird der Faktor \textit{Bauraum} in die Bewertung einbezogen. In modernen Schaltanlagen korreliert das Volumen eines Bauteils oft direkt mit indirekten Kosten (größere Felder, mehr Kupfer für Schienenabstände).
+
+Vergleicht man die volumen-gewichteten Rankings bei \SI{2000}{A} (Abbildung \ref{dia:2000A_ranking_volumen_plot}) und \SI{5000}{A} (Abbildung \ref{dia:5000A_ranking_volumen_plot}), zeigt sich ein interessanter Zielkonflikt. Kompakte Wandler sind oft günstiger im Preis/Volumen-Verhältnis, erkaufen sich diese Kompaktheit jedoch durch geringere Eisenmengen und damit früher einsetzende Sättigung. Der großvolumige Standardwandler bei \SI{5000}{A} ist aufgrund seiner hohen Präzision im Dreieck in der Gesamtbetrachtung dennoch führend. Dies belegt, dass eine reine Minimierung des Bauvolumens technisch kontraproduktiv sein kann, wenn dadurch die Messaufgabe gefährdet wird.
+
+% Sonderfall Kosten/Volumen 2000A
+\begin{diagram}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.pdf}
+    \caption{Wirtschaftliches Ranking unter Berücksichtigung des Volumens bei \SI{2000}{A}}
+    \label{dia:2000A_ranking_volumen_plot}
+\end{diagram}
+
+\begin{table}[H]
+    \centering
+    \caption{Tabellarisches Ranking nach Kosten/Volumen (\SI{2000}{A})}
+    \label{tab:2000A_ranking_volumen}
+    \input{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.tex}
+\end{table}
 
 % Sonderfall Kosten/Volumen 5000A
-
 \begin{diagram}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{03_Ressourcen/diagramme/dia_5000A_kosten_volumen/dia_5000A_kosten_volumen-Oekonomie_Ranking.pdf}
     \caption{Wirtschaftliches Ranking unter Berücksichtigung des Volumens bei \SI{5000}{A}}
     \label{dia:5000A_ranking_volumen_plot}
 \end{diagram}
-
 
 \begin{table}[H]
     \centering
