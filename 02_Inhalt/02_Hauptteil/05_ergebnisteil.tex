@@ -289,9 +289,6 @@ Die Ergebnisse zeigen, dass bei dieser Stromstufe selbst konstruktiv robuste Wan
 
 
 
-
-
-
 \clearpage
 \subsection{Ökonomische Evaluation und Technologie-Ranking}
 \label{sec:oekonomische_evaluation}
@@ -301,7 +298,8 @@ In diesem Abschnitt werden die technischen Messergebnisse in Relation zu den Ans
 % --- Cluster 1: Standardbereich ---
 \subsubsection{Wirtschaftlichkeit im Nennstrombereich (\SI{2000}{A} bis \SI{2500}{A})}
 
-Im unteren untersuchten Strombereich zeigt sich ein starker Wettbewerb zwischen den Standardwandlern und den technologisch aufwendigeren Lösungen. Wie Abbildung \ref{dia:2000A_ranking_plot} für \SI{2000}{A} und Abbildung \ref{dia:2500A_ranking_plot} für \SI{2500}{A} illustrieren, bieten Standardwandler hier oft den günstigsten Einstiegspreis. Allerdings offenbart der Performance-Index, dass die vermeintlich günstigste Lösung in der Parallelanordnung aufgrund der hohen Fehleraufschläge im Ranking abrutscht. Die kompensierten Wandler positionieren sich hier als robuste Allrounder: Sie sind zwar teurer in der Anschaffung, kompensieren dies jedoch durch eine signifikant höhere Messstabilität.
+Im Nennstrombereich zwischen \SI{2000}{A} und \SI{2500}{A} werden unterschiedliche Wandlertechnologien erstmals direkt miteinander vergleichbar, da alle untersuchten Typen ihre Messaufgabe grundsätzlich innerhalb oder nahe der geforderten Genauigkeitsklasse erfüllen. 
+Der wirtschaftliche Vergleich stellt somit weniger eine Frage der grundsätzlichen Funktionstüchtigkeit dar, sondern vielmehr der Effizienz des eingesetzten technischen Aufwands.
 
 % === 2000 A ===
 \begin{diagram}[H]
@@ -311,12 +309,13 @@ Im unteren untersuchten Strombereich zeigt sich ein starker Wettbewerb zwischen 
     \label{dia:2000A_ranking_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking der Wandlertechnologien (\SI{2000}{A})}
-    \label{tab:2000A_ranking}
-    \input{03_Ressourcen/diagramme/dia_2000A_kosten/dia_2000A_kosten-Oekonomie_Ranking.tex}
-\end{table}
+Als preisliche Referenz dienen die Standardwandler ohne zusätzliche Kompensations- oder Abschirmmaßnahmen, exemplarisch vertreten durch den Celsa ALO 10030 sowie den MBS ASK101.4. 
+Diese Modelle weisen die geringsten Anschaffungskosten auf, zeigen jedoch – insbesondere in der Parallelanordnung – eine erhöhte Empfindlichkeit gegenüber externen Magnetfeldern. 
+Dies schlägt sich in einem erhöhten Fehleranteil im Performance-Score nieder, wodurch der ökonomische Vorteil teilweise relativiert wird (siehe Abbildung \ref{dia:2000A_ranking_plot}).
+
+Demgegenüber stehen die kompensierten Wandler von Celsa (ALO 8030 K bzw. ALO 10050 K), die durch ihre zusätzliche Kompensationswicklung eine deutlich höhere Messstabilität erreichen. 
+Die geringeren Fehleranteile führen trotz höherer Anschaffungskosten zu konkurrenzfähigen Performance-Scores, insbesondere bei \SI{2500}{A} (Abbildung \ref{dia:2500A_ranking_plot}). 
+In diesem Strombereich rechtfertigt der technische Mehraufwand somit erstmals ökonomisch den höheren Preis.
 
 % === 2500 A ===
 \begin{diagram}[H]
@@ -326,20 +325,37 @@ Im unteren untersuchten Strombereich zeigt sich ein starker Wettbewerb zwischen 
     \label{dia:2500A_ranking_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking der Wandlertechnologien (\SI{2500}{A})}
-    \label{tab:2500A_ranking}
-    \input{03_Ressourcen/diagramme/dia_2500A_kosten/dia_2500A_kosten-Oekonomie_Ranking.tex}
-\end{table}
+Eine weitere Technologiestufe stellen Wandler mit Fremdfeldprotektoren dar, vertreten durch die Redur-Modelle. 
+Diese zeichnen sich durch eine hohe geometrische Robustheit aus und zeigen selbst in ungünstigen Leiteranordnungen stabile Messwerte. 
+Ökonomisch bewegen sie sich jedoch aufgrund der hohen Anschaffungskosten nur im oberen Mittelfeld, da der Zugewinn an Messgenauigkeit im Nennstrombereich begrenzt bleibt.
+Für den Nennstromfall \SI{2000}{A} ist zudem die Parallelanordnung des Redur 13A1030.3ffp hervorzuheben.
+
+Die Fremdfeldprotektoren reduzieren in dieser Konfiguration die Messabweichungen insbesondere im Nenn- und Überlastbereich deutlich und adressieren damit gezielt den in den vorangegangenen Abschnitten beschriebenen Einfluss benachbarter Leiterfelder. 
+In der ökonomischen Bewertung wird dieser technische Vorteil jedoch durch den vergleichsweise hohen Anschaffungspreis teilweise kompensiert, sodass der Performance-Index trotz guter Messgüte nicht in jedem Fall führend ausfällt (vgl. Abb.~\ref{dia:2000A_ranking_plot}). 
+Ein zusätzlicher Vorteil der Protektor-Technologie besteht darin, dass Abschirmkörper prinzipiell auch als nachrüstbare Maßnahme in bestehenden Anlagen eingesetzt werden können. 
+Damit eröffnet sich eine wirtschaftlich interessante Option zur Verbesserung der Messgenauigkeit, ohne den Stromwandler vollständig ersetzen zu müssen (vgl. \cite{redur_patent_ffp_2022}).
+
+Ist die Realisierung einer Dreiecksanordnung aus konstruktiven, platzbedingten oder normativen Gründen nicht möglich, muss die Auswahl auf die Parallelanordnung beschränkt werden. 
+In diesem Fall verlieren feldempfindliche Standardwandler ihren Kostenvorteil, da erhöhte Messabweichungen den Performance-Score dominieren.\\ 
+Für den betrachteten Datensatz ergibt sich dabei ein differenziertes Bild: Bei \SI{2000}{A} erzielt der MBS ASK101.4 in Parallelanordnung den geringsten Performance-Index und stellt damit die wirtschaftlich günstigste Lösung innerhalb der parallelen Verschaltung dar (vgl. Abb.~\ref{dia:2000A_ranking_plot}).\\ 
+Bei \SI{2500}{A} verschiebt sich das Optimum hingegen zugunsten des kompensierten Celsa ALO 10050 K, der auch ohne geometrische Optimierung stabile Messwerte liefert und in der Parallelanordnung das beste Preis-Leistungs-Verhältnis erreicht (vgl. Abb.~\ref{dia:2500A_ranking_plot}).
+
+
+
+
+
+
+
+
 
 
 % --- Cluster 2: Hochstrombereich ---
-\subsubsection{Verschiebung der Kosteneffizienz bei Hochstrom (\SI{3000}{A} bis \SI{5000}{A})}
+\subsubsection{Verschiebung der Kosteneffizienz bei Hochstrom (\SI{3000}{A} bis \SI{4000}{A})}
 
-Mit steigendem Primärstrom verändern sich die ökonomischen Vorzeichen drastisch. Ab \SI{3000}{A} (siehe Abbildung \ref{dia:3000A_ranking_plot}) beginnen einfache Standardwandler in der Parallelanordnung physikalisch zu sättigen, wodurch ihr Fehler-Score explodiert. Das führt zu dem Paradoxon, dass das billigste Bauteil ökonomisch unbrauchbar wird, da die Messdaten nicht valide sind.
+Die Messreihen bei \SI{3000}{A} und \SI{4000}{A} zeigen exemplarisch, wie sich die Wirtschaftlichkeit bei gleicher Wandlerbauform mit steigender Stromstärke verschiebt. 
+In beiden Fällen werden die Baureihe ALO 12070 in Standardausführung sowie die kompensierte Variante ALO 12070 K gegenübergestellt. Dadurch lassen sich die beobachteten Rangfolgen primär auf die Stromskalierung und die damit verbundene Fehlerentwicklung zurückführen.
 
-In den Bereichen von \SI{4000}{A} und \SI{5000}{A} (Abbildungen \ref{dia:4000A_ranking_plot} und \ref{dia:5000A_ranking_plot}) kristallisiert sich heraus, dass eine Investition in Geometrie-Optimierung (Dreiecksanordnung) oft wirtschaftlicher ist als der Kauf teurer Spezialwandler. Besonders hervorzuheben ist bei \SI{5000}{A} der Standardwandler in Dreiecksanordnung: Er liefert Präzisionswerte, die sonst nur wesentlich teurere Wandler mit Fremdfeldprotektoren erreichen, kostet aber nur einen Bruchteil. Er ist damit der klare Gewinner im Preis-Leistungs-Ranking für Hochstromanwendungen, sofern die Verschienung eine Dreiecksanordnung zulässt.
+
 
 % === 3000 A ===
 \begin{diagram}[H]
@@ -349,12 +365,14 @@ In den Bereichen von \SI{4000}{A} und \SI{5000}{A} (Abbildungen \ref{dia:4000A_r
     \label{dia:3000A_ranking_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking der Wandlertechnologien (\SI{3000}{A})}
-    \label{tab:3000A_ranking}
-    \input{03_Ressourcen/diagramme/dia_3000A_kosten/dia_3000A_kosten-Oekonomie_Ranking.tex}
-\end{table}
+
+Bei \SI{3000}{A} (Abb.~\ref{dia:3000A_ranking_plot}) wird der Performance-Score bereits deutlich durch den Messfehler beeinflusst. 
+Insbesondere in der Parallelanordnung verliert der nicht kompensierte Standardwandler seinen anfänglichen Kostenvorteil, da erhöhte Abweichungen den Score dominieren. 
+Die kompensierte Ausführung reduziert diesen Fehleranteil und erreicht dadurch trotz höherer Anschaffungskosten ein günstigeres Preis-Leistungs-Verhältnis.
+
+Bei \SI{4000}{A} (Abb.~\ref{dia:4000A_ranking_plot}) verstärkt sich dieser Effekt. 
+Mit steigender Strombeanspruchung wächst der Abstand zwischen kompensierter und nicht kompensierter Ausführung im Ranking, da der Messfehler stärker in den Performance-Score eingeht und die Kompensationstechnologie somit ökonomisch relevanter wird. 
+
 
 % === 4000 A ===
 \begin{diagram}[H]
@@ -364,12 +382,22 @@ In den Bereichen von \SI{4000}{A} und \SI{5000}{A} (Abbildungen \ref{dia:4000A_r
     \label{dia:4000A_ranking_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking der Wandlertechnologien (\SI{4000}{A})}
-    \label{tab:4000A_ranking}
-    \input{03_Ressourcen/diagramme/dia_4000A_kosten/dia_4000A_kosten-Oekonomie_Ranking.tex}
-\end{table}
+
+
+Parallel dazu zeigt sich der Einfluss der Leitergeometrie als eigenständiger Hebel. Die Dreiecksanordnung senkt die Messabweichungen und verbessert damit den Performance-Score sowohl für Standard- als auch für kompensierte Wandler. 
+Damit ergibt sich für den Hochstrombereich eine klare Reihenfolge der Maßnahmen. Eine geometrische Optimierung verbessert die Wirtschaftlichkeit innerhalb einer Technologieklasse deutlich. Die Wahl eines kompensierten Wandlers erhöht zusätzlich die Robustheit gegenüber Feld- und Sättigungseffekten.
+
+
+
+
+
+
+
+
+
+
+
+\subsubsection{Verschiebung der Kosteneffizienz bei Hochstrom (\SI{5000}{A})}
 
 % === 5000 A ===
 \begin{diagram}[H]
@@ -379,12 +407,7 @@ In den Bereichen von \SI{4000}{A} und \SI{5000}{A} (Abbildungen \ref{dia:4000A_r
     \label{dia:5000A_ranking_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking der Wandlertechnologien (\SI{5000}{A})}
-    \label{tab:5000A_ranking}
-    \input{03_Ressourcen/diagramme/dia_5000A_kosten/dia_5000A_kosten-Oekonomie_Ranking.tex}
-\end{table}
+
 
 
 % --- Cluster 3: Volumenbetrachtung ---
@@ -402,12 +425,7 @@ Vergleicht man die volumen-gewichteten Rankings bei \SI{2000}{A} (Abbildung \ref
     \label{dia:2000A_ranking_volumen_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking nach Kosten/Volumen (\SI{2000}{A})}
-    \label{tab:2000A_ranking_volumen}
-    \input{03_Ressourcen/diagramme/dia_2000A_kosten_volumen/dia_2000A_kosten_volumen-Oekonomie_Ranking.tex}
-\end{table}
+
 
 % Sonderfall Kosten/Volumen 5000A
 \begin{diagram}[H]
@@ -417,9 +435,3 @@ Vergleicht man die volumen-gewichteten Rankings bei \SI{2000}{A} (Abbildung \ref
     \label{dia:5000A_ranking_volumen_plot}
 \end{diagram}
 
-\begin{table}[H]
-    \centering
-    \caption{Tabellarisches Ranking nach Kosten/Volumen (\SI{5000}{A})}
-    \label{tab:5000A_ranking_volumen}
-    \input{03_Ressourcen/diagramme/dia_5000A_kosten_volumen/dia_5000A_kosten_volumen-Oekonomie_Ranking.tex}
-\end{table}
