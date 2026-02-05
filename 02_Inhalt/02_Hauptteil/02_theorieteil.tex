@@ -222,7 +222,7 @@ Dieser Zusammenhang wird durch die Maxwell-Gleichungen beschrieben und lässt si
 \end{figure}
 
 Ein durch den Ringkern geführter Primärstrom \gls{sym:I_pri} erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld.
-Das Linienintegral der magnetischen Feldstärke \gls{sym:H} entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung \gls{sym:Theta}:
+Das Linienintegral der magnetischen Feldstärke \gls{sym:H} entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung \gls{sym:Theta}, wie Gleichung \eqref{eq:ampere_integral} zeigt
 
 \begin{equation}
     \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} = I_{pri} = \Theta
@@ -232,7 +232,7 @@ Das Linienintegral der magnetischen Feldstärke \gls{sym:H} entlang eines geschl
 Der Stromwandler nutzt einen Ringkern aus ferromagnetischem Material mit einer hohen relativen Permeabilität $\mu_r \gg 1$.
 Unter der Annahme eines torusförmigen Kerns mit dem mittleren Radius $r$ verläuft der Integrationsweg kreisförmig entlang der mittleren Feldlinie.
 Aufgrund der Rotationssymmetrie ist der Betrag der Feldstärke $H$ konstant.
-Das Wegintegral entspricht somit dem Produkt aus $H$ und dem Kreisumfang $2\pi r$:
+Das Wegintegral entspricht somit dem Produkt aus $H$ und dem Kreisumfang $2\pi r$ (siehe Gleichung \eqref{eq:feldstaerke_h})
 
 \begin{align}
     \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} & = H \cdot \oint_{\mathcal{S}} \mathrm{d}s = H \cdot 2\pi r = I_{pri} \nonumber \\[6pt]
@@ -241,7 +241,7 @@ Das Wegintegral entspricht somit dem Produkt aus $H$ und dem Kreisumfang $2\pi r
 \end{align}
 
 Die magnetische Flussdichte \gls{sym:B} im Kernmaterial ergibt sich aus der Feldstärke und den Materialeigenschaften.
-Mit der magnetischen Feldkonstante \gls{sym:mu0} und der relativen Permeabilität \gls{sym:mur} folgt:
+Mit der magnetischen Feldkonstante \gls{sym:mu0} und der relativen Permeabilität \gls{sym:mur} folgt der Zusammenhang in Gleichung \eqref{eq:flussdichte_b}
 
 \begin{equation}
     B = \mu_0 \mu_r \cdot H = \mu_0 \mu_r \cdot \frac{I_{pri}}{2\pi r}
@@ -249,14 +249,14 @@ Mit der magnetischen Feldkonstante \gls{sym:mu0} und der relativen Permeabilitä
 \end{equation}
 
 Für die Funktion des Stromwandlers ist entscheidend, welcher magnetische Fluss \gls{sym:Phi} den Eisenquerschnitt \gls{sym:A} durchsetzt, da dieser in der Sekundärwicklung die Spannung induziert.
-Der Fluss berechnet sich durch Integration der Flussdichte über die Querschnittsfläche:
+Der Fluss berechnet sich durch Integration der Flussdichte über die Querschnittsfläche gemäß Gleichung \eqref{eq:fluss_integral}
 
 \begin{equation}
     \Phi = \iint_A \vec{B} \cdot \mathrm{d}\vec{A}
     \label{eq:fluss_integral}
 \end{equation}
 
-Geht man vereinfacht von einer über den Querschnitt konstanten Flussdichte aus ($\vec{B} \parallel \mathrm{d}\vec{A}$), ergibt sich der direkte Zusammenhang zwischen dem verursachenden Primärstrom und dem resultierenden magnetischen Fluss im Kern:
+Geht man vereinfacht von einer über den Querschnitt konstanten Flussdichte aus ($\vec{B} \parallel \mathrm{d}\vec{A}$), ergibt sich der direkte Zusammenhang zwischen dem verursachenden Primärstrom und dem resultierenden magnetischen Fluss im Kern, was in Gleichung \eqref{eq:fluss_final} dargestellt ist
 
 \begin{equation}
     \Phi = B \cdot A = \mu_0 \mu_r \frac{A}{2\pi r} \cdot I_{pri}
@@ -268,7 +268,7 @@ Der Faktor $\mu_0 \mu_r \frac{A}{2\pi r}$ fasst dabei die Geometrie (Querschnitt
 \textmd{---}
 
 Der in Gleichung \eqref{eq:fluss_final} hergeleitete Zusammenhang zwischen Fluss und Strom lässt sich in Analogie zum elektrischen Stromkreis (Ohmsches Gesetz) betrachten.
-Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, stellt den magnetischen Widerstand \gls{sym:Rm} dar:
+Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, stellt den magnetischen Widerstand \gls{sym:Rm} dar (vgl. Gleichung \eqref{eq:magnetischer_widerstand})
 
 \begin{equation}
     R_m = \frac{2\pi r}{\mu_0 \mu_r A}
@@ -276,7 +276,7 @@ Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, 
 \end{equation}
 
 Damit lässt sich der magnetische Fluss $\Phi$ vereinfacht über das Hopkinsonsche Gesetz ausdrücken, welches das magnetische Äquivalent zum Ohmschen Gesetz bildet.
-Die magnetische Durchflutung $\Theta$ entspricht dabei der elektrischen Spannung und der magnetische Fluss dem elektrischen Strom:
+Die magnetische Durchflutung $\Theta$ entspricht dabei der elektrischen Spannung und der magnetische Fluss dem elektrischen Strom, analog zu Gleichung \eqref{eq:hopkinson}
 
 \begin{equation}
     \Phi = \frac{\Theta}{R_m}
@@ -288,7 +288,7 @@ Auf der Sekundärseite befindet sich eine Wicklung mit der Windungszahl \gls{sym
 Der magnetische Fluss induziert in dieser Wicklung eine Spannung, die bei geschlossenem Sekundärkreis einen Strom \gls{sym:I_sec} treibt.
 Nach der Lenzschen Regel ist dieser Sekundärstrom seiner Ursache entgegengerichtet.
 Er erzeugt eine magnetische Gegendurchflutung $\Theta_{sec}$, die den Fluss im Kern schwächt.
-Die resultierende magnetische Durchflutung $\Theta_{res}$, die effektiv den Fluss im Kern treibt, ist somit die Differenz aus Primär- und Sekundärdurchflutung:
+Die resultierende magnetische Durchflutung $\Theta_{res}$, die effektiv den Fluss im Kern treibt, ist somit die Differenz aus Primär- und Sekundärdurchflutung (siehe Gleichung \eqref{eq:durchflutungsbilanz})
 
 \begin{equation}
     \Theta_{res} = \Theta_{pri} - \Theta_{sec} = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec}
@@ -296,7 +296,7 @@ Die resultierende magnetische Durchflutung $\Theta_{res}$, die effektiv den Flus
 \end{equation}
 
 Dabei ist $N_{pri}$ die Windungszahl der Primärseite (bei Durchsteckwandlern ist $N_{pri} = 1$).
-Setzt man die resultierende Durchflutung in das Hopkinsonsche Gesetz ein, erhält man:
+Setzt man die resultierende Durchflutung in das Hopkinsonsche Gesetz ein, erhält man die Beziehung in Gleichung \eqref{eq:bilanz_rm}
 
 \begin{equation}
     \Phi \cdot R_m = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec}
@@ -306,15 +306,15 @@ Setzt man die resultierende Durchflutung in das Hopkinsonsche Gesetz ein, erhäl
 Für die ideale Betrachtung eines Stromwandlers wird ein Kernmaterial mit sehr hoher Permeabilität ($\mu_r \to \infty$) angenommen.
 Daraus folgt gemäß Gleichung \eqref{eq:magnetischer_widerstand}, dass der magnetische Widerstand gegen Null geht ($R_m \to 0$).
 Damit der magnetische Fluss $\Phi$ einen endlichen Wert annimmt, muss die resultierende Durchflutung $\Theta_{res}$ ebenfalls gegen Null gehen.
-Es stellt sich ein fast ideales Durchflutungsgleichgewicht ein:
+Es stellt sich ein fast ideales Durchflutungsgleichgewicht ein, wie in Gleichung \eqref{eq:ideales_gleichgewicht} zu sehen ist
 
 \begin{align}
-    0                     & = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec} \nonumber \\[6pt]
+    0                         & = N_{pri} \cdot I_{pri} - N_{sec} \cdot I_{sec} \nonumber \\[6pt]
     N_{sec} \cdot I_{sec} & = N_{pri} \cdot I_{pri}
     \label{eq:ideales_gleichgewicht}
 \end{align}
 
-Durch Umstellen dieser Gleichung ergibt sich der Sekundärstrom in Abhängigkeit vom Primärstrom und dem Übersetzungsverhältnis der Windungszahlen:
+Durch Umstellen dieser Gleichung ergibt sich der Sekundärstrom in Abhängigkeit vom Primärstrom und dem Übersetzungsverhältnis der Windungszahlen (siehe Gleichung \eqref{eq:sekundaerstrom})
 
 \begin{equation}
     I_{sec} = I_{pri} \cdot \frac{N_{pri}}{N_{sec}}
@@ -322,6 +322,7 @@ Durch Umstellen dieser Gleichung ergibt sich der Sekundärstrom in Abhängigkeit
 \end{equation}
 
 Diese Beziehung beschreibt das ideale Übertragungsverhalten des Stromwandlers, bei dem der Sekundärstrom proportional zum Primärstrom ist und lediglich durch das Windungszahlverhältnis skaliert wird.
+
 
 \subsubsection{Magnetische Stoffeigenschaften}
 \label{sec:magnetische_stoffeigenschaften}
