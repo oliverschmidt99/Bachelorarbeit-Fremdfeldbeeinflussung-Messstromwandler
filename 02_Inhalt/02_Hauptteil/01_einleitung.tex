@@ -12,64 +12,68 @@
 Die fortschreitende Energiewende und die zunehmende Dezentralisierung der Energieversorgung stellen wachsende Anforderungen an die elektrische Energieverteilung \cite{VDE_Studie_Dezentralisierung}.
 Niederspannungsschaltanlagen bilden hierbei als zentrale Knotenpunkte das Rückgrat der industriellen Infrastruktur.
 Neben der reinen Betriebssicherheit rückt die präzise Erfassung von Energieströmen immer stärker in den Fokus.
-Dies ist nicht nur für den exakten Abrechnungsverkehr essenziell, sondern auch für modernes Energiemanagement und die Netzstabilität \cite{ISO50001}.
+Dies ist nicht nur für den genauen Abrechnungsverkehr essenziell sondern auch für modernes Energiemanagement und die Netzstabilität \cite{ISO50001}.
 
-Gleichzeitig stehen Hersteller von Schaltanlagen, wie die Rolf Janssen Elektrotechnische Werke GmbH, unter einem hohen wirtschaftlichen und konstruktiven Druck.
-Der in technischen Betriebsräumen zur Verfügung stehende Platz ist oft stark begrenzt, weshalb Schaltanlagen möglichst kompakt dimensioniert werden müssen \cite[Kap.~1.4]{Siemens_Planungshandbuch}.
-Dies führt zwangsläufig zu einer hohen Packungsdichte der Komponenten.
-Leiterbahnen, die hohe Ströme von mehreren Tausend Ampere führen, verlaufen in unmittelbarer Nähe zu empfindlichen Messstromwandlern.
+Gleichzeitig stehen Hersteller von Schaltanlagen wie die Rolf Janssen Elektrotechnische Werke GmbH unter einem hohen wirtschaftlichen und konstruktiven Druck.
+Der in technischen Betriebsräumen zur Verfügung stehende Platz ist oft begrenzt weshalb Schaltanlagen möglichst kompakt dimensioniert werden müssen \cite[Kap.~1.4]{Siemens_Planungshandbuch}.
+Dies führt zu einer hohen Packungsdichte der Komponenten.
+Leiterbahnen die hohe Ströme von mehreren Tausend Ampere führen verlaufen in unmittelbarer Nähe zu empfindlichen Messstromwandlern.
 
 Aus dieser Konstellation ergibt sich ein physikalischer Zielkonflikt.
-Die kompakte Bauweise begünstigt die gegenseitige Beeinflussung durch starke magnetische Felder.
-Für den Ingenieur stellt sich daher die Frage, wie unter diesen erschwerten Bedingungen die normativ geforderte Messgenauigkeit gewährleistet werden kann, ohne die Wirtschaftlichkeit der Anlage durch überdimensionierte Spezialkomponenten zu gefährden.
-Die Untersuchung dieses Spannungsfeldes zwischen technischer Präzision, kompakter Bauform und ökonomischer Effizienz bildet den Antrieb für die vorliegende Arbeit.
+Die kompakte Bauweise begünstigt die gegenseitige Beeinflussung durch magnetische Felder.
+Für den Ingenieur stellt sich daher die Frage wie unter diesen erschwerten Bedingungen die normativ geforderte Messgenauigkeit gewährleistet werden kann ohne die Wirtschaftlichkeit der Anlage durch überdimensionierte Spezialkomponenten zu gefährden.
+Die Untersuchung dieses Spannungsfeldes zwischen technischer Präzision kompakter Bauform und ökonomischer Effizienz bildet den Antrieb für die vorliegende Arbeit.
 
 \subsection{Problemstellung}
 \label{sec:problemstellung}
 
-An moderne Niederspannungsschaltanlagen wird die Anforderung gestellt, eine hohe Stromtragfähigkeit bei gleichzeitig möglichst kompakter Bauweise zu gewährleisten.
+An moderne Niederspannungsschaltanlagen wird die Anforderung gestellt eine hohe Stromtragfähigkeit bei gleichzeitig möglichst kompakter Bauweise zu gewährleisten.
 Aufgrund der daraus resultierenden räumlichen Nähe der Leiter zueinander und der hohen Betriebsströme sind Messstromwandler verstärkt magnetischen Fremdfeldern ausgesetzt \cite{Redur2021Fremdfeld}.
-Physikalisch ist dies darin begründet, dass die magnetische Feldstärke mit abnehmendem Abstand zur Quelle ansteigt.
+Dies ist besonders kritisch in einem Drehstromsystem da die Leiter der Phasen L1 L2 und L3 typischerweise parallel zueinander verlaufen.
+Durch diese Anordnung beeinflussen die magnetischen Wechselfelder der benachbarten Leiter die Messstellen der anderen Phasen.
+
 
 Diese Fremdfeldeinflüsse wirken sich auf die Zuverlässigkeit der Messung aus.
-Bereits ab einem Nennstrom von \SI{2500}{\ampere} ist eine massive Beeinflussung der Messwerte festzustellen, wie die Messdaten im Anhang zeigen (vgl. Tabelle \ref{tab:messergebnisse_celsa10030_2500A_alle}).
-Diese Abweichung nimmt mit steigender Stromstärke zu, sodass bei Nennströmen im Bereich von \SI{5000}{\ampere} betragsmäßige Messabweichungen von mehreren Hundert Ampere auftreten können.
-Messungen an Standardwandlern in paralleler Schienenanordnung belegen hierbei Fehlerströme, die \SI{400}{\ampere} überschreiten (siehe Tabelle \ref{tab:messergebnisse_mbs_5000A_mixed}).
+Bereits ab einem Nennstrom von \SI{2500}{\ampere} ist eine deutliche Beeinflussung der Messwerte festzustellen wie die Messdaten im Anhang zeigen (vgl. Tabelle \ref{tab:messergebnisse_celsa10030_2500A_alle}).
+Diese Abweichung nimmt mit steigender Stromstärke zu sodass bei Nennströmen im Bereich von \SI{5000}{\ampere} betragsmäßige Messabweichungen von mehreren Hundert Ampere auftreten können.
+Messungen an Standardwandlern in paralleler Schienenanordnung belegen hierbei Fehlerströme die \SI{400}{\ampere} überschreiten (siehe Tabelle \ref{tab:messergebnisse_mbs_5000A_mixed}).
 
-Eine derartige Ungenauigkeit ist unbedingt zu vermeiden, da der Markt zunehmend präzisere Messwerte für Schutzeinrichtungen, die Anlagenüberwachung und insbesondere für Verrechnungszwecke fordert.
-Ist die Messung durch Fremdfelder verfälscht, können Schutzorgane fehlauslösen oder Energiekosten fehlerhaft abgerechnet werden.
+Eine derartige Ungenauigkeit ist zu vermeiden da der Markt zunehmend präzisere Messwerte für Schutzeinrichtungen die Anlagenüberwachung und insbesondere für Verrechnungszwecke fordert.
+Ist die Messung durch die Felder von L1 L2 und L3 verfälscht können Schutzorgane fehlauslösen oder Energiekosten fehlerhaft abgerechnet werden.
 
-Zwar existieren am Markt Lösungsansätze wie kompensierte Wandler oder zusätzliche Schirmungen, doch sind diese Maßnahmen oft mit Nachteilen verbunden.
-Kompensierte Wandler sind in der Regel kostenintensiver und benötigen durch zusätzliche Wicklungen mehr Bauraum, der in kompakten Anlagen oft nicht vorhanden ist.
-Zudem ist bislang nicht hinreichend geklärt, ob diese teureren Spezialwandler bei sehr hohen Strömen tatsächlich die notwendige Messsicherheit bieten oder ob wirtschaftlichere Standardwandler unter bestimmten Bedingungen vergleichbare Ergebnisse liefern.
+Zwar existieren am Markt Lösungsansätze wie kompensierte Wandler oder zusätzliche Schirmungen doch sind diese Maßnahmen oft mit Nachteilen verbunden.
+Kompensierte Wandler sind in der Regel kostenintensiver und benötigen durch zusätzliche Wicklungen mehr Bauraum der in kompakten Anlagen oft nicht vorhanden ist.
+Zudem ist bislang nicht hinreichend geklärt ob diese teureren Spezialwandler bei sehr hohen Strömen tatsächlich die notwendige Messsicherheit bieten oder ob wirtschaftlichere Standardwandler unter bestimmten Bedingungen vergleichbare Ergebnisse liefern.
 
 \subsection{Zielsetzung der Arbeit}
 \label{sec:zielsetzung}
 
-Vor dem Hintergrund der Neuentwicklung einer Schaltanlagengeneration ist es das Ziel dieser Arbeit, eine technisch zuverlässige und zugleich wirtschaftliche Lösung für die Strommessung unter Fremdfeldeinfluss zu identifizieren.
+Vor dem Hintergrund der Neuentwicklung einer Schaltanlagengeneration ist es das Ziel dieser Arbeit eine technisch zuverlässige und zugleich wirtschaftliche Lösung für die Strommessung unter Fremdfeldeinfluss zu analysieren.
+Der Kern der Untersuchung liegt darin Messstromwandler explizit in einem Drehstromsystem der Phasen L1 L2 und L3 zu betrachten.
+Es wird geprüft ob die Wandler unter den gegebenen Rahmenbedingungen und den magnetischen Einflüssen des Dreiphasensystems die geforderte Messgenauigkeit einhalten können.
 
-Dazu soll systematisch untersucht werden, wie sich verschiedene Wandlertypen, von Standardausführungen bis hin zu herstellerspezifischen Speziallösungen, bei hohen Strömen verhalten.
-Ein zentraler Fokus liegt dabei auf der Überprüfung, ob der Einsatz kostenintensiver kompensierter Wandler in diesem Hochstrombereich erforderlich ist.
-Darüber hinaus wird als alternativer Lösungsansatz untersucht, ob eine Anpassung der Leitergeometrie innerhalb der Schaltanlage den Fremdfeldeinfluss konstruktiv minimieren kann.
-Die Ergebnisse sollen direkt in den Entwicklungsprozess der neuen Schaltanlage einfließen, um die Messgenauigkeit und Betriebssicherheit der neuen Schaltanlagengeneration zu steigern.
+Dazu soll systematisch untersucht werden wie sich verschiedene Wandlertypen von Standardausführungen bis hin zu herstellerspezifischen Speziallösungen bei hohen Strömen verhalten.
+Ein zentraler Fokus liegt dabei auf der Überprüfung ob der Einsatz kostenintensiver kompensierter Wandler in diesem Hochstrombereich erforderlich ist.
+Darüber hinaus wird als alternativer Lösungsansatz untersucht ob eine Anpassung der Leitergeometrie innerhalb der Schaltanlage den Fremdfeldeinfluss konstruktiv minimieren kann.
+Die Ergebnisse sollen direkt in den Entwicklungsprozess der neuen Schaltanlage einfließen um die Messgenauigkeit und Betriebssicherheit der neuen Schaltanlagengeneration zu steigern.
 
 \subsection{Vorgehensweise}
 \label{sec:vorgehensweise}
 
-Die Arbeit gliedert sich in einen theoretischen Grundlagenteil, die Beschreibung des experimentellen Aufbaus sowie die Analyse und Bewertung der Messergebnisse.
+Die Arbeit gliedert sich in einen theoretischen Grundlagenteil die Beschreibung des experimentellen Aufbaus sowie die Analyse und Bewertung der Messergebnisse.
 
 In Kapitel \ref{chap:theorie} werden zunächst die theoretischen Grundlagen erarbeitet.
 Hierbei erfolgt eine Betrachtung des physikalischen Wirkprinzips von Stromwandlern sowie der Mechanismen der magnetischen Induktion und Sättigung.
-Zusätzlich werden die relevanten Normen und Genauigkeitsklassen vorgestellt, die als Bewertungsgrundlage dienen.
+Zusätzlich werden die relevanten Normen und Genauigkeitsklassen vorgestellt die als Bewertungsgrundlage dienen.
 
 Das dritte Kapitel widmet sich dem methodischen Vorgehen und dem Versuchsaufbau.
-Es wird der eingesetzte Hochstrom-Prüfstand beschrieben und die Optimierung der Messstrecke durch den Einsatz präziser digitaler Messgeräte erläutert.
-Zudem erfolgt die Definition der untersuchten Leitergeometrien und die Vorstellung der ausgewählten Prüflinge.
+Es wird der eingesetzte Hochstrom Prüfstand beschrieben und die Optimierung der Messstrecke durch den Einsatz präziser digitaler Messgeräte erläutert.
+Zudem erfolgt die Definition der untersuchten Leitergeometrien und die Vorstellung der ausgewählten Prüflinge für das Drehstromsystem.
 
 In Kapitel \ref{sec:auswertung_diskussion} erfolgt die detaillierte Auswertung der durchgeführten Messreihen.
 Die Ergebnisse werden nach Stromstärken von \SI{2000}{\ampere} bis \SI{5000}{\ampere} gestaffelt analysiert.
 Dabei liegt der Fokus auf dem direkten Vergleich der Messabweichungen zwischen den verschiedenen Wandlertechnologien und den geometrischen Anordnungen.
-Ergänzend wird eine ökonomische Evaluation durchgeführt, die die technische Performance in Relation zu den Kosten setzt.
+Ergänzend wird eine ökonomische Evaluation durchgeführt die die technische Performance in Relation zu den Kosten setzt.
 
 Abschließend fasst Kapitel \ref{chap:zusammenfassung_ergebnisse} die gewonnenen Erkenntnisse zusammen und leitet daraus konkrete Handlungsempfehlungen für die Konstruktion von Niederspannungsschaltanlagen ab.
 Ein Ausblick auf weiterführende Fragestellungen rundet die Arbeit ab.
