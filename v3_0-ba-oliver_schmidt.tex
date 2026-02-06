@@ -1,0 +1,92 @@
+% =============================================================================
+% HAUPTDOKUMENT (main.tex)
+% =============================================================================
+
+% GEÄNDERT: Dokumentenklasse zu 'scrartcl' (Artikel) geändert
+% NEU: numbers=noenddot entfernt den Punkt nach der Gliederungsnummer
+% NEU: headsepline korrigiert (ohne Wertangabe in der Class-Option)
+\documentclass[11pt, a4paper, headsepline, numbers=noenddot]{scrartcl}
+
+% --- EINSTELLUNGEN LADEN ---
+\input{01_Einstellungen/praeambel.tex}
+\input{01_Einstellungen/befehle.tex}
+\input{01_Einstellungen/layout.tex}
+
+\setcounter{tocdepth}{3}
+
+% --- GLOSSAR-EINTRÄGE LADEN ---
+\loadglsentries{01_Einstellungen/glossar.tex}
+
+% --- LITERATURQUELLE ANGEBEN ---
+\addbibresource{bibliographie.bib}
+
+% -----------------------------------------------------------------------------
+% DOKUMENTENBEGINN
+% -----------------------------------------------------------------------------
+
+\begin{document}
+
+% ---------- DECKBLATT (ohne Nummer) ----------
+\pagenumbering{gobble}
+\input{02_Inhalt/01_Vorspann/00_deckblatt.tex}
+\newpage
+
+% ---------- VORSPANN (römische Zählung) ----------
+\clearpage
+\pagenumbering{Roman}
+
+% --- VERZEICHNISSE ---
+% Hier wird nur die Datei geladen. Die Befehle \printglossary stehen 
+% IN der Datei '02_verzeichnisse.tex', damit alles an einem Ort ist.
+\input{02_Inhalt/01_Vorspann/02_verzeichnisse.tex}
+\newpage
+
+% ---------- HAUPTTEIL (arabische Zählung ab 1) ----------
+\clearpage
+\pagenumbering{arabic}
+
+\include{02_Inhalt/02_Hauptteil/01_einleitung}
+\include{02_Inhalt/02_Hauptteil/02_theorieteil}
+\include{02_Inhalt/02_Hauptteil/03_methodenteil}
+\include{02_Inhalt/02_Hauptteil/04_experimentelle_untersuchung}
+\include{02_Inhalt/02_Hauptteil/05_ergebnisteil}
+\include{02_Inhalt/02_Hauptteil/06_diskussion_fazit}
+\include{02_Inhalt/02_Hauptteil/07_ausblick}
+
+% ===========================================================================
+% ANHANG (Nummeriert mit A, B...)
+% ===========================================================================
+\clearpage
+\appendix
+\renewcommand{\thesection}{\Alph{section}} % A, B, C ...
+\renewcommand{\thesubsection}{\Alph{section}.\arabic{subsection}}
+
+% Anhang einbinden (erzeugt z.B. "A Anhang")
+\input{02_Inhalt/03_Nachspann/anhang.tex}
+
+% ===========================================================================
+% NACHSPANN (Eingerückt & ohne Seitenzahlen im Inhaltsverzeichnis)
+% ===========================================================================
+
+% --- LITERATURVERZEICHNIS ---
+\clearpage
+\thispagestyle{empty} % Entfernt die Seitenzahl auf dieser Seite
+% Manueller Eintrag ins Inhaltsverzeichnis:
+% 1. \protect\numberline{} sorgt für die Einrückung (Platzhalter für Nummer)
+% 2. Das leere Klammernpaar {} am Ende unterdrückt die Seitenzahl
+\addtocontents{toc}{\protect\contentsline{section}{\protect\numberline{}Literaturverzeichnis}{}{}}
+
+% Literaturverzeichnis ausgeben (ohne automatische Überschrift, da wir sie manuell setzen)
+\section*{Literaturverzeichnis}
+\printbibliography[heading=none]
+
+% --- EIGENSTÄNDIGKEITSERKLÄRUNG ---
+\clearpage
+\thispagestyle{empty} % Entfernt die Seitenzahl auf dieser Seite
+% Manueller Eintrag ins Inhaltsverzeichnis (Eingerückt, ohne Seitenzahl)
+\addtocontents{toc}{\protect\contentsline{section}{\protect\numberline{}Eigenständigkeitserklärung}{}{}}
+
+% Datei einbinden (Achtung: Du musst Schritt 2 beachten!)
+\input{02_Inhalt/03_Nachspann/eigenstaendigkeitserklaerung.tex}
+
+\end{document}
