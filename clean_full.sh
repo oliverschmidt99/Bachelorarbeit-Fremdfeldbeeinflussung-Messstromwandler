@@ -7,20 +7,22 @@ EXTENSIONS=(
     "synctex.gz" "fdb_latexmk" "fls"          # Build-Tools
     "bbl" "blg" "bbl-SAVE-ERROR"              # Literaturverzeichnis & Fehler
     "acn" "acr" "alg" "glg" "glo" "gls" "ist" # Glossaries & Acronyms
-    "nav" "snm" "vrb"                         # Beamer (falls mal genutzt)
-    "xdv" "indent.log"                        # Sonstiges
+    "nav" "snm" "vrb"                         # Beamer
+    "xdv" "indent.log" "lod"                  # Sonstiges
 )
 
-echo "Starte Bereinigung..."
+echo "Starte rekursive Bereinigung in allen Ordnern..."
 
 # Loop durch alle Endungen
 for ext in "${EXTENSIONS[@]}"; do
-    # Löscht Dateien im aktuellen Verzeichnis (ohne Unterordner zu zerstören)
-    # 2>/dev/null unterdrückt Fehlermeldungen, falls keine Datei dieses Typs existiert
-    rm -f *."$ext" 2>/dev/null
+    # find sucht im aktuellen Verzeichnis (.) und allen Unterordnern
+    # -type f beschränkt die Suche auf Dateien
+    # -name "*.$ext" sucht nach der spezifischen Endung
+    # -delete löscht die gefundene Datei sofort
+    find . -type f -name "*.$ext" -delete
 done
 
-# Speziell für Dateien, die mit .bbl-SAVE-ERROR enden (Wildcard am Ende)
-rm -f *.bbl-SAVE-ERROR 2>/dev/null
+# Speziell für Dateien, die mit .bbl-SAVE-ERROR enden
+find . -type f -name "*.bbl-SAVE-ERROR" -delete
 
 echo "Fertig! Es verbleiben nur .tex, .pdf, .bib und Ressourcen."
