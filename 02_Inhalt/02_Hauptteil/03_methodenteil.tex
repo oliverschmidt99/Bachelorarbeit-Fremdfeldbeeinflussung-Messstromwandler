@@ -51,9 +51,9 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
     \small
     \begin{tabularx}{\textwidth}{@{}l l l l >{\raggedright\arraybackslash}X@{}}
         \toprule
-        \textbf{Komponente}      & \textbf{Typ}                  & \textbf{\makecell[l]{Leistung /                                                                                             \\ Bürde}}
+        \textbf{Komponente}      & \textbf{Typ}                  & \textbf{\makecell[l]{Leistung /                                                                                              \\ Bürde}}
         
-                                 & \textbf{\makecell[l]{Primär /                                                                                                                               \\ Input}} & \textbf{\makecell[l]{Sekundär /\\ Output}}                                                                                \\ \midrule
+                                 & \textbf{\makecell[l]{Primär /                                                                                                                                                                                                                                         \\ Input}} & \textbf{\makecell[l]{Sekundär /\\ Output}}                                                                                                            \\ \midrule
         Säulenstelltransformator & Ruhstrat                      & \SI{90}{kVA}
 
         
@@ -61,7 +61,7 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
         
         
         
-                                 & \SI{380}{V}                   & \SIrange{0}{380}{\volt} (\SI{70}{A})                                                                                        \\
+                                 & \SI{380}{V}                   & \SIrange{0}{380}{\volt} (\SI{70}{A})                                                                                                                                                                                                  \\
         Festtransformator        & Janssen                       & \SI{30}{kVA}
 
         
@@ -69,7 +69,7 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
         
         
         
-                                 & \SI{380}{V}                   & \SI{6}{V} (\SI{5000}{A})                                                                                                    \\
+                                 & \SI{380}{V}                   & \SI{6}{V} (\SI{5000}{A})                                                                                                                                                                                                              \\
         Stromwandler             & Celsa ICG                     & \SI{5}{VA}
 
         
@@ -77,10 +77,10 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
         
         
         
-                                 & \SI{6000}{A}                  & \SI{5}{A} (Kl. 0,2S)                                                                                                        \\
+                                 & \SI{6000}{A}                  & \SI{5}{A} (Kl. 0,2S)                                                                                                                                                                                                                  \\
         
-        Messumformer (K-3)       & 3K Elektrik                   & --                                                                                         & \SI{0}{A} bis \SI{5}{A} AC & 
-        \SIrange{0}{20}{mA} \gls{dc}                                                                                                                                                           \\ \midrule
+        Messumformer (K-3)       & 3K Elektrik                   & --                                                                                                                               & \SI{0}{A} bis \SI{5}{A} AC & 
+        \SIrange{0}{20}{mA} \gls{dc}                                                                                                                                                                                                                                                                          \\ \midrule
         \textbf{Leittechnik}     & \textbf{Typ}                  & \multicolumn{3}{l}{\textbf{Beschreibung}}
 
         
@@ -89,6 +89,7 @@ Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{ta
         
         
         \\ \cmidrule(r){1-2}
+        
         Steuerung                & Siemens \gls{et200s}          & \multicolumn{3}{p{9cm}}{\gls{profinet} Anbindung, Stromregelung, Analogeingänge}
 
         
@@ -391,42 +392,42 @@ Für die konstruktive Bewertung in Schaltanlagen ist diese Betrachtungsweise jed
             S@{}}
         \toprule
         \textbf{Hersteller}
-                                                     & 
-        \textbf{Typ}                                 & 
-        \textbf{Technologie}                         & 
+                                                             & 
+        \textbf{Typ}                                         & 
+        \textbf{Technologie}                                 & 
         {\textbf{$I_n$ [\si{\ampere}]}}
-                                                     & 
-        {\textbf{$S_n$ [\si{\volt\ampere}]}}         & 
+                                                             & 
+        {\textbf{$S_n$ [\si{\volt\ampere}]}}                 & 
         {\textbf{Volumen [\si{\centi\meter\cubed}]}} & 
         \textbf{Preis [\euro]}
         \\
         \midrule
-        Celsa                                        & ALO 10030
-                                                     & Standard      & 2000        & 2,5  & 634,3 & 45,50            \\
-        Celsa                                        & ALO 8030 K    & Kompensiert & 2000 & 10,0  & 710,2  & 95,95   \\
+        Celsa                                                & ALO 10030
+                                                             & Standard      & 2000        & 2,5  & 634,3 & 45,50            \\
+        Celsa                                                & ALO 8030 K    & Kompensiert & 2000 & 10,0  & 710,2  & 95,95   \\
         Celsa
-                                                     & ALO 10030     & Standard    & 2500 & 2,5   & 634,3  & 45,50   \\
+                                                             & ALO 10030     & Standard    & 2500 & 2,5   & 634,3  & 45,50   \\
         Celsa
-                                                     & ALO 10050 K   & Kompensiert & 2500 & 5,0   & 1027,0 & 104,20  \\
-        Celsa                                        & ALO 12070     & Standard    & 3000 & 15,0  & 1520,0 & 71,51   \\
+                                                             & ALO 10050 K   & Kompensiert & 2500 & 5,0   & 1027,0 & 104,20  \\
+        Celsa                                                & ALO 12070     & Standard    & 3000 & 15,0  & 1520,0 & 71,51   \\
         Celsa
-                                                     & ALO 12070 K   & Kompensiert & 3000 & 15,0  & 1520,0 & 346,06  \\
+                                                             & ALO 12070 K   & Kompensiert & 3000 & 15,0  & 1520,0 & 346,06  \\
         Celsa
-                                                     & ALO 12070     & Standard    & 4000 & 15,0  & 1520,0 & 71,51   \\
-        Celsa                                        & ALO 12070 K   & Kompensiert & 4000 & 15,0  & 1520,0 & 401,91  \\
+                                                             & ALO 12070     & Standard    & 4000 & 15,0  & 1520,0 & 71,51   \\
+        Celsa                                                & ALO 12070 K   & Kompensiert & 4000 & 15,0  & 1520,0 & 401,91  \\
         Celsa
-                                                     & ALO 20060     & Standard    & 5000 & 40,0  & 1989,0 & 124,76  \\
+                                                             & ALO 20060     & Standard    & 5000 & 40,0  & 1989,0 & 124,76  \\
         Celsa
-                                                     & ALO E 16050 K & Kompensiert & 5000 & 40,0  & 1903,0 & 414,56  \\
+                                                             & ALO E 16050 K & Kompensiert & 5000 & 40,0  & 1903,0 & 414,56  \\
         \addlinespace
-        MBS                                          & ASK 101.4     & Standard    & 2000 & 10,0  & 733,2  & 43,67   \\
+        MBS                                                  & ASK 101.4     & Standard    & 2000 & 10,0  & 733,2  & 43,67   \\
         
-        MBS                                          & ASK 129.10    & Standard    & 5000 & 15,0  & 6175,0 & 289,80   \\
+        MBS                                                  & ASK 129.10    & Standard    & 5000 & 15,0  & 6175,0 & 289,80   \\
         \addlinespace
         Redur
-                                                     & 13A1030.3ffp  & FFP         & 2000 & 10,0  & 778,7  & 146,01
+                                                             & 13A1030.3ffp  & FFP         & 2000 & 10,0  & 778,7  & 146,01
         \\
-        Redur                                        & 20A1456.5FFP  & FFP         & 5000 & 15,0  & 1600,0 & 296,64
+        Redur                                                & 20A1456.5FFP  & FFP         & 5000 & 15,0  & 1600,0 & 296,64
         \\
         \bottomrule
     \end{tabular}
@@ -525,140 +526,3 @@ Auch in dieser Konfiguration wurde der \SI{5000}{A} Wandler von Redur vermessen.
     \caption{Modifizierter Versuchsaufbau in Dreieckskonfiguration durch räumlichen Versatz der Phase L2 mittels Kupferadapter}
     \label{pic:kupferschienen_dreieck}
 \end{figure}
-
-\subsubsection{Aufbau und Funktionsweise}
-\label{sec:aufbau_funktionsweise}
-
-Der Leistungspfad beginnt primärseitig mit einem motorbetriebenen Säulenstelltransformator der Firma Ruhstrat der mit einer Leistung von \SI{90}{kVA} als zentrales Stellglied fungiert.
-Dem Transformator sind Netzdrosseln nachgeschaltet die zur Entkopplung von Stromspitzen dienen.
-Die Spannungsstellung erfolgt stufenlos über verstellbare Kohlerollbürsten wodurch eine variable Ausgangsspannung zwischen \SI{0}{V} und \SI{380}{V} bereitgestellt wird.
-Diese Spannung speist den nachgeschalteten Hochstrom Festtransformator von Rolf Janssen (Typ UI 260/420 M).
-Mit einer Nennleistung von \SI{30}{kVA} transformiert dieser die Spannung auf eine Kleinspannung von \SI{6}{V} herab was sekundärseitig die Realisierung von Prüfströmen bis zu \SI{6000}{A} am dreiphasigen Abgang ermöglicht.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_hochstrom_pruefstand.drawio.pdf}
-    \caption{Blockschaltbild des Hochstromprüfstandes mit Leistungs und Signalpfaden}
-    \label{pic:aufbau_hochstrom_pruefstand}
-\end{figure}
-
-\subsubsection{Regelungskonzept}
-\label{sec:regelungskonzept}
-
-Die Stromregelung ist als digitaler \gls{pid} Regelkreis innerhalb der Siemens \gls{et200s} realisiert.
-Der Anwender gibt über die \gls{wincc} Visualisierung den gewünschten Sollstrom vor welchen die \gls{sps} kontinuierlich mit dem rückgeführten Istwert vergleicht.
-Als Stellgröße generiert die Steuerung Schaltbefehle für den Antriebsmotor des Säulenstelltransformators.
-Um permanentes Nachregeln zu minimieren die starke Stromspitzen erzeugen ist eine Hysterese als Totband in den Regelalgorithmus integriert.
-Die Visualisierung übernimmt dabei neben der Parametrierung auch das lückenlose Datenlogging der Versuchsverläufe.
-Eine detaillierte Spezifikation der einzelnen Komponenten ist in Tabelle~\ref{tab:komponenten_hochstrom} zusammengefasst.
-
-\begin{table}[H]
-    \centering
-    \caption{Detaillierte Spezifikation der Komponenten}
-    \label{tab:komponenten_hochstrom}
-    \small
-    \begin{tabularx}{\textwidth}{@{}l l l l >{\raggedright\arraybackslash}X@{}}
-        \toprule
-        \textbf{Komponente}      & \textbf{Typ}                  & \textbf{\makecell[l]{Leistung /                                                                                             \\ Bürde}}
-        
-                                 & \textbf{\makecell[l]{Primär /                                                                                                                               \\ Input}} & \textbf{\makecell[l]{Sekundär /\\ Output}}                                                                                \\ \midrule
-        Säulenstelltransformator & Ruhstrat                      & \SI{90}{kVA}
-
-        
-        
-        
-        
-        
-                                 & \SI{380}{V}                   & \SIrange{0}{380}{\volt} (\SI{70}{A})                                                                                        \\
-        Festtransformator        & Janssen                       & \SI{30}{kVA}
-
-        
-        
-        
-        
-        
-                                 & \SI{380}{V}                   & \SI{6}{V} (\SI{5000}{A})                                                                                                    \\
-        Stromwandler             & Celsa ICG                     & \SI{5}{VA}
-
-        
-        
-        
-        
-        
-                                 & \SI{6000}{A}                  & \SI{5}{A} (Kl. 0,2S)                                                                                                        \\
-        
-        Messumformer (K-3)       & 3K Elektrik                   & --                                                                                         & \SI{0}{A} bis \SI{5}{A} AC & 
-        \SIrange{0}{20}{mA} \gls{dc}                                                                                                                                                           \\ \midrule
-        \textbf{Leittechnik}     & \textbf{Typ}                  & \multicolumn{3}{l}{\textbf{Beschreibung}}
-
-        
-        
-        
-        
-        
-        \\ \cmidrule(r){1-2}
-        Steuerung                & Siemens \gls{et200s}          & \multicolumn{3}{p{9cm}}{\gls{profinet} Anbindung, Stromregelung, Analogeingänge}
-
-        
-        
-        
-        
-        
-        \\
-        Visualisierung           & Siemens \gls{wincc}           & \multicolumn{3}{p{9cm}}{\gls{hmi} System, Prozessüberwachung, Datenlogging}
-
-        
-        
-        
-        
-        
-        \\ \bottomrule
-    \end{tabularx}
-\end{table}
-
-\subsubsection{Ursprünglicher Aufbau der Messstrecke}
-\label{sec:aufbau_alter_messstrecke}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/aufbau_messstrecke.drawio.pdf}
-    \caption{Schematischer Aufbau der Messstrecke zur Ermittlung der Messabweichung}
-    \label{pic:aufbau_messstrecke}
-\end{figure}
-
-Der erste Aufbau der Messstrecke (siehe Abbildung \ref{pic:aufbau_messstrecke}) sah zwei parallele Erfassungspfade vor.
-Zur Bestimmung des Referenzwertes der Einspeisung wurden die K-3 Messumformer genutzt welche das Signal an die \gls{sps} übermittelten.
-Parallel dazu wurde das Ausgangssignal des Prüflings mit einem Digitalmultimeter von Fluke im Modus „Acquire“ erfasst.
-
-\subsubsection{Schwachstellen im Messkonzept}
-\label{sec:fehleranalyse}
-
-Die Auswertung der ersten Messreihen zeigt Abweichungen die über den gesamten Messbereich auftreten.
-In Abbildung \ref{pic:dia_messstrecke_alt} sind die Verläufe der Messumformer K-3 (blau) und der Rogowskispulen (orange) dargestellt.
-Die Rogowskispulen wurden parallel eingesetzt um deren Eignung für die Prüfung der Wandler zu untersuchen.
-Beide Systeme erfassten die Messwerte zeitgleich an einem Messpunkt hinter dem Festtransformator.
-Als Referenzrahmen für die Bewertung der gesamten Messkette wird die Genauigkeitsklasse 0,2 herangezogen.
-Dies stellt eine konservative Betrachtung dar da die primärseitigen Stromwandler der Klasse 0,2S entsprechen.
-Gemäß Norm \cite{din_en_61869_2_2013} definiert die Sonderklasse 0,2S insbesondere im Niederstrombereich strengere Anforderungen als die Standardklasse 0,2.
-Da die Abweichungen jedoch bereits die weiteren Grenzen der Klasse 0,2 überschreiten ist diese als Vergleichsmaßstab für die Fehleranalyse ausreichend.
-
-Die grafische Darstellung verdeutlicht dass beide Messsysteme die durch die Norm vorgegebenen Toleranzgrenzen (gestrichelte Linien) nicht einhalten.
-In Phase L1 überschreitet der Messumformer K-3 ab einer Last von 50\,\% den positiven Grenzwert während die Rogowskispulen eine negative Abweichung zwischen minus 1\,\% und minus 2,5\,\% aufweisen.
-In Phase L2 zeigt der Messumformer K-3 bei 20\,\% Last einen Abfall der Genauigkeit auf circa minus 2\,\% wohingegen die Rogowskispulen eine positive Abweichung von über 1\,\% erreichen.
-Da beide Messsysteme die geforderte Genauigkeitsklasse von 0,2 signifikant verfehlen sind sie für eine valide Referenzmessung ungeeignet.
-Folglich kann auf Basis dieser Komponenten kein vertrauenswürdiger Referenzwert für den Primärstrom bestimmt werden was die Validierung der Stromwandler unmöglich macht.
-
-\begin{diagram}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/diagramme/dia_messstrecke_alt/dia_messstrecke_alt-Zusammenfassung_MultiCurrent.pdf}
-    \caption{Analyse der Messabweichung und Standardabweichung der Phasen L1 L2 und L3 im ursprünglichen Versuchsaufbau}
-    \label{pic:dia_messstrecke_alt}
-\end{diagram}
-
-Die im unteren Teil der Abbildung \ref{pic:dia_messstrecke_alt} dargestellte Standardabweichung zeigt dass beide Messgeräte im niedrigen Strombereich eine erhöhte Varianz aufweisen.
-Dies ist darauf zurückzuführen dass der Säulenstelltransformator bei geringen Strömen einen begrenzten Stellbereich besitzt woraus eine geringere Stabilität des Stromwertes resultiert aus der Regelung.
-Mit zunehmender Stromstärke reduziert sich dieses Rauschen im Messsignal.
-Dabei weisen die K-3 Messumformer eine geringere Schwankungsbreite auf als die Rogowskispulen.
-Aufgrund dieser Ergebnisse sind beide Messverfahren für eine Referenzmessung im Rahmen der Genauigkeitsprüfung unzureichend.
-Im folgenden Abschnitt \ref{sec:optimierung_messsystem} wird die Systemoptimierung erläutert um eine präzisere Messwerterfassung zu realisieren.
-
