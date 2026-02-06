@@ -152,7 +152,7 @@ Die Messreihe bei einer Stromstärke von \SI{3000}{A} fungiert als zentrale Fall
 
 \paragraph{Vergleich der Wandlertechnologien und Geometrien}
 
-Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber. 
+Abbildung \ref{dia:3000A_zusammenfassung} stellt die Fehlerverläufe beider Wandlertypen in Dreiecks- und Parallelanordnung gegenüber.
 
 Die Untersuchung des Standardwandlers ALO 12070 in der Parallelanordnung offenbart dass der Leiter L2 als einziger die Genauigkeitsanforderungen nicht erfüllen kann. Wie in Tabelle \ref{tab:messergebnisse_celsa12070_3000A_alle} im Anhang ersichtlich fällt der Messwert bereits bei \SI{80}{\%} des Nennstromes mit \SI{-1,1}{\%} unter den Grenzwert. Dieser Fehler verstärkt sich linear bis in den Überlastbereich wo er bei \SI{120}{\%} Last einen Wert von \SI{-5,4}{\%} erreicht was einem absoluten Fehlstrom von rund \SI{195,3}{A} entspricht.
 
@@ -175,12 +175,12 @@ Da der Standardwandler in der Parallelanordnung erkennbare Sättigungserscheinun
     \label{tab:buerden_konfigurationen_3000A}
     \begin{tabular}{l c c c l}
         \toprule
-                                   & \multicolumn{3}{c}{Bürdenwiderstand $R_B$ [\unit{\ohm}]} &                                        \\
+                           & \multicolumn{3}{c}{Bürdenwiderstand $R_B$ [\unit{\ohm}]} &                                                      \\
         \cmidrule(lr){2-4}
-        {Konfiguration}            & {L1}                                                     & {L2} & {L3} & {Ziel der Untersuchung}                  \\
+        {Konfiguration}    & {L1}                                                     & {L2} & {L3} & {Ziel der Untersuchung}                \\
         \midrule
-        Referenzlast               & 10,8                                                     & 10,8 & 10,8 & Basisvergleich Geometrieeinfluss       \\
-        Minimallast                & 0,0                                                      & 0,0  & 0,0  & Bestimmung maximaler Sättigungsgrenze  \\
+        Referenzlast       & 10,8                                                     & 10,8 & 10,8 & Basisvergleich Geometrieeinfluss       \\
+        Minimallast        & 0,0                                                      & 0,0  & 0,0  & Bestimmung maximaler Sättigungsgrenze  \\
         Asymmetrische Last & 10,8                                                     & 0,0  & 10,8 & Selektive Entlastung des Mittelleiters \\
         \bottomrule
     \end{tabular}
@@ -240,7 +240,7 @@ Die abschließenden Untersuchungen widmen sich dem Hochstrombereich von \SI{5000
 
 
 \begin{aufgabenbox}
-    Ich kann nicht erklären warum die Messungen bei L1 so unterschiedlich sind zu andern Leitern.
+    Ich verstehe nicht, warum die Messungen bei L1 so verschieden sind im Vergleich zu anderen Leitern.
 \end{aufgabenbox}
 
 % --- 5000 A Diagramm ---
@@ -253,7 +253,7 @@ Die abschließenden Untersuchungen widmen sich dem Hochstrombereich von \SI{5000
 
 Bei der Analyse des MBS ASK129.10 (Details in Tabelle \ref{tab:messergebnisse_mbs_5000A_mixed} im Anhang) offenbaren sich über alle drei Phasen hinweg Schwierigkeiten bei der Einhaltung der geforderten Messgenauigkeit was sich insbesondere in der Parallelanordnung zeigt. Während Phase L1 den Toleranzbereich bereits bei \SI{90}{\%} des Nennstroms mit einer Abweichung von \SI{-2,32}{\%} verlässt und im Überlastfall sogar auf \SI{-6,72}{\%} abfällt bricht die Genauigkeit der Phase L2 noch früher ein. Schon bei \SI{80}{\%} $I_n$ treten hier massive Messabweichungen von rund \SI{-5,5}{\%} auf. Im Kontrast dazu zeigt sich Phase L3 in der gleichen Anordnung deutlich robuster und hält die Vorgaben weitestgehend ein wobei der Nennpunkt mit \SI{-1,06}{\%} nur marginal die Norm verfehlt.
 
-Einen direkten technologischen Vergleich ermöglicht der Redur 20A1456.5vffp dessen Messwerte in Tabelle \ref{tab:messergebnisse_redur_5000A_mixed} (Anhang) dokumentiert sind. Zwar zeigt dieser Wandler in der Parallelanordnung ein qualitativ ähnliches Verhalten wie das Modell von MBS schneidet jedoch quantitativ präziser ab. Eine Anomalie offenbart sich jedoch beim Wechsel in die Dreiecksanordnung. Während die Phasen L2 und L3 wie erwartet signifikant an Genauigkeit gewinnen bleibt dieser Effekt bei L1 aus. Wie die Messwerte zeigen verschlechtert sich der Fehler bei L1 im Nennpunkt sogar leicht von \SI{-1,85}{\%} in der Parallelanordnung auf \SI{-2,00}{\%} im Dreieck. Dies deutet auf eine spezifische magnetische Asymmetrie oder eine Sättigungsgrenze hin die durch die Geometrieänderung allein nicht kompensiert werden kann.
+Einen direkten technologischen Vergleich ermöglicht der Redur 20A1456.5FFP dessen Messwerte in Tabelle \ref{tab:messergebnisse_redur_5000A_mixed} (Anhang) dokumentiert sind. Zwar zeigt dieser Wandler in der Parallelanordnung ein qualitativ ähnliches Verhalten wie das Modell von MBS schneidet jedoch quantitativ präziser ab. Eine Anomalie offenbart sich jedoch beim Wechsel in die Dreiecksanordnung. Während die Phasen L2 und L3 wie erwartet signifikant an Genauigkeit gewinnen bleibt dieser Effekt bei L1 aus. Wie die Messwerte zeigen verschlechtert sich der Fehler bei L1 im Nennpunkt sogar leicht von \SI{-1,85}{\%} in der Parallelanordnung auf \SI{-2,00}{\%} im Dreieck. Dies deutet auf eine spezifische magnetische Asymmetrie oder eine Sättigungsgrenze hin die durch die Geometrieänderung allein nicht kompensiert werden kann.
 
 Als überraschend leistungsfähig erweist sich in diesem Hochstromszenario der Standardwandler Celsa ALO 20060 (Tabelle \ref{tab:messergebnisse_celsa20060_5000A_alle} im Anhang). Er übertrifft die beiden zuvor betrachteten Modelle deutlich. In der Parallelanordnung verbleiben die Außenleiter L1 und L3 über den gesamten Messbereich innerhalb der Genauigkeitsklasse 1. Lediglich der mittlere Leiter L2 zeigt ab \SI{50}{\%} des Nennstroms Sättigungstendenzen und fällt bei Nennlast auf \SI{-3,84}{\%} ab.
 Die Umstellung auf die Dreiecksanordnung eliminiert diese Schwäche vollständig und stabilisiert die Messwerte auf einem bemerkenswert hohen Niveau. So verbessert sich der Fehler bei L2 um den Faktor 14 auf \SI{-0,26}{\%} und auch L1 sowie L3 liefern mit \SI{-0,31}{\%} und \SI{-0,15}{\%} nahezu ideale Werte.
@@ -266,19 +266,19 @@ Tabelle \ref{tab:verbesserungsfaktor_alle_5000a} fasst die Wirksamkeit der geome
     \label{tab:verbesserungsfaktor_alle_5000a}
     \begin{tabular}{llcccc}
         \toprule
-        {Wandler} & {Phase} & \SI{80}{\%} & \SI{90}{\%} & \SI{100}{\%} & \SI{120}{\%} \\
+        {Wandler}       & {Phase} & \SI{80}{\%} & \SI{90}{\%} & \SI{100}{\%} & \SI{120}{\%} \\
         \midrule
-        MBS ASK129.10 & L1 & 2,46 & 3,75 & 2,88 & 1,99 \\
-                      & L2 & 20,71 & 13,14 & 10,01 & 7,59 \\
-                      & L3 & 0,93 & 3,42 & 27,69 & 4,79 \\
+        MBS ASK129.10   & L1      & 2,46        & 3,75        & 2,88         & 1,99         \\
+                        & L2      & 20,71       & 13,14       & 10,01        & 7,59         \\
+                        & L3      & 0,93        & 3,42        & 27,69        & 4,79         \\
         \addlinespace
-        Redur 20A1456 & L1 & 0,79 & 0,77 & 0,93 & 1,12 \\
-                      & L2 & 9,51 & 6,68 & 5,06 & 3,69 \\
-                      & L3 & 1,36 & 1,26 & 0,94 & 2,48 \\
+        Redur 20A1456   & L1      & 0,79        & 0,77        & 0,93         & 1,12         \\
+                        & L2      & 9,51        & 6,68        & 5,06         & 3,69         \\
+                        & L3      & 1,36        & 1,26        & 0,94         & 2,48         \\
         \addlinespace
-        Celsa ALO 20060 & L1 & 5,93 & 1,14 & 1,11 & 2,49 \\
-                        & L2 & 15,12 & 10,68 & 14,75 & 32,51 \\
-                        & L3 & 1,06 & 0,69 & 1,10 & 2,96 \\
+        Celsa ALO 20060 & L1      & 5,93        & 1,14        & 1,11         & 2,49         \\
+                        & L2      & 15,12       & 10,68       & 14,75        & 32,51        \\
+                        & L3      & 1,06        & 0,69        & 1,10         & 2,96         \\
         \bottomrule
     \end{tabular}
 \end{table} Die Messreihe bei einem Nennstrom von \SI{5000}{A} stellt keinen Optimierungs- oder Vergleichsfall im engeren Sinne dar, sondern dient der Untersuchung des Grenzverhaltens der betrachteten Stromwandlerkonzepte unter extremen Betriebsbedingungen. Bereits bei Lastströmen deutlich unterhalb des Nennwertes verlassen mehrere Wandler die spezifizierte Genauigkeitsklasse, was auf eine systematische Überforderung der magnetischen Kerne hindeutet.
@@ -298,7 +298,7 @@ In diesem Abschnitt werden die technischen Messergebnisse in Relation zu den Ans
 % --- Cluster 1: Standardbereich ---
 \subsubsection{Wirtschaftlichkeit im Nennstrombereich (\SI{2000}{A} bis \SI{2500}{A})}
 
-Im Nennstrombereich zwischen \SI{2000}{A} und \SI{2500}{A} werden unterschiedliche Wandlertechnologien erstmals direkt miteinander vergleichbar, da alle untersuchten Typen ihre Messaufgabe grundsätzlich innerhalb oder nahe der geforderten Genauigkeitsklasse erfüllen. 
+Im Nennstrombereich zwischen \SI{2000}{A} und \SI{2500}{A} werden unterschiedliche Wandlertechnologien erstmals direkt miteinander vergleichbar, da alle untersuchten Typen ihre Messaufgabe grundsätzlich innerhalb oder nahe der geforderten Genauigkeitsklasse erfüllen.
 Der wirtschaftliche Vergleich stellt somit weniger eine Frage der grundsätzlichen Funktionstüchtigkeit dar, sondern vielmehr der Effizienz des eingesetzten technischen Aufwands.
 
 % === 2000 A ===
@@ -309,12 +309,12 @@ Der wirtschaftliche Vergleich stellt somit weniger eine Frage der grundsätzlich
     \label{dia:2000A_ranking_plot}
 \end{diagram}
 
-Als preisliche Referenz dienen die Standardwandler ohne zusätzliche Kompensations- oder Abschirmmaßnahmen, exemplarisch vertreten durch den Celsa ALO 10030 sowie den MBS ASK101.4. 
-Diese Modelle weisen die geringsten Anschaffungskosten auf, zeigen jedoch – insbesondere in der Parallelanordnung – eine erhöhte Empfindlichkeit gegenüber externen Magnetfeldern. 
+Als preisliche Referenz dienen die Standardwandler ohne zusätzliche Kompensations- oder Abschirmmaßnahmen, exemplarisch vertreten durch den Celsa ALO 10030 sowie den MBS ASK101.4.
+Diese Modelle weisen die geringsten Anschaffungskosten auf, zeigen jedoch – insbesondere in der Parallelanordnung – eine erhöhte Empfindlichkeit gegenüber externen Magnetfeldern.
 Dies schlägt sich in einem erhöhten Fehleranteil im Performance-Score nieder, wodurch der ökonomische Vorteil teilweise relativiert wird (siehe Abbildung \ref{dia:2000A_ranking_plot}).
 
-Demgegenüber stehen die kompensierten Wandler von Celsa (ALO 8030 K bzw. ALO 10050 K), die durch ihre zusätzliche Kompensationswicklung eine deutlich höhere Messstabilität erreichen. 
-Die geringeren Fehleranteile führen trotz höherer Anschaffungskosten zu konkurrenzfähigen Performance-Scores, insbesondere bei \SI{2500}{A} (Abbildung \ref{dia:2500A_ranking_plot}). 
+Demgegenüber stehen die kompensierten Wandler von Celsa (ALO 8030 K bzw. ALO 10050 K), die durch ihre zusätzliche Kompensationswicklung eine deutlich höhere Messstabilität erreichen.
+Die geringeren Fehleranteile führen trotz höherer Anschaffungskosten zu konkurrenzfähigen Performance-Scores, insbesondere bei \SI{2500}{A} (Abbildung \ref{dia:2500A_ranking_plot}).
 In diesem Strombereich rechtfertigt der technische Mehraufwand somit erstmals ökonomisch den höheren Preis.
 
 % === 2500 A ===
@@ -325,19 +325,19 @@ In diesem Strombereich rechtfertigt der technische Mehraufwand somit erstmals ö
     \label{dia:2500A_ranking_plot}
 \end{diagram}
 
-Eine weitere Technologiestufe stellen Wandler mit Fremdfeldprotektoren dar, vertreten durch die Redur-Modelle. 
-Diese zeichnen sich durch eine hohe geometrische Robustheit aus und zeigen selbst in ungünstigen Leiteranordnungen stabile Messwerte. 
+Eine weitere Technologiestufe stellen Wandler mit Fremdfeldprotektoren dar, vertreten durch die Redur-Modelle.
+Diese zeichnen sich durch eine hohe geometrische Robustheit aus und zeigen selbst in ungünstigen Leiteranordnungen stabile Messwerte.
 Ökonomisch bewegen sie sich jedoch aufgrund der hohen Anschaffungskosten nur im oberen Mittelfeld, da der Zugewinn an Messgenauigkeit im Nennstrombereich begrenzt bleibt.
 Für den Nennstromfall \SI{2000}{A} ist zudem die Parallelanordnung des Redur 13A1030.3ffp hervorzuheben.
 
-Die Fremdfeldprotektoren reduzieren in dieser Konfiguration die Messabweichungen insbesondere im Nenn- und Überlastbereich deutlich und adressieren damit gezielt den in den vorangegangenen Abschnitten beschriebenen Einfluss benachbarter Leiterfelder. 
-In der ökonomischen Bewertung wird dieser technische Vorteil jedoch durch den vergleichsweise hohen Anschaffungspreis teilweise kompensiert, sodass der Performance-Index trotz guter Messgüte nicht in jedem Fall führend ausfällt (vgl. Abb.~\ref{dia:2000A_ranking_plot}). 
-Ein zusätzlicher Vorteil der Protektor-Technologie besteht darin, dass Abschirmkörper prinzipiell auch als nachrüstbare Maßnahme in bestehenden Anlagen eingesetzt werden können. 
+Die Fremdfeldprotektoren reduzieren in dieser Konfiguration die Messabweichungen insbesondere im Nenn- und Überlastbereich deutlich und adressieren damit gezielt den in den vorangegangenen Abschnitten beschriebenen Einfluss benachbarter Leiterfelder.
+In der ökonomischen Bewertung wird dieser technische Vorteil jedoch durch den vergleichsweise hohen Anschaffungspreis teilweise kompensiert, sodass der Performance-Index trotz guter Messgüte nicht in jedem Fall führend ausfällt (vgl. Abb.~\ref{dia:2000A_ranking_plot}).
+Ein zusätzlicher Vorteil der Protektor-Technologie besteht darin, dass Abschirmkörper prinzipiell auch als nachrüstbare Maßnahme in bestehenden Anlagen eingesetzt werden können.
 Damit eröffnet sich eine wirtschaftlich interessante Option zur Verbesserung der Messgenauigkeit, ohne den Stromwandler vollständig ersetzen zu müssen (vgl. \cite{redur_patent_ffp_2022}).
 
-Ist die Realisierung einer Dreiecksanordnung aus konstruktiven, platzbedingten oder normativen Gründen nicht möglich, muss die Auswahl auf die Parallelanordnung beschränkt werden. 
-In diesem Fall verlieren feldempfindliche Standardwandler ihren Kostenvorteil, da erhöhte Messabweichungen den Performance-Score dominieren.\\ 
-Für den betrachteten Datensatz ergibt sich dabei ein differenziertes Bild: Bei \SI{2000}{A} erzielt der MBS ASK101.4 in Parallelanordnung den geringsten Performance-Index und stellt damit die wirtschaftlich günstigste Lösung innerhalb der parallelen Verschaltung dar (vgl. Abb.~\ref{dia:2000A_ranking_plot}).\\ 
+Ist die Realisierung einer Dreiecksanordnung aus konstruktiven, platzbedingten oder normativen Gründen nicht möglich, muss die Auswahl auf die Parallelanordnung beschränkt werden.
+In diesem Fall verlieren feldempfindliche Standardwandler ihren Kostenvorteil, da erhöhte Messabweichungen den Performance-Score dominieren.\\
+Für den betrachteten Datensatz ergibt sich dabei ein differenziertes Bild: Bei \SI{2000}{A} erzielt der MBS ASK101.4 in Parallelanordnung den geringsten Performance-Index und stellt damit die wirtschaftlich günstigste Lösung innerhalb der parallelen Verschaltung dar (vgl. Abb.~\ref{dia:2000A_ranking_plot}).\\
 Bei \SI{2500}{A} verschiebt sich das Optimum hingegen zugunsten des kompensierten Celsa ALO 10050 K, der auch ohne geometrische Optimierung stabile Messwerte liefert und in der Parallelanordnung das beste Preis-Leistungs-Verhältnis erreicht (vgl. Abb.~\ref{dia:2500A_ranking_plot}).
 
 
@@ -352,7 +352,7 @@ Bei \SI{2500}{A} verschiebt sich das Optimum hingegen zugunsten des kompensierte
 % --- Cluster 2: Hochstrombereich ---
 \subsubsection{Verschiebung der Kosteneffizienz bei Hochstrom (\SI{3000}{A} bis \SI{4000}{A})}
 
-Die Messreihen bei \SI{3000}{A} und \SI{4000}{A} zeigen exemplarisch, wie sich die Wirtschaftlichkeit bei gleicher Wandlerbauform mit steigender Stromstärke verschiebt. 
+Die Messreihen bei \SI{3000}{A} und \SI{4000}{A} zeigen exemplarisch, wie sich die Wirtschaftlichkeit bei gleicher Wandlerbauform mit steigender Stromstärke verschiebt.
 In beiden Fällen werden die Baureihe ALO 12070 in Standardausführung sowie die kompensierte Variante ALO 12070 K gegenübergestellt. Dadurch lassen sich die beobachteten Rangfolgen primär auf die Stromskalierung und die damit verbundene Fehlerentwicklung zurückführen.
 
 
@@ -366,12 +366,12 @@ In beiden Fällen werden die Baureihe ALO 12070 in Standardausführung sowie die
 \end{diagram}
 
 
-Bei \SI{3000}{A} (Abb.~\ref{dia:3000A_ranking_plot}) wird der Performance-Score bereits deutlich durch den Messfehler beeinflusst. 
-Insbesondere in der Parallelanordnung verliert der nicht kompensierte Standardwandler seinen anfänglichen Kostenvorteil, da erhöhte Abweichungen den Score dominieren. 
+Bei \SI{3000}{A} (Abb.~\ref{dia:3000A_ranking_plot}) wird der Performance-Score bereits deutlich durch den Messfehler beeinflusst.
+Insbesondere in der Parallelanordnung verliert der nicht kompensierte Standardwandler seinen anfänglichen Kostenvorteil, da erhöhte Abweichungen den Score dominieren.
 Die kompensierte Ausführung reduziert diesen Fehleranteil und erreicht dadurch trotz höherer Anschaffungskosten ein günstigeres Preis-Leistungs-Verhältnis.
 
-Bei \SI{4000}{A} (Abb.~\ref{dia:4000A_ranking_plot}) verstärkt sich dieser Effekt. 
-Mit steigender Strombeanspruchung wächst der Abstand zwischen kompensierter und nicht kompensierter Ausführung im Ranking, da der Messfehler stärker in den Performance-Score eingeht und die Kompensationstechnologie somit ökonomisch relevanter wird. 
+Bei \SI{4000}{A} (Abb.~\ref{dia:4000A_ranking_plot}) verstärkt sich dieser Effekt.
+Mit steigender Strombeanspruchung wächst der Abstand zwischen kompensierter und nicht kompensierter Ausführung im Ranking, da der Messfehler stärker in den Performance-Score eingeht und die Kompensationstechnologie somit ökonomisch relevanter wird.
 
 
 % === 4000 A ===
@@ -384,7 +384,7 @@ Mit steigender Strombeanspruchung wächst der Abstand zwischen kompensierter und
 
 
 
-Parallel dazu zeigt sich der Einfluss der Leitergeometrie als eigenständiger Hebel. Die Dreiecksanordnung senkt die Messabweichungen und verbessert damit den Performance-Score sowohl für Standard- als auch für kompensierte Wandler. 
+Parallel dazu zeigt sich der Einfluss der Leitergeometrie als eigenständiger Hebel. Die Dreiecksanordnung senkt die Messabweichungen und verbessert damit den Performance-Score sowohl für Standard- als auch für kompensierte Wandler.
 Damit ergibt sich für den Hochstrombereich eine klare Reihenfolge der Maßnahmen. Eine geometrische Optimierung verbessert die Wirtschaftlichkeit innerhalb einer Technologieklasse deutlich. Die Wahl eines kompensierten Wandlers erhöht zusätzlich die Robustheit gegenüber Feld- und Sättigungseffekten.
 
 

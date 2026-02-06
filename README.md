@@ -8,7 +8,7 @@
 
 Im Rahmen dieser Bachelorarbeit wird die Messgenauigkeit von Stromwandlern in Niederspannungsschaltanlagen untersucht. Ein besonderer Fokus liegt auf der **magnetischen Kopplung** zwischen benachbarten Phasen bzw. externen Stromschienen. Diese Fremdfelder wurden in Voruntersuchungen als signifikante Störgröße identifiziert, die zu relevanten Messabweichungen führen.
 
-Das Projekt umfasst sowohl die **experimentelle Quantifizierung** dieser Fehler am Hochstrom-Prüfstand als auch die **technische Optimierung** der Messkette (Retrofit durch digitale Messtechnik und SPS-Automatisierung).
+Das Projekt umfasst sowohl die **experimentelle Quantifizierung** dieser Fehler am Hochstromprüfstand als auch die **technische Optimierung** der Messkette (Retrofit durch digitale Messtechnik und SPS-Automatisierung).
 
 ### 🚀 Interaktive Ergebnisse
 Die Auswertung der Messreihen und die Visualisierung der Fehlerkurven sind in einem interaktiven Dashboard verfügbar:
@@ -51,7 +51,7 @@ gantt
     %% ZK2 ist am 29.12 (Mo) -> 24-26 sind frei -> Prüfung am 22./23.12
     Review Experimente                  :crit, rev2, 2025-12-22, 2d
 
-    %% ZK3 ist am 12.01 (Mo) -> Prüfung am Do/Fr davor (08./09.01)
+    %% ZK-3 ist am 12.01 (Mo) -> Prüfung am Do/Fr davor (08./09.01)
     Review Auswertung                   :crit, rev3, 2026-01-08, 2d
 
     %% ZK4 ist am 26.01 (Mo) -> Prüfung am Do/Fr davor (22./23.01)
@@ -71,7 +71,7 @@ gantt
     %% Phase 3: Nach ZK2 bis zum nächsten Review
     Auswertung und Diskussion           :write3, after zk2, 8d
 
-    %% Phase 4: Nach ZK3 bis zum nächsten Review
+    %% Phase 4: Nach ZK-3 bis zum nächsten Review
     Zusammenfassung und Ausblick        :write4, after zk4, 8d
 
     %% Feinschliff bis zur Abgabe

@@ -47,9 +47,6 @@ Er muss gewährleisten, dass der sekundäre Strom auch weit über den Nennbereic
 Der Kern darf folglich nicht frühzeitig sättigen, um eine zuverlässige Schutzauslösung sicherzustellen~\cite[Kap.~2.2]{redur_einmaleins}.
 Eine weitere spezielle Wandlerart stellen die im folgenden Abschnitt~\ref{sec:kompensationswicklungen} behandelten Kompensationswicklungen dar.
 
-\subsubsubsection{Rogowskispulen}
-\label{sec:Rogowskispulen}
-
 
 
 \subsubsection{Kompensationswicklungen}
@@ -78,7 +75,7 @@ Diese Parallelschaltung ermöglicht den Fluss von Ausgleichsströmen zwischen de
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{03_Ressourcen/zeichnungen/kupferschiene_positionierung_vergleich.drawio.pdf}
-    \caption{Schematische Darstellung der zentrischen und außenmittige Positionierung der Kupferschiene}
+    \caption{Schematische Darstellung der zentrischen und exzentrischen (außermittigen) Positionierung der Kupferschiene}
     \label{pic:schema_kupferschiene_pos}
 \end{figure}
 
@@ -213,18 +210,19 @@ Dieser Zusammenhang wird durch die Maxwell-Gleichungen beschrieben und lässt si
     \label{pic:phy_wandler}
 \end{figure}
 
-Ein durch den Ringkern geführter Primärstrom \gls{sym:I_pri} erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld.
+Ein durch den Ringkern geführter Primärstrom \gls{sym:I_p} erzeugt gemäß dem Ampèreschen Durchflutungsgesetz ein magnetisches Feld.
 Das Linienintegral der magnetischen Feldstärke \gls{sym:H} entlang eines geschlossenen Weges $\mathcal{S}$ entspricht dabei der umschlossenen Durchflutung \gls{sym:Theta}, wie Gleichung \eqref{eq:ampere_integral} zeigt
 
 \begin{equation}
-    \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} = I_{p} = \Theta
+    \oint_{\mathcal{S}} \vec{H}\cdot d\vec{s} = \Theta = N_p \cdot I_p
     \label{eq:ampere_integral}
 \end{equation}
 
-Der Stromwandler nutzt einen Ringkern aus ferromagnetischem Material (siehe Abschitt \ref{sec:magnetische-stoffeigenschaften}) mit einer hohen relativen Permeabilität $\mu_r \gg 1$.
-Unter der Annahme eines torusförmigen Kerns mit dem mittleren Radius $r$ verläuft der Integrationsweg kreisförmig entlang der mittleren Feldlinie.
-Aufgrund der Rotationssymmetrie ist der Betrag der Feldstärke $H$ konstant.
-Das Wegintegral entspricht somit dem Produkt aus $H$ und dem Kreisumfang $2\pi r$ (siehe Gleichung \eqref{eq:feldstaerke_h})
+Der Stromwandler nutzt einen Ringkern aus ferromagnetischem Material mit einer hohen relativen Permeabilität $\mu_r \gg 1$ (siehe Abschnitt \ref{sec:magnetische-stoffeigenschaften}).
+Unter der Annahme eines torusförmigen Kerns mit dem mittleren Radius $r$ folgt der Integrationsweg der kreisförmigen mittleren Feldlinie.
+Infolge der Rotationssymmetrie bleibt der Betrag der Feldstärke $H$ konstant.
+Bei einem Durchsteck-/Aufsteckstromwandler entspricht der Primärleiter einer einzelnen Durchsetzung des Kerns, sodass $N_p=1$ gilt.
+Das Wegintegral ergibt sich folglich aus dem Produkt der Feldstärke $H$ und dem Kreisumfang $2\pi r$ (siehe Gleichung \eqref{eq:feldstaerke_h}).
 
 \begin{align}
     \oint_{\mathcal{S}} \vec{H} \cdot \mathrm{d}\vec{s} & = H \cdot \oint_{\mathcal{S}} \mathrm{d}s = H \cdot 2\pi r = I_{p} \nonumber \\[6pt]
@@ -255,7 +253,7 @@ Geht man vereinfacht von einer über den Querschnitt konstanten Flussdichte aus 
     \label{eq:fluss_final}
 \end{equation}
 
-Dieser Ausdruck zeigt, dass der magnetische Fluss im Wandlerkern – solange keine Sättigung eintritt – proportional zum Primärstrom \gls{sym:I_pri} ist.
+Dieser Ausdruck zeigt, dass der magnetische Fluss im Wandlerkern – solange keine Sättigung eintritt – proportional zum Primärstrom \gls{sym:I_p} ist.
 Der Faktor $\mu_0 \mu_r \frac{A}{2\pi r}$ fasst dabei die Geometrie (Querschnitt $A$ und Umfang $2\pi r$) sowie die magnetischen Eigenschaften des Kerns zusammen.
 
 
@@ -268,7 +266,7 @@ Der Term, der die Geometrie und die Materialeigenschaften des Kerns beschreibt, 
 \end{equation}
 
 Damit lässt sich der magnetische Fluss $\Phi$ vereinfacht über das Hopkinsonsche Gesetz ausdrücken, welches das magnetische Äquivalent zum Ohmschen Gesetz bildet.
-Die magnetische Durchflutung $\Theta$ entspricht dabei der elektrischen Spannung und der magnetische Fluss dem elektrischen Strom, analog zu Gleichung \eqref{eq:hopkinson} \cite{Harriehausen2025}[Kap.~11.9]
+Die magnetische Durchflutung $\Theta$ entspricht dabei der elektrischen Spannung und der magnetische Fluss dem elektrischen Strom, analog zu Gleichung \eqref{eq:hopkinson} \cite[Kap.~11.9]{Harriehausen2025}
 
 \begin{equation}
     \Phi = \frac{\Theta}{R_m}
@@ -389,7 +387,7 @@ Zur vollständigen Entmagnetisierung ist eine Gegenfeldstärke erforderlich, der
     \label{fig:bh-hysterese}
 \end{figure}
 
-Die im $B$-$H$-Diagramm eingeschlossene Fläche der Hystereseschleife ist ein Maß für die magnetischen Verluste pro Zyklus~\cite{Harriehausen2025}[Kap.~11.12.1].
+Die im $B$-$H$-Diagramm eingeschlossene Fläche der Hystereseschleife ist ein Maß für die magnetischen Verluste ... pro Zyklus~\cite[Kap.~11.12.1]{Harriehausen2025}.
 Für Messanwendungen werden daher weichmagnetische Werkstoffe mit kleiner Koerzitivfeldstärke und schmaler Hystereseschleife bevorzugt, um Remanenz und Verlustleistung zu reduzieren~\cite{Harriehausen2025, Elektroniktutor_Magkurve}.
 
 
@@ -434,7 +432,7 @@ Aus dieser Beziehung wird ersichtlich, dass eine Erhöhung des Bürdenwiderstand
 
 % --- Paragraph 2 ---
 \paragraph{Magnetische Fremdfelder}
-\label{sec:theorie_fremdfelder} % <--- Hier ist das wichtige Label für den Verweis aus Kap 4
+\label{sec:theorie_fremdfelder}
 
 Jeder stromdurchflossene Leiter ist von einem konzentrischen Magnetfeld umgeben.
 Befinden sich mehrere Leiter in unmittelbarer Nähe zueinander, überlagern sich deren magnetische Felder gemäß dem Superpositionsprinzip.
@@ -451,7 +449,7 @@ In der Praxis verlaufen die Sammelschienen der drei Phasen in Hochstrom-Schaltan
 Die von den Nachbarleitern erzeugten starken Magnetfelder können als Streufluss in den Eisenkern des betrachteten Wandlers eindringen und sich dem Nutzfluss überlagern.
 Die durch den Störleiter verursachte Erhöhung der Flussdichte kann in den benachbarten Kernsegmenten zu einer lokalen Sättigung führen.
 Zur Quantifizierung dieses Effekts wird eine Näherungsgleichung der MBS AG herangezogen.
-Diese berechnet explizit den zusätzlichen Anteil der Flussdichte \gls{sym:B_fremd}, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}
+Dieser Berechnungsansatz stützt sich auf die theoretischen Grundlagen von Pfuntner \cite{Pfuntner1951} und ermittelt explizit den zusätzlichen Anteil der Flussdichte \gls{sym:B_fremd}, der durch das externe Feld induziert wird \cite{MBS_Hochstrom}
 
 \begin{equation}
     B_{\text{Fremd}} \approx 10^{-6} \cdot I_{p} \cdot \frac{R + 0,5 \cdot W}{A} \cdot \log_{10}\left(\frac{D+R}{D-R}\right)
@@ -502,13 +500,13 @@ Diese Beziehung bestätigt, dass der reine Störfluss $\Phi_{\text{Fremd}}$ nur 
 Die Robustheit großer Kerne resultiert folglich nicht aus einer geringeren Einkopplung, sondern aus ihrer höheren Kapazität zur Aufnahme dieses Zusatzflusses.
 
 
-% --- Paragraph 3 ---
+
 % --- Paragraph 3 ---
 \paragraph{Exzentrische Positionierung der Kupferschiene}
 \label{par:exzentrische_positionierung}
 
 Wie bereits in Abschnitt \ref{sec:kompensationswicklungen} erläutert, lässt sich eine ideal zentrierte Installation der Primärleiter (Kupferschienen) in der Praxis häufig nicht vollständig realisieren.
-Bereits geringe Abweichungen von der zentrischen Lage führen zu einer inhomogenen magnetischen Feld- bzw. Flussverteilung im Eisenkern und erhöhen damit die Wahrscheinlichkeit lokaler Sättigungsbereiche.
+Bereits geringe Abweichungen von der zentrischen Lage führen zu einer inhomogenen magnetischen Feld- bzw. Flussverteilung im Eisenkern und erhöhen damit lokale Sättigungsbereiche.
 
 
 \begin{figure}[H]
@@ -519,12 +517,14 @@ Bereits geringe Abweichungen von der zentrischen Lage führen zu einer inhomogen
 \end{figure}
 
 
-Abbildung \ref{pic:sim_exzentrische_moniert} zeigt den simulierten Verlauf des magnetischen Flusses entlang des mittleren Kernumfangs (X-Achse: Weg/''Länge'' in mm, Y-Achse: magnetischer Fluss in Wb).
-Der blaue Kurvenverlauf (symmetrisch) entspricht der Referenzkonfiguration mit zentrierter Leiteranordnung: Der Fluss ist über den Umfang weitgehend homogen und weist eine nahezu symmetrische Verteilung auf.
-Der orangefarbene Verlauf (unsymmetrisch) beschreibt die exzentrische Positionierung: In den Umfangsbereichen, in denen der Primärleiter näher am Kern liegt, steigt der magnetische Fluss deutlich an, während er auf der gegenüberliegenden Seite entsprechend abnimmt.
-Diese Asymmetrie ist ein unmittelbarer Hinweis auf eine ungleichmäßige magnetische Beanspruchung des Kerns und damit auf ein erhöhtes Risiko lokaler Sättigung.
-
-Ist die Sekundärwicklung zusätzlich nicht gleichmäßig um den Kern verteilt, kann die resultierende unsymmetrische Flussverteilung zu systematischen Messabweichungen führen, da einzelne Wicklungsabschnitte eine unterschiedliche magnetische Kopplung erfahren.
+Abbildung \ref{pic:sim_exzentrische_moniert} visualisiert den simulierten Verlauf des magnetischen Flusses entlang des mittleren Kernumfangs.
+Dabei sind auf der Abszisse der Weg in mm und auf der Ordinate der magnetische Fluss in $\varphi$ aufgetragen.
+Die blaue Kurve repräsentiert die Referenzkonfiguration mit einer zentrierten Leiteranordnung.
+Der Fluss ist hierbei über den gesamten Umfang homogen verteilt.
+Im Vergleich dazu verdeutlicht der orangefarbene Verlauf die Auswirkungen einer exzentrischen Positionierung.
+In den leiternahen Bereichen nimmt der magnetische Fluss zu während er auf der gegenüberliegenden Seite abfällt.
+Diese Asymmetrie führt zu einer ungleichmäßigen magnetischen Aussteuerung des Materials und begünstigt lokale Sättigungseffekte.
+Sofern die Sekundärwicklung nicht gleichmäßig über den Kernumfang verteilt ist resultieren aus dieser inhomogenen Flussverteilung Messabweichungen da die magnetische Kopplung in den einzelnen Wicklungsabschnitten variiert.
 
 
 
@@ -547,58 +547,5 @@ Hierbei entspricht \gls{sym:kn} dem Bemessungsübersetzungsverhältnis.
 Der zweite Parameter ist der Fehlwinkel \gls{sym:deltaphi}, der die Phasenverschiebung zwischen dem primären und dem sekundären Stromvektor definiert.
 Für die Validierung ist zudem die Belastung mit der Nennbürde entscheidend, da die Impedanz des Sekundärkreises die magnetische Aussteuerung des Kerns und somit die Fehlerwerte maßgeblich beeinflusst.
 
-\subsection{Niederspannungsschaltanlagen}
-\label{sec:niederspannungsschaltanlagen}
 
-Niederspannungsschaltanlagen dienen der Verteilung, Schaltung und Absicherung elektrischer Energie im Niederspannungsbereich bis 1000~V.
-Sie stellen die Verbindung zwischen der Einspeisung und den nachgelagerten Verbrauchern her und sind für hohe Dauerströme sowie mechanische und thermische Beanspruchungen infolge von Kurzschlüssen ausgelegt.
 
-\subsubsection{Aufbau einer Niederspannungsschaltanlagen}
-\label{sec:aufbau_niederspannungsschaltanlagen}
-
-Der konstruktive Aufbau einer Niederspannungsschaltanlage folgt einem modularen Prinzip, bei dem mehrere Felder über ein gemeinsames Hauptsammelschienensystem im Rücken der Anlage elektrisch miteinander verbunden sind.
-Diese Felder lassen sich funktional in drei wesentliche Kategorien unterteilen: Während Einspeisefelder die elektrische Energie beziehen und der Hauptsammelschiene zuführen, erfolgt über die Abgangsfelder die gezielte Verteilung an nachgelagerte Verbraucher.
-Kupplungsfelder ermöglichen zudem die galvanische Verbindung oder Trennung einzelner Sammelschienenabschnitte, um die Versorgungssicherheit und Flexibilität im Anlagenbetrieb zu erhöhen.
-Neben der reinen Energieverteilung ist die mechanische und thermische Festigkeit gegenüber hohen Kurzschlussströmen ein entscheidendes Sicherheitsmerkmal der Konstruktion.
-Die Anlagen müssen technisch so ausgelegt sein, dass sie selbst hohen Belastungen, wie einem Kurzschlussstrom von $I_k=100$ kA, standhalten.
-Ein wesentlicher Aspekt des Personenschutzes ist dabei das Störlichtbogen: Im Fehlerfall wird die entstehende Druckenergie kontrolliert über das Dach der Anlage abgeführt, um eine Gefährdung des Bedienpersonals zu verhindern und ein schnellstmögliches Erlöschen des Lichtbogens zu gewährleisten
-
-\subsubsection{Kupferschienensystem und Geometrie}
-\label{sec:kupferschienensystem}
-
-Das Kupferschienensystem bildet das zentrale Element für den Energietransport innerhalb der Schaltanlage.
-Es übernimmt die elektrische Verbindung zwischen der Einspeisung, den Leistungsschaltern und den einzelnen Abgängen.
-Bei der Dimensionierung muss die geforderte Strombelastbarkeit sichergestellt sein, wobei die spezifischen Schienenquerschnitte und Bemessungsströme in Tabelle~\ref{tab:schienenquerschnitte} aufgeführt sind.
-Die geometrische Anordnung des Schienensystems, insbesondere der Phasenmittenabstand, wird maßgeblich durch die Baugröße der eingesetzten Leistungsschalter bestimmt.
-Dieser Abstand definiert die minimale Breite eines Feldes und beeinflusst durch die räumliche Nähe der Leiter die magnetische Kopplung zwischen den Phasen.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{03_Ressourcen/Bilder/kupferschinen_gesamtaufbau.pdf}
-    \caption{Darstellung der Phasenmittenabstände in Abhängigkeit von der Schienenkonfiguration}
-    \label{pic:kupferschienensystem}
-\end{figure}
-
-Abbildung~\ref{pic:kupferschienensystem} verdeutlicht diesen Zusammenhang für zwei gängige Konfigurationen.
-Hierbei wird ein Phasenmittenabstand von $130$~mm für Ströme bis zu $4000$~A eingesetzt, was bei einem $2500$-A-Feld durch ein Kupferschienenpaket aus zwei Leitern der Dimension $100 \times 10$~mm realisiert wird.
-Für höhere Anforderungen bis zu $6300$~A wird hingegen ein Phasenmittenabstand von $210$~mm gewählt.
-Dies ermöglicht die Montage von Paketen mit bis zu fünf parallelen Schienen pro Phase, wobei die Abbildung beispielhaft die Anordnung für ein $4000$-A-Feld mit vier Einzelschienen darstellt.
-\begin{table}[H]
-    \centering
-    \caption{Geometrische Daten und Schienenpakete für Siemens 3WA Leistungsschalter }
-    \label{tab:schienenquerschnitte}
-    \begin{tabular}{rcl}
-        \toprule
-        \textbf{Bemessungsstrom} & \textbf{Phasenmittenabstand} & \textbf{Kupferschienenpaket} \\
-        \midrule
-        2000~A                   & 130~mm
-                                 & $2 \times 80 \times 10$~mm                                  \\
-        2500~A                   & 130~mm                       & $2 \times 100 \times 10$~mm  \\
-        3200~A                   & 210~mm
-                                 & $3 \times 100 \times 10$~mm                                 \\
-        4000~A                   & 210~mm                       & $4 \times 100 \times 10$~mm  \\
-        5000~A
-                                 & 210~mm                       & $5 \times 120 \times 10$~mm  \\
-        \bottomrule
-    \end{tabular}
-\end{table}
